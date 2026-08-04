@@ -17,3 +17,6 @@ dist/
 
 # project memory / agent data (do not publish)
 .workbuddy/
+
+# local agent instructions
+CLAUDE.md
