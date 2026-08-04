@@ -20,3 +20,4 @@ dist/
 
 # local agent instructions
 CLAUDE.md
+.playwright-mcp/
