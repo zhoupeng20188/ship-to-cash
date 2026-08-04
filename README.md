@@ -22,7 +22,7 @@ Every guide is labeled by difficulty (Beginner / Intermediate) and tested agains
 
 - [Astro](https://astro.build) + MDX + Tailwind CSS 4 — static, fast, SEO-friendly
 - Dark mode, RSS feed, sitemap, per-post OG images, FAQ structured data (JSON-LD), table of contents
-- Deployed on Cloudflare Pages
+- Deployed on Cloudflare Workers (static assets), auto-built on every push to `main`
 
 ## Develop
 
