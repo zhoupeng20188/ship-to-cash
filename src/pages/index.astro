@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { CATEGORIES } from '../config/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="ShipToCash — Ship your vibe-coded app and start earning">
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-900 dark:to-brand-800">
+    <div class="max-w-4xl mx-auto px-4 py-16 text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-ink-900 leading-tight">
+        You built it with AI.<br />Now ship it and get paid.
+      </h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg text-ink-600 leading-relaxed">
+        Step-by-step guides for vibe coders: deploy your app, set up payments,
+        handle the legal stuff, and turn your project into income.
+      </p>
+    </div>
+  </section>
+
+  <!-- Category paths -->
+  <section class="max-w-6xl mx-auto px-4 mt-12">
+    <h2 class="text-2xl font-bold text-ink-900 mb-6">Pick your path</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {CATEGORIES.map((cat) => (
+        <a
+          href={`/${cat.slug}/`}
+          class="rounded-xl border border-ink-200 bg-white p-5 hover:shadow-lg hover:border-brand-300 transition-all duration-200 dark:bg-ink-100"
+        >
+          <h3 class="font-bold text-lg text-brand-600">{cat.name}</h3>
+          <p class="mt-2 text-sm text-ink-600">{cat.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Latest guides -->
+  <section class="max-w-6xl mx-auto px-4 mt-14">
+    <h2 class="text-2xl font-bold text-ink-900 mb-6">Latest guides</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => <ArticleCard post={post} />)}
+      </div>
+    </section>
+
+  <!-- Subscribe via RSS -->
+  <section class="bg-ink-900 text-white dark:bg-brand-900 mt-16">
+    <div class="max-w-4xl mx-auto px-4 py-16 text-center">
+      <h2 class="text-3xl font-bold mb-4">Never miss a new guide</h2>
+      <p class="text-ink-300 max-w-xl mx-auto mb-8 dark:text-brand-200">
+        Subscribe to our RSS feed for the latest vibe coding tutorials, deployment
+        walkthroughs, and payments setup guides — delivered the moment they publish.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="/rss.xml"
+          class="inline-flex items-center px-6 py-3 rounded-lg bg-brand-600 text-white font-medium hover:bg-brand-700 transition-colors"
+        >
+          Subscribe via RSS
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

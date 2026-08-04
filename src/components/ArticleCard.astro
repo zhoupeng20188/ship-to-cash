@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCategoryBySlug } from '../config/site';
+import DifficultyTag from './DifficultyTag.astro';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, category, difficulty } = post.data;
+const cat = getCategoryBySlug(category);
+const dateStr = pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const href = `/${category}/${post.id}/`;
+---
+
+<article class="group rounded-xl border border-ink-200 bg-white overflow-hidden hover:shadow-lg hover:border-brand-300 transition-all duration-200 dark:bg-ink-100">
+  <div class="p-5 flex flex-col">
+    <div class="flex items-center gap-2 mb-3">
+      {cat && (
+        <a
+          href={`/${cat.slug}/`}
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-50 text-brand-700 hover:bg-brand-100 transition-colors dark:bg-brand-900 dark:text-brand-200"
+        >
+          {cat.name}
+        </a>
+      )}
+      <DifficultyTag level={difficulty} />
+      <time class="text-xs text-ink-400 ml-auto" datetime={pubDate.toISOString()}>{dateStr}</time>
+    </div>
+
+    <h3 class="font-bold text-lg text-ink-900 group-hover:text-brand-600 transition-colors">
+      <a href={href}>{title}</a>
+    </h3>
+
+    <p class="mt-2 text-sm text-ink-600 line-clamp-2 flex-1">{description}</p>
+
+    <a
+      href={href}
+      class="mt-4 inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-700"
+      aria-label={`Read more about ${title}`}
+    >
+      Read more
+      <svg class="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+</article>

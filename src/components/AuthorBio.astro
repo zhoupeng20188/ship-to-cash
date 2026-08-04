@@ -1,0 +1,30 @@
+---
+import { SITE } from '../config/site';
+---
+
+<div class="mt-12 p-6 rounded-xl bg-ink-50 border border-ink-100 dark:bg-ink-100 dark:border-ink-200">
+  <div class="flex items-start gap-4">
+    <img
+      src={SITE.avatar}
+      alt={SITE.author}
+      width="48"
+      height="48"
+      loading="lazy"
+      class="w-12 h-12 rounded-full object-cover flex-shrink-0"
+    />
+    <div>
+      <p class="font-semibold text-ink-900">{SITE.author}</p>
+      <p class="text-sm text-ink-600 mt-1">
+        Founder of ShipToCash. I build small software products and write about the part
+        nobody teaches you: getting your app deployed, taking real payments, and staying
+        out of legal trouble — everything here is tested on my own projects first.
+      </p>
+      <a
+        href="/about/"
+        class="inline-block mt-2 text-sm font-medium text-brand-600 hover:text-brand-700"
+      >
+        More about me →
+      </a>
+    </div>
+  </div>
+</div>

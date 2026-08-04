@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { CATEGORIES } from '../../content.config';
+import { getCategoryBySlug } from '../../config/site';
+
+export function getStaticPaths() {
+  return CATEGORIES.map((category) => ({ params: { category } }));
+}
+
+const { category } = Astro.params;
+const cat = getCategoryBySlug(category);
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.category === category))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title={`${cat?.name ?? category} guides | ShipToCash`} description={cat?.description}>
+  <div class="max-w-6xl mx-auto px-4 pt-10">
+    <nav class="flex items-center gap-2 text-sm text-ink-500 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-brand-600">Home</a>
+      <span>/</span>
+      <span class="text-ink-700">{cat?.name ?? category}</span>
+    </nav>
+
+    <h1 class="text-3xl font-bold text-ink-900">{cat?.name ?? category}</h1>
+    <p class="mt-3 mb-10 max-w-2xl text-ink-600">{cat?.description}</p>
+
+    {posts.length === 0 ? (
+      <p class="text-ink-500">Guides are on the way — check back soon.</p>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => <ArticleCard post={post} />)}
+      </div>
+    )}
+  </div>
+</BaseLayout>

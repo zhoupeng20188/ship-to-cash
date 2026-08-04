@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title="Contact | ShipToCash">
+  <div class="max-w-3xl mx-auto px-4 pt-10">
+    <h1 class="text-3xl font-bold text-ink-900 mb-8">Contact</h1>
+    <div class="prose">
+      <p>
+        Questions, corrections, or a topic you'd like us to cover?
+        The fastest way to reach me is on
+        <a
+          href={SITE.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-brand-600 hover:text-brand-700 underline">GitHub</a>.
+      </p>
+      <p>
+        Found an outdated step in one of our guides? Tools change fast —
+        letting us know helps every reader after you.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

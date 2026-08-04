@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout
+  title="About | ShipToCash"
+  description="Peng Zhou writes ShipToCash — practical guides that take vibe coders from localhost to a live, earning app."
+>
+  <div class="max-w-3xl mx-auto px-4 pt-10">
+    <h1 class="text-3xl font-bold text-ink-900 mb-8">About ShipToCash</h1>
+
+    <div class="prose">
+      <div class="flex items-start gap-6 not-prose mb-8">
+        <img
+          src={SITE.avatar}
+          alt={`${SITE.author}, founder of ShipToCash`}
+          width="112"
+          height="112"
+          loading="lazy"
+          class="rounded-full shadow-md flex-shrink-0"
+          style="width: 112px; height: 112px;"
+        />
+        <div class="flex-1">
+          <p class="text-lg font-semibold text-ink-900 mb-1">{SITE.author}</p>
+          <p class="text-sm text-ink-500 mb-3">Vibe coder &middot; Founder of ShipToCash</p>
+        </div>
+      </div>
+
+      <p>
+        Hi, I'm Peng Zhou. I build small software products, and I write about the
+        unglamorous part nobody teaches you: getting an app actually <em>deployed</em>,
+        taking real money from real users, and not getting into legal trouble doing it.
+      </p>
+      <p>
+        I ship on Cloudflare Pages with auto-deploy from GitHub — it's the setup I use for
+        everything. A big part of what I write about is the gap Stripe doesn't cover: how do you
+        actually get paid when Stripe won't open an account in your country? I dig into the
+        workarounds — Ko-fi, PayPal, Paddle — and the tax and payout trade-offs nobody explains
+        up front. The goal is the same for every guide here: take you from "it runs on my laptop"
+        to "strangers are paying me for this."
+      </p>
+      <p>
+        Every guide here is something I've actually done, on the current version of the tool.
+        If a step is missing a screenshot, it's because I forgot to take one — not because I'm
+        hand-waving the hard part.
+      </p>
+      <p>
+        I also write about AI tools over at
+        <a
+          href="https://aikitguides.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-brand-600 hover:text-brand-700 underline">AI Kit Guides</a>
+        — same person, different lane. If you're still picking the tools themselves, that's a
+        good place to start.
+      </p>
+
+      <h2>What you'll find here</h2>
+      <ul>
+        <li><strong>Deploy</strong> — hosting, domains, HTTPS, databases</li>
+        <li><strong>Payments</strong> — Stripe, Paddle, Lemon Squeezy, taxes (and what to do when Stripe says no)</li>
+        <li><strong>Monetize</strong> — ads, subscriptions, pricing</li>
+        <li><strong>Legal</strong> — privacy policies, GDPR, terms</li>
+      </ul>
+
+      <h2>Get in touch</h2>
+      <p>
+        Found a broken step? Built something with one of these guides? I'd love to hear about it.
+        The fastest way to reach me is on
+        <a
+          href={SITE.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-brand-600 hover:text-brand-700 underline">GitHub</a>,
+        or through the <a href="/contact/" class="text-brand-600 hover:text-brand-700 underline">contact page</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

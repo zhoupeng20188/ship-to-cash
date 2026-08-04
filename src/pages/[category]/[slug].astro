@@ -1,0 +1,85 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
+import AuthorBio from '../../components/AuthorBio.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { category: post.data.category, slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const wordCount = post.body?.split(/\s+/).filter(Boolean).length ?? 0;
+const readingMinutes = Math.max(1, Math.round(wordCount / 200));
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const sameCategory = allPosts
+  .filter((p) => p.id !== post.id && p.data.category === post.data.category)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const relatedPosts = [...sameCategory];
+if (relatedPosts.length < 3) {
+  const fillers = allPosts
+    .filter((p) => p.id !== post.id && p.data.category !== post.data.category)
+    .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+    .slice(0, 3 - relatedPosts.length);
+  relatedPosts.push(...fillers);
+}
+
+const faq = post.data.faq ?? [];
+---
+
+<PostLayout
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  updatedDate={post.data.updatedDate}
+  difficulty={post.data.difficulty}
+  category={post.data.category}
+  wordCount={wordCount}
+  readingMinutes={readingMinutes}
+  headings={headings}
+  image={post.data.image ?? `/og-${post.id}.jpg`}
+>
+  <Content />
+
+  <Fragment slot="after">
+    {faq.length > 0 && (
+      <section class="mt-12 pt-8 border-t border-ink-200">
+        <h2 class="text-2xl font-bold text-ink-900 mb-6">Frequently Asked Questions</h2>
+        <div class="space-y-6">
+          {faq.map((item) => (
+            <div>
+              <h3 class="text-lg font-semibold text-ink-900 mb-2">{item.question}</h3>
+              <p class="text-ink-600 leading-relaxed">{item.answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <AuthorBio />
+
+    <RelatedPosts posts={relatedPosts} currentId={post.id} />
+
+    {faq.length > 0 && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faq.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        })}
+      />
+    )}
+  </Fragment>
+</PostLayout>

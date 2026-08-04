@@ -1,0 +1,54 @@
+---
+import { SITE, CATEGORIES } from "../config/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-brand-900 text-[#cbd5e1] mt-20">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <a href="/" class="flex items-center gap-2 font-bold text-lg text-white mb-3">
+          <svg class="w-7 h-7" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="#10b981"/>
+            <path d="M8 20L16 6L24 20H18V26H14V20H8Z" fill="white"/>
+          </svg>
+          {SITE.name}
+        </a>
+        <p class="text-sm leading-relaxed max-w-md">{SITE.description}</p>
+      </div>
+
+      <div>
+        <h3 class="text-white font-semibold text-sm mb-3">Guides</h3>
+        <ul class="space-y-2 text-sm">
+          {CATEGORIES.map((cat) => (
+            <li>
+              <a href={`/${cat.slug}/`} class="hover:text-brand-400 transition-colors">
+                {cat.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-white font-semibold text-sm mb-3">Site</h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/about/" class="hover:text-brand-400 transition-colors">About</a></li>
+          <li><a href="/contact/" class="hover:text-brand-400 transition-colors">Contact</a></li>
+          <li><a href="/privacy/" class="hover:text-brand-400 transition-colors">Privacy Policy</a></li>
+          <li><a href="/rss.xml" class="hover:text-brand-400 transition-colors">RSS Feed</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-[#1e293b] mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-[#94a3b8]">
+        &copy; {year} {SITE.name}. All rights reserved.
+      </p>
+      <p class="text-xs text-[#64748b]">
+        Built with Astro &amp; Tailwind CSS.
+      </p>
+    </div>
+  </div>
+</footer>

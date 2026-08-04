@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../config/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout
+  title="All Guides"
+  description="Browse every ShipToCash guide: deploy your app, set up payments, handle the legal stuff, and turn your project into income."
+>
+  <div class="max-w-6xl mx-auto px-4 py-12">
+    <header class="mb-10 text-center">
+      <h1 class="text-4xl font-extrabold text-ink-900 mb-3">All Guides</h1>
+      <p class="text-lg text-ink-600 max-w-2xl mx-auto">
+        Step-by-step guides for vibe coders — new articles published every week.
+      </p>
+    </header>
+
+    <!-- Category filter pills -->
+    <div class="flex flex-wrap items-center justify-center gap-2 mb-10">
+      <a
+        href="/blog/"
+        class="px-4 py-1.5 rounded-full text-sm font-medium bg-brand-600 text-white"
+      >
+        All
+      </a>
+      {CATEGORIES.map((cat) => (
+        <a
+          href={`/${cat.slug}/`}
+          class="px-4 py-1.5 rounded-full text-sm font-medium bg-ink-100 text-ink-600 hover:bg-brand-50 hover:text-brand-700 transition-colors dark:hover:bg-brand-900 dark:hover:text-brand-200"
+        >
+          {cat.name}
+        </a>
+      ))}
+    </div>
+
+    <!-- Article Grid -->
+    {posts.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-20 text-ink-400">
+        <p class="text-lg">No guides yet. Check back soon!</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>

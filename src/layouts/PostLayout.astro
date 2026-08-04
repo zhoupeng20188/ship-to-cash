@@ -1,0 +1,94 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import DifficultyTag from '../components/DifficultyTag.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import { SITE, getCategoryBySlug } from '../config/site';
+
+interface TocItem {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  difficulty: 'beginner' | 'intermediate';
+  category: string;
+  wordCount: number;
+  readingMinutes: number;
+  headings?: TocItem[];
+  image?: string;
+}
+
+const { title, description, pubDate, updatedDate, difficulty, category, wordCount, readingMinutes, headings = [], image } = Astro.props;
+const cat = getCategoryBySlug(category);
+
+const formattedDate = pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const formattedUpdated = updatedDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title={`${title} | ShipToCash`} description={description} image={image} type="article">
+  <div class="max-w-3xl lg:max-w-6xl mx-auto px-4 pt-8">
+    <nav class="flex items-center gap-2 text-sm text-ink-500 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-brand-600">Home</a>
+      <span>/</span>
+      <a href={`/${category}/`} class="hover:text-brand-600">{cat?.name ?? category}</a>
+    </nav>
+
+    <article>
+      <header class="mb-8">
+        <div class="flex items-center gap-2 mb-4">
+          <a
+            href={`/${category}/`}
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-50 text-brand-700 dark:bg-brand-900 dark:text-brand-200"
+          >
+            {cat?.name ?? category}
+          </a>
+          <DifficultyTag level={difficulty} />
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-ink-900 leading-tight">{title}</h1>
+        <p class="mt-4 text-lg text-ink-600 leading-relaxed">{description}</p>
+        <div class="mt-6 flex items-center gap-3 text-sm text-ink-500">
+          <img
+            src={SITE.avatar}
+            alt={SITE.author}
+            width="32"
+            height="32"
+            loading="lazy"
+            decoding="async"
+            class="rounded-full w-8 h-8 object-cover"
+          />
+          <span class="font-medium text-ink-700">{SITE.author}</span>
+          <span>&middot;</span>
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+          {updatedDate && (
+            <>
+              <span>&middot;</span>
+              <span class="text-ink-400">Updated {formattedUpdated}</span>
+            </>
+          )}
+          <span>&middot;</span>
+          <span>{wordCount.toLocaleString('en-US')} words</span>
+          <span>&middot;</span>
+          <span>{readingMinutes} min read</span>
+        </div>
+      </header>
+
+      <div class="flex gap-8">
+        <div class="prose flex-1 min-w-0">
+          <slot />
+        </div>
+
+        <div class="hidden lg:block w-64 flex-shrink-0">
+          <div class="sticky top-24">
+            <TableOfContents headings={headings} />
+          </div>
+        </div>
+      </div>
+      <slot name="after" />
+    </article>
+  </div>
+</BaseLayout>
