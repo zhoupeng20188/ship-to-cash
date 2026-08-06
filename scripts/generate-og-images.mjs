@@ -20,6 +20,7 @@ const ICON_KEYWORDS = [
   ["cloudflare", "siCloudflare"],
   ["vercel", "siVercel"],
   ["netlify", "siNetlify"],
+  ["namecheap", "siNamecheap"],
   ["stripe", "siStripe"],
   ["paddle", "siPaddle"],
   ["lemon squeezy", "siLemonsqueezy"],
