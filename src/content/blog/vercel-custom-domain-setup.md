@@ -2,6 +2,7 @@
 title: "Vercel Custom Domain Setup 2026: Namecheap & Cloudflare in 10 Minutes"
 description: "Vercel custom domain setup for Namecheap & Cloudflare: the exact DNS records (A + CNAME), auto SSL, www vs apex, and the mistakes that break verification."
 pubDate: 2026-08-06
+updatedDate: 2026-08-10
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -68,6 +69,12 @@ In your Cloudflare dashboard, select the domain, then go to **DNS → Records** 
 Now the Cloudflare-specific gotcha: **the proxy toggle**. Each record has an orange-cloud "Proxied" option, on by default. Turn it off — you want **DNS only** (grey cloud) for both records right now.
 
 This isn't superstition. Vercel's own docs say a proxied record sits between public DNS and the A record Vercel expects, which blocks both domain verification and the SSL certificate challenge. People who leave the orange cloud on end up stuck on "Failed to generate cert" in the Vercel dashboard. Once Vercel verifies the domain and issues the certificate, you can flip the proxy back on if you want Cloudflare's caching and WAF in front — but leave it off until then.
+
+## Alternative: using Vercel's nameservers
+
+Instead of adding A/CNAME records at your registrar, you can hand your whole DNS over to Vercel: at your registrar, change the domain's nameservers to `ns1.vercel-dns.com` and `ns2.vercel-dns.com`, and Vercel manages every record for you.
+
+I don't recommend this for a first domain. Nameserver changes propagate more slowly than record edits, and once you switch, your registrar's DNS screen stops working — all future records (email, verification TXT, subdomains) must be added in Vercel's dashboard instead. The A + CNAME approach above keeps your DNS where the rest of your stuff lives. The nameserver route is really for wildcard domains or people who want everything inside Vercel.
 
 ## Step 3: Verification and SSL
 

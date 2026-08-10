@@ -2,6 +2,7 @@
 title: "How to Deploy Your First App to Vercel (No DevOps Experience Needed)"
 description: "You built an app with AI. Here's how to get it off your laptop and onto the internet with Vercel — step by step, no prior deployment experience required."
 pubDate: 2026-08-04
+updatedDate: 2026-08-10
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -90,6 +91,20 @@ This is the part that makes it worth it:
 - **Pull requests get preview URLs.** Work in a branch, and each PR deploys to its own temporary URL for testing.
 - **HTTPS is automatic.** Vercel provisions and renews the certificate; you never touch it.
 - **Rollbacks are one click.** Deployed something broken? **Deployments → ⋯ → Promote** an older deployment.
+
+## How to redeploy your app (without pushing code)
+
+Pushing to `main` redeploys automatically — but sometimes you need to rebuild the *same* code: you added environment variables, a build flaked out halfway, or you just want a clean slate.
+
+Go to your project's **Deployments** tab, find the latest deployment, click **⋯ → Redeploy**. One dialog appears with a single meaningful choice: **"Use existing Build Cache."**
+
+- **Checked (default):** faster, reuses cached dependencies and build artifacts. Fine for picking up new env vars.
+- **Unchecked:** a full clean build. Choose this if you changed dependencies, or a previous build left something weird in the cache and you're getting errors that make no sense.
+
+Two things beginners get wrong here:
+
+1. **Redeploy rebuilds the same commit.** It does not pull your newest local code — if you want new changes live, push them.
+2. **Redeploy ≠ rollback.** Redeploy rebuilds the current version; to go *back* to an older working version, use **⋯ → Promote** on that older deployment instead.
 
 ## Common first-deploy errors
 
