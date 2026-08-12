@@ -11,7 +11,7 @@
 | 2 | Vercel vs Netlify vs Cloudflare Pages: Which Free Host for Your First App? | vercel vs netlify vs cloudflare pages | beginner |
 | 3 | How to Connect a Custom Domain to Vercel (Namecheap & Cloudflare) | vercel custom domain setup | beginner |
 | 4 | How to Buy a Domain and Set Up DNS for the First Time | how to set up dns for domain | beginner |
-| 5 | What Is HTTPS and Why Your Site Needs It (Free SSL Setup) | free ssl certificate setup | beginner |
+| 5 | Do I Need to Buy an SSL Certificate? No — and Here's Why (2026) | do i need to buy an ssl certificate（原 free ssl certificate setup 竞争过强，SERP 检查后换长尾） | beginner |
 | 6 | Environment Variables: Where Your API Keys Should Live | environment variables nextjs vercel | beginner |
 | 7 | Supabase vs Neon vs PlanetScale: Picking Your First Database | supabase vs neon | intermediate |
 | 8 | How to Add a Database to Your Deployed App (Supabase Step by Step) | connect supabase to nextjs | intermediate |
