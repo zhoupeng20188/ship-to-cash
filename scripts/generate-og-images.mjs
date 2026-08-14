@@ -84,7 +84,8 @@ function parseFrontmatter(file) {
   const fm = match[1];
   const title = fm.match(/^title:\s*"(.+?)"/m)?.[1];
   const category = fm.match(/^category:\s*(\w+)/m)?.[1];
-  return title ? { title, category } : null;
+  const ogIcon = fm.match(/^ogIcon:\s*(\w+)/m)?.[1];
+  return title ? { title, category, ogIcon } : null;
 }
 
 function escapeXml(str) {
@@ -108,7 +109,8 @@ function detectIcons(title, category) {
 }
 
 // 标题按宽度断行：优先 2 行大字，超长则 3 行小字，仍超出则截断
-function wrapTitle(title) {
+// wide = 无图标时用更宽的版式
+function wrapTitle(title, wide = false) {
   const wrap = (maxChars, maxLines) => {
     const words = title.split(" ");
     const lines = [""];
@@ -123,15 +125,15 @@ function wrapTitle(title) {
     }
     return lines.filter(Boolean);
   };
-  const twoLines = wrap(20, 2);
-  if (twoLines) return { lines: twoLines, fontSize: 62, lineHeight: 76, startY: 310 };
-  const threeLines = wrap(25, 3);
-  if (threeLines) return { lines: threeLines, fontSize: 48, lineHeight: 62, startY: 275 };
+  const twoLines = wrap(wide ? 24 : 20, 2);
+  if (twoLines) return { lines: twoLines, fontSize: wide ? 66 : 62, lineHeight: wide ? 80 : 76, startY: 310 };
+  const threeLines = wrap(wide ? 30 : 25, 3);
+  if (threeLines) return { lines: threeLines, fontSize: 50, lineHeight: 64, startY: wide ? 285 : 275 };
   // 极端超长：三行截断加省略号
-  const truncated = wrap(25, 4);
+  const truncated = wrap(wide ? 30 : 25, 4);
   const lines = truncated.slice(0, 3);
   lines[2] = lines[2].replace(/:?$/, "…");
-  return { lines, fontSize: 48, lineHeight: 62, startY: 275 };
+  return { lines, fontSize: 50, lineHeight: 64, startY: wide ? 285 : 275 };
 }
 
 function iconBadge({ x, y, s }, icon) {
@@ -151,8 +153,8 @@ function iconBadge({ x, y, s }, icon) {
 }
 
 const template = ({ kicker, title, footer, icons }) => {
-  const { lines, fontSize, lineHeight, startY } = wrapTitle(title);
-  const layout = BADGE_LAYOUTS[Math.min(icons.length, 3)];
+  const { lines, fontSize, lineHeight, startY } = wrapTitle(title, icons.length === 0);
+  const layout = BADGE_LAYOUTS[Math.min(icons.length, 3)] ?? [];
   return `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -226,7 +228,7 @@ for (const file of files) {
       kicker: CATEGORY_LABELS[fm.category] ?? "Guide",
       title: fm.title,
       footer: "shiptocash.com",
-      icons: detectIcons(fm.title, fm.category),
+      icons: fm.ogIcon === "none" ? [] : detectIcons(fm.title, fm.category),
     }),
     `og-${slug}`
   );

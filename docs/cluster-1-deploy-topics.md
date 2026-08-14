@@ -44,3 +44,10 @@
 - 文内互链：报错类文章链回核心漏斗文章，漏斗文章互相串联
 - frontmatter 复用 `src/content/blog/deploy-first-app-vercel.md` 的格式
 - 发布节奏：每周 2–4 篇，先写完 A 组再写 B 组
+
+## GSC 发现的清单外候选词
+
+| 词 | 首次出现 | 状态 |
+|---|---|---|
+| how to redeploy vercel app | 2026-08-10 | 已作为小节加入文章 1（2026-08-10），观察排名；曝光涨则拆独立文 |
+| transfer domain to vercel | 2026-08-13 | 待写：How to Transfer a Domain to Vercel (and Whether You Should)，FAQ 可复用文章 3 答案 |
