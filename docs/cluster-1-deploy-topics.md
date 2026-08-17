@@ -50,4 +50,4 @@
 | 词 | 首次出现 | 状态 |
 |---|---|---|
 | how to redeploy vercel app | 2026-08-10 | 已作为小节加入文章 1（2026-08-10），观察排名；曝光涨则拆独立文 |
-| transfer domain to vercel | 2026-08-13 | 待写：How to Transfer a Domain to Vercel (and Whether You Should)，FAQ 可复用文章 3 答案 |
+| transfer domain to vercel | 2026-08-13 | ✅ 已发布：`transfer-domain-to-vercel.md`（2026-08-17），角度"该不该转移 vs 只改 DNS"，链 #1/#3 |
