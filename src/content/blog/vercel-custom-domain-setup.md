@@ -29,7 +29,7 @@ If you haven't deployed yet, do that first: [my 15-minute Vercel deploy guide](/
 - A domain you own, with access to its DNS settings
 - About 10 minutes, plus propagation time
 
-One thing to know before you start: you're not moving your domain anywhere. It stays at your registrar. You're just telling the internet "when someone asks for this name, send them to Vercel."
+One thing to know before you start: you're not moving your domain anywhere. It stays at your registrar. You're just telling the internet "when someone asks for this name, send them to Vercel." If what you actually want is to move the domain itself into Vercel's registrar, that's a different job — here's [when transferring a domain to Vercel](/deploy/transfer-domain-to-vercel/) is worth the hassle (spoiler: rarely).
 
 ## Step 1: Add the domain in Vercel
 
@@ -100,4 +100,4 @@ In **Settings → Domains**, Vercel lets you set a redirect from one to the othe
 
 ## Next steps
 
-Domain connected, SSL green padlock, canonical URL picked — your app now looks like a real product. If you're wondering why that padlock matters beyond appearances (and what HTTPS actually does), that's exactly what the next guide covers. And if this DNS stuff felt like magic incantations, the upcoming DNS-for-beginners walkthrough will make records actually make sense.
+Domain connected, SSL green padlock, canonical URL picked — your app now looks like a real product. If you're wondering why that padlock matters beyond appearances (and whether you'd ever need to buy a certificate), I answered that in [do you need to buy an SSL certificate?](/deploy/do-i-need-to-buy-ssl-certificate/) — short version: no. And if this DNS stuff felt like magic incantations, my [beginner's guide to buying a domain and setting up DNS](/deploy/buy-domain-set-up-dns/) makes the records actually make sense.

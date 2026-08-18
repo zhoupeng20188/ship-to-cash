@@ -98,4 +98,4 @@ And don't agonize. All three deploy from the same Git repo, so switching later i
 
 ## Next steps
 
-Picked Vercel? Follow the [15-minute deploy guide](/deploy/deploy-first-app-vercel/). Picked Cloudflare Pages? The flow is nearly identical — connect GitHub, set build command to `npm run build`, output directory `dist`, done. Either way, next up is connecting a custom domain.
+Picked Vercel? Follow the [15-minute deploy guide](/deploy/deploy-first-app-vercel/). Picked Cloudflare Pages? The flow is nearly identical — connect GitHub, set build command to `npm run build`, output directory `dist`, done. Either way, next up is [setting up a custom domain on Vercel](/deploy/vercel-custom-domain-setup/) — and no, [transferring your domain to Vercel](/deploy/transfer-domain-to-vercel/) isn't required; pointing two DNS records at it is enough.

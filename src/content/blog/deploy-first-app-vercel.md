@@ -116,6 +116,8 @@ Two things beginners get wrong here:
 | `npm ERR! peer dep` during build | Dependency conflict your local install tolerated | Run `npm install` locally, commit the updated `package-lock.json`, push |
 | Deploy hangs or times out | A dev-server command ended up in your build script | Check the framework preset — build must produce output and exit |
 
+That first error, `Module not found`, deserves special mention — it's the one that works locally and only breaks on Vercel, and the fix is usually a single character. I broke down [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/) (file casing, mostly) in its own guide.
+
 Hit something not in this table? Copy the exact error from the Vercel build log and paste it into your AI tool along with "my Vercel deploy fails with this error." Deploy errors are one of the things AI debugs best, because build logs are extremely literal.
 
 ## What the free tier actually covers
