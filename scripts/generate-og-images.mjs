@@ -99,9 +99,12 @@ function detectIcons(title, category) {
     const icon = brandIcons[iconName];
     if (!icon || !lower.includes(keyword)) continue;
     if (found.some((f) => f.path === icon.path)) continue;
-    found.push({ path: icon.path, color: `#${icon.hex}`, stroke: false });
+    found.push({ path: icon.path, color: `#${icon.hex}`, stroke: false, isVercel: iconName === "siVercel" });
     if (found.length === 3) break;
   }
+  // Vercel 的黑色三角单独出现显得生硬（大多数标题都含 "vercel"），
+  // 只在与其他品牌图标搭配（对比类文章）时保留；单独命中视为无合适图标
+  if (found.length && found.every((f) => f.isVercel)) return [];
   if (found.length === 0) {
     found.push(CATEGORY_ICONS[category] ?? CATEGORY_ICONS.deploy);
   }
