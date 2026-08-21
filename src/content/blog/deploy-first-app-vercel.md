@@ -2,7 +2,7 @@
 title: "How to Deploy Your First App to Vercel (No DevOps Experience Needed)"
 description: "You built an app with AI. Here's how to get it off your laptop and onto the internet with Vercel — step by step, no prior deployment experience required."
 pubDate: 2026-08-04
-updatedDate: 2026-08-10
+updatedDate: 2026-08-21
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -118,7 +118,7 @@ Two things beginners get wrong here:
 
 That first error, `Module not found`, deserves special mention — it's the one that works locally and only breaks on Vercel, and the fix is usually a single character. I broke down [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/) (file casing, mostly) in its own guide.
 
-Hit something not in this table? Copy the exact error from the Vercel build log and paste it into your AI tool along with "my Vercel deploy fails with this error." Deploy errors are one of the things AI debugs best, because build logs are extremely literal.
+Hit something not in this table? If the build itself failed, I keep a running list of [the Vercel build failures I hit most often](/deploy/vercel-build-failed/) and what fixed each one. Otherwise, copy the exact error from the Vercel build log and paste it into your AI tool along with "my Vercel deploy fails with this error." Deploy errors are one of the things AI debugs best, because build logs are extremely literal.
 
 ## What the free tier actually covers
 
@@ -128,4 +128,4 @@ The two restrictions worth knowing: Hobby is licensed for **non-commercial use**
 
 ## Next steps
 
-Your `.vercel.app` subdomain works, but it screams "weekend project." A custom domain costs about $10 a year and takes 20 minutes to connect — that guide is next. Then set up analytics, because watching your first real visitor arrive is the moment this stops being a toy.
+Your `.vercel.app` subdomain works, but it screams "weekend project." A custom domain costs about $10 a year and takes 20 minutes to connect — my [Vercel custom domain setup guide](/deploy/vercel-custom-domain-setup/) walks through it with Namecheap and Cloudflare. Don't have a domain yet? Start with [how to buy one and set up DNS](/deploy/buy-domain-set-up-dns/). (And no, you don't need to [transfer your domain to Vercel](/deploy/transfer-domain-to-vercel/) — pointing it is enough.) Then set up analytics, because watching your first real visitor arrive is the moment this stops being a toy.

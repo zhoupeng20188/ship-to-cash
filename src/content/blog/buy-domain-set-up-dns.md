@@ -2,6 +2,7 @@
 title: "How to Buy a Domain and Set Up DNS for the First Time (2026)"
 description: "How to buy a domain and set up DNS for the first time: fair .com prices in 2026, the DNS records that actually matter, and the beginner mistakes to avoid."
 pubDate: 2026-08-10
+updatedDate: 2026-08-21
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -75,6 +76,8 @@ So there are two completely different ways to point a domain at a host:
 2. **Change the nameservers** to your host's DNS (e.g., `ns1.vercel-dns.com`), and manage records there
 
 Both work. Option 1 gives you more flexibility; option 2 is less to think about. What you should never do is half of each — if you change nameservers to Vercel, your registrar's DNS screen becomes dead weight and edits there do nothing.
+
+One thing neither option involves: *moving* your domain. Pointing DNS at a host is not the same as transferring the domain's registration to that host — a distinction that trips up almost everyone the first time. If you're on Vercel and wondering whether you need to transfer, [you almost certainly don't](/deploy/transfer-domain-to-vercel/).
 
 ## Part 3: Pointing the domain at your host
 
