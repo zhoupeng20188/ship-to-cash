@@ -129,3 +129,5 @@ The two restrictions worth knowing: Hobby is licensed for **non-commercial use**
 ## Next steps
 
 Your `.vercel.app` subdomain works, but it screams "weekend project." A custom domain costs about $10 a year and takes 20 minutes to connect — my [Vercel custom domain setup guide](/deploy/vercel-custom-domain-setup/) walks through it with Namecheap and Cloudflare. Don't have a domain yet? Start with [how to buy one and set up DNS](/deploy/buy-domain-set-up-dns/). (And no, you don't need to [transfer your domain to Vercel](/deploy/transfer-domain-to-vercel/) — pointing it is enough.) Then set up analytics, because watching your first real visitor arrive is the moment this stops being a toy.
+
+And when the app is live and you're ready to charge for it: before you open a Stripe account, read [merchant of record vs payment processor](/payments/merchant-of-record-vs-payment-processor/) — the difference decides who files your sales tax, and picking wrong is expensive.
