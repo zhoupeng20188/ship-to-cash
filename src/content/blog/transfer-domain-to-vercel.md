@@ -16,6 +16,8 @@ faq:
     answer: "It can. If your email runs on MX records at your old registrar (Google Workspace, Zoho, a forwarded inbox), those records don't automatically follow the domain to Vercel. You must re-add them after the transfer, or your mail stops. DNS-only pointing avoids this risk entirely."
   - question: "Is Vercel a good domain registrar?"
     answer: "It's convenient if Vercel is already your whole stack, but as a registrar it's thinner than Cloudflare or even Namecheap — fewer TLDs, weaker DNS tooling, and less competitive renewal pricing. I keep my domains at Cloudflare and point DNS at Vercel. Best of both."
+  - question: "How do I transfer a domain to Vercel step by step?"
+    answer: "Unlock the domain at your current registrar, get the EPP/auth code, paste it into Vercel's Domains tab under Transfer, approve the confirmation emails from both registrars, then wait 5–7 days. After it completes, re-add any MX and TXT records the transfer dropped — otherwise your email or verification can break."
 ---
 
 You just deployed your app. Vercel's dashboard is nudging you: **"Add your domain."** So you go looking for a *Transfer* button, assuming you need to move the domain into Vercel.
@@ -73,6 +75,31 @@ Three situations where it's actually the right call:
 
 **3. You bought the domain *through* Vercel originally.** Then it's already there; nothing to transfer. This guide is for domains bought elsewhere.
 
+## If you still want to transfer: the steps
+
+Fine. Here's the real flow — slower and fussier than pointing DNS. If you're not sure you actually need this, read the DNS-only section below first.
+
+### Step 1: Unlock the domain at your current registrar
+Look for "Registrar lock" or "Transfer lock" and disable it. Namecheap hides this under **Domain List → Manage → Sharing & Transfer**. Cloudflare has it under **Registration → Configuration**.
+
+### Step 2: Get the authorization (EPP) code
+This is the password that proves you own the domain. Namecheap emails it to you on request; Cloudflare shows it in the same transfer settings panel.
+
+### Step 3: Start the transfer in Vercel
+In Vercel, go to the Domains tab and choose Transfer. Enter the domain and paste the auth code. Vercel checks eligibility — if it's within the 60-day lock or has a recent contact edit, it'll reject you here.
+
+### Step 4: Approve the confirmation emails
+Both your old registrar and the registry send confirmation links. Ignore them and the transfer stalls. Click through within a few days.
+
+### Step 5: Wait 5–7 days
+You'll get a completion notice. Don't touch DNS during this window or you can reset the clock.
+
+### Step 6: Re-add anything the transfer dropped
+This is the part people forget. After the transfer:
+- Re-create your **MX records** if you have domain email.
+- Re-create any **TXT records** (SPF, DKIM, verification codes).
+- Double-check the A/CNAME still point at Vercel.
+
 ## When you should NOT transfer
 
 The default case. Specifically:
@@ -93,25 +120,6 @@ You're done here — this is covered step by step in [the custom domain setup gu
 3. Wait 5–30 min. Vercel issues the SSL cert automatically.
 
 No transfer, no waiting period, email keeps working.
-
-## If you still want to transfer: the steps
-
-Fine. Here's the real flow — slower and fussier than pointing DNS.
-
-**Step 1: Unlock the domain at your current registrar.** Look for "Registrar lock" or "Transfer lock" and disable it. Namecheap hides this under **Domain List → Manage → Sharing & Transfer**. Cloudflare has it under **Registration → Configuration**.
-
-**Step 2: Get the authorization (EPP) code.** This is the password that proves you own the domain. Namecheap emails it to you on request; Cloudflare shows it in the same transfer settings panel.
-
-**Step 3: In Vercel, go to the Domains tab and choose Transfer.** Enter the domain and paste the auth code. Vercel checks eligibility — if it's within the 60-day lock or has a recent contact edit, it'll reject you here.
-
-**Step 4: Approve the confirmation emails.** Both your old registrar and the registry send confirmation links. Ignore them and the transfer stalls. Click through within a few days.
-
-**Step 5: Wait 5–7 days.** You'll get a completion notice. Don't touch DNS during this window or you can reset the clock.
-
-**Step 6: Re-add anything the transfer dropped.** This is the part people forget. After the transfer:
-- Re-create your **MX records** if you have domain email.
-- Re-create any **TXT records** (SPF, DKIM, verification codes).
-- Double-check the A/CNAME still point at Vercel.
 
 ## After a transfer: what changes
 

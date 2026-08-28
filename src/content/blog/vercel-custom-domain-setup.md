@@ -1,5 +1,5 @@
 ---
-title: "Vercel Custom Domain Setup 2026: Namecheap & Cloudflare in 10 Minutes"
+title: "How to Set Up a Vercel Custom Domain (Namecheap & Cloudflare)"
 description: "Vercel custom domain setup for Namecheap & Cloudflare: the exact DNS records (A + CNAME), auto SSL, www vs apex, and the mistakes that break verification."
 pubDate: 2026-08-06
 updatedDate: 2026-08-10
@@ -15,6 +15,10 @@ faq:
     answer: "Not during setup. Vercel's docs say a proxied record blocks domain verification and the SSL certificate challenge. Set the record to DNS only (grey cloud), wait for Vercel to verify and issue the certificate, then you can re-enable the proxy if you want Cloudflare's features in front."
   - question: "Should I use www or the bare domain as my main URL?"
     answer: "Either works — pick one and redirect the other. Vercel nudges you toward www when you add an apex domain, and that's a fine default. What matters for SEO is choosing one canonical version so you don't split ranking signals between two URLs."
+  - question: "How do I add a custom domain to Vercel for free?"
+    answer: "Vercel does not charge for adding a custom domain on any plan — you only pay your registrar for the domain itself (about $10/year). In Settings → Domains, add your domain and www, then point two DNS records at Vercel. No paid add-on is required."
+  - question: "How long does Vercel custom domain setup take?"
+    answer: "The DNS record changes take 5–30 minutes to propagate with Namecheap or Cloudflare, and Vercel issues the SSL certificate automatically once it sees them. The official max is 48 hours, but in practice it's under an hour. If it's been longer, check for leftover parking records or a proxied Cloudflare record."
 ---
 
 Your app is live on a `*.vercel.app` subdomain, and now you want it on a real domain. Good call — nothing says "weekend toy" like a free subdomain, and a proper domain costs about $10 a year.
@@ -22,6 +26,14 @@ Your app is live on a `*.vercel.app` subdomain, and now you want it on a real do
 I did this for a Next.js side project I hosted on Vercel. The actual work is two DNS records and about 10 minutes of clicking; the waiting for DNS propagation is what pads it out. This guide covers the two registrars I see most often — Namecheap and Cloudflare — because their DNS screens are where people get lost.
 
 If you haven't deployed yet, do that first: [my 15-minute Vercel deploy guide](/deploy/deploy-first-app-vercel/) gets you from local folder to live URL. And if you bought a domain through Cloudflare and are wondering whether to just host there too, I [compared Vercel, Netlify, and Cloudflare Pages](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) after using all three.
+
+## What this guide covers
+
+- Adding a custom domain to Vercel (apex + www) in one sitting
+- The exact DNS records for **Namecheap** and **Cloudflare**
+- The Cloudflare proxy gotcha that silently blocks SSL
+- Apex vs www, and which one to set as canonical
+- The fastest fix when verification gets stuck
 
 ## What you need
 
@@ -45,6 +57,19 @@ Vercel now shows you the DNS records it expects:
 Older tutorials tell you to use `cname.vercel-dns.com`. That's outdated. Copy the exact CNAME value your dashboard shows, character for character.
 
 Leave this tab open. You'll come back to check verification.
+
+## Namecheap vs Cloudflare: the records at a glance
+
+Both registrars need the same two records — only the dashboard labels differ:
+
+| | Namecheap | Cloudflare |
+|---|---|---|
+| A record | Host `@`, Value `76.76.21.21` | Name `@`, IPv4 `76.76.21.21` |
+| CNAME (www) | Host `www`, your Vercel value | Name `www`, your Vercel value |
+| Proxy setting | n/a | Turn **off** (grey cloud) during setup |
+| Common mistake | Leftover parking records | Orange cloud left on |
+
+The CNAME value is unique to your project — copy it from the Vercel dashboard, don't type it by hand.
 
 ## Step 2a: DNS records on Namecheap
 

@@ -1,5 +1,5 @@
 ---
-title: "Vercel Build Failed? 5 Real Causes and How I Fixed Them"
+title: "Vercel Build Failed: 5 Real Causes and Exact Fixes"
 description: "Build works locally but Vercel says 'Build failed'? The 5 causes behind almost every red deployment — with the exact error text and fixes, from real build logs."
 pubDate: 2026-08-19
 category: deploy
@@ -14,6 +14,8 @@ faq:
     answer: "You can — set typescript.ignoreBuildErrors in next.config — and it's fine as a one-evening escape hatch. But it hides real breakage that will resurface at runtime. Fix the errors, or at least come back to them before your next feature."
   - question: "How do I retry a failed deployment?"
     answer: "Deployments tab → the latest deployment → ⋯ → Redeploy. Keep 'Use existing Build Cache' checked for a quick retry; uncheck it for a clean build if you suspect a stale cache. Redeploy rebuilds the same commit — it won't pick up new local changes until you push."
+  - question: "What does 'Build Failed' mean on Vercel?"
+    answer: "It means Vercel's build container could not finish compiling and packaging your app, so it never produced a deployable output. The cause is almost always one of five things: a dependency mismatch, a Node version gap, a TypeScript error, a wrong build/output setting, or a timeout. The exact reason is in the first red line of the build log — scroll up, not down."
 ---
 
 The first time I saw a red "Error" status on a Vercel deployment, I stared at the log for twenty minutes. The app built fine on my laptop. It built fine five minutes earlier. What changed?
@@ -31,6 +33,16 @@ The mistake everyone makes (me included, for those twenty minutes) is reading th
 **Scroll up to the first red line.** That's the real error. Everything after it is the build process falling over. Vercel keeps build logs indefinitely, so you can always come back to an old failure and re-read it — useful when the same error shows up a week later and you've forgotten the fix.
 
 Now, the five causes.
+
+Here's the quick map — match your log's first red line to the cause, then scroll to it:
+
+| Your log shows… | The cause | Which one |
+|---|---|---|
+| `ERESOLVE` / `command not found` | Dependencies differ from local | Cause 1 |
+| Node syntax error / cryptic crash | Node version mismatch | Cause 2 |
+| `Type error:` / `Cannot find module` | TypeScript error surfaces at build | Cause 3 |
+| `No Output Directory` / 404 after build | Wrong build command or output | Cause 4 |
+| `heap out of memory` / build times out | Out of time or memory | Cause 5 |
 
 ## 1. Dependencies install fine locally but break on Vercel
 
@@ -162,4 +174,4 @@ If both pass locally, your odds of a green first deployment go way up. It's the 
 
 ## Next steps
 
-Fix the build, and you're back to the fun part: the thing actually being online. If red deployments are becoming a pattern and your project is mostly static, it's worth knowing that [Cloudflare Pages and Vercel trade blows differently](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) — I run projects on both, and build behavior is one of the places they genuinely differ. And once the deploy is green, the next milestone is a custom domain, which is a 10-minute job when you're ready for it.
+Fix the build, and you're back to the fun part: the thing actually being online. If red deployments are becoming a pattern and your project is mostly static, it's worth knowing that [Cloudflare Pages and Vercel trade blows differently](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) — I run projects on both, and build behavior is one of the places they genuinely differ. And once the deploy is green, the next milestone is a custom domain — here's [how to point a domain at Vercel](/deploy/vercel-custom-domain-setup/) when you're ready, or [whether transferring the domain is even worth it](/deploy/transfer-domain-to-vercel/).
