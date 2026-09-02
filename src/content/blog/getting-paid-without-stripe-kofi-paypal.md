@@ -51,7 +51,7 @@ That's what the 0–5% buys. Early on, it's a good trade.
 
 ## What it actually costs — and the default that quietly takes 5%
 
-Ko-fi has three tiers, and the middle one is the trap.
+Ko-fi has [three tiers](https://ko-fi.com/pricing), and the middle one is the trap.
 
 | Tier | Tips | Shop / memberships / commissions | Monthly cost |
 |---|---|---|---|
@@ -63,7 +63,7 @@ Read that middle row again. **Standard is the default for new creators, and it a
 
 If tips are your main income and you're under $240/month, staying on Free beats paying $12 for Gold. Opt out of Standard during setup, before the first payment lands.
 
-On top of Ko-fi's cut, PayPal takes its own. The standard commercial rate is roughly **2.9% + $0.30** on domestic transactions, and cross-border payments add roughly another 1–2% depending on where your buyer is. Rates vary by country, so check PayPal's merchant fees page for yours rather than trusting my number.
+On top of Ko-fi's cut, PayPal takes its own. The standard commercial rate is roughly **2.9% + $0.30** on domestic transactions, and cross-border payments add roughly another 1–2% depending on where your buyer is. Rates vary by country, so [check PayPal's merchant fees page](https://www.paypal.com/c2/webapps/mpp/merchant-fees?locale.x=zh_c2) for yours rather than trusting my number.
 
 Real numbers on a $10 tip:
 
@@ -76,7 +76,7 @@ Same tip, same buyer, same day. The difference is a checkbox nobody told you abo
 
 This is where I lost those eleven days, and it's the part no "how to get paid" guide covers — because most of them are written by people whose bank account is in the same currency they're paid in.
 
-PayPal will wire USD to a bank account in mainland China. Per PayPal's own China page: **$35 per withdrawal, flat, 3–7 business days.** Not 3.5% — thirty-five dollars whether you withdraw $50 or $5,000.
+PayPal will wire USD to a bank account in mainland China. Per [PayPal's own China fee page](https://www.paypal.com/c2/cgi-bin/?cmd=_fees-rate-about-outside&fli=true): **$35 per withdrawal, flat, 3–7 business days.** Not 3.5% — thirty-five dollars whether you withdraw $50 or $5,000.
 
 Run that math before you set anything up:
 
