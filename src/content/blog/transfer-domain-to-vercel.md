@@ -5,6 +5,7 @@ pubDate: 2026-08-17
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-transfer-domain-to-vercel.jpg
 faq:
   - question: "Do I need to transfer my domain to Vercel to use it?"
     answer: "No. You can keep the domain at your current registrar (Namecheap, Cloudflare, GoDaddy) and just point DNS records at Vercel. The domain stays where it is; only the DNS routing changes. Transferring is optional and only worth it if you want Vercel to be your registrar too."

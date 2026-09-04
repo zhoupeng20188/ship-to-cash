@@ -5,6 +5,7 @@ pubDate: 2026-08-26
 category: payments
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-stripe-not-available-in-my-country.jpg
 faq:
   - question: "Can I sign up for Stripe using a VPN?"
     answer: "No. Stripe's identity verification asks for ID, proof of address, and a bank account matching your stated country. A VPN changes your IP, not your passport. The mismatch tends to surface at verification or after your first payouts, and the usual outcome is a closed account with the balance frozen for an extended review. Not something to build a product on."

@@ -6,6 +6,7 @@ updatedDate: 2026-08-21
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-buy-domain-set-up-dns.jpg
 faq:
   - question: "How much should a .com domain cost?"
     answer: "Around $10-16 per year is the fair range in 2026. Cloudflare Registrar charges $10.46 flat (registration and renewal, no markup). Be suspicious of $1-4 first-year deals — Wix sells .com at $3.95 for year one, then renews at $21.35. Always check the renewal price before buying."

@@ -6,6 +6,7 @@ updatedDate: 2026-08-10
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-vercel-custom-domain-setup.jpg
 faq:
   - question: "Do I need to transfer my domain to Vercel?"
     answer: "No. You keep the domain at your registrar (Namecheap, Cloudflare, wherever) and just point two DNS records at Vercel. Transferring the domain itself is optional and only worth doing if you want to manage everything in one dashboard."

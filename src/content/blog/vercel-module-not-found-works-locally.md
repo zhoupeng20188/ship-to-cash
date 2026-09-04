@@ -5,6 +5,7 @@ pubDate: 2026-08-13
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-vercel-module-not-found-works-locally.jpg
 ogIcon: none
 faq:
   - question: "Why does my app build locally but fail on Vercel with module not found?"

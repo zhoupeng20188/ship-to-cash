@@ -5,6 +5,7 @@ pubDate: 2026-08-24
 category: payments
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-do-i-need-an-llc-to-sell-digital-products.jpg
 faq:
   - question: "Can I sell digital products without an LLC?"
     answer: "Yes. In the US you're a sole proprietor by default the moment you start selling — no registration required. You report the income on Schedule C of your personal tax return and pay self-employment tax (15.3%) on profit. Stripe, Paddle, Gumroad, and Lemon Squeezy all accept individual accounts, so no platform forces you to form a company first."

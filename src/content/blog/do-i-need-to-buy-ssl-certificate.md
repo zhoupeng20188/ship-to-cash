@@ -5,6 +5,7 @@ pubDate: 2026-08-12
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-do-i-need-to-buy-ssl-certificate.jpg
 faq:
   - question: "Is a free SSL certificate as secure as a paid one?"
     answer: "Yes. The encryption is identical — a free Let's Encrypt certificate and a $50 paid certificate use the same TLS protocols and the same browser trust. What paid certificates add is organization validation paperwork and a monetary warranty, not stronger encryption."

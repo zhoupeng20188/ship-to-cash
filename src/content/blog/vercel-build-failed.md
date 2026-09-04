@@ -5,6 +5,7 @@ pubDate: 2026-08-19
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-vercel-build-failed.jpg
 faq:
   - question: "Where do I find the logs for a failed Vercel build?"
     answer: "In your Vercel dashboard, open the project, click the Deployments tab, then click the failed deployment. The build log is the 'Building' section — scroll to the first red line, not the last. Vercel keeps build logs indefinitely, so you can go back to old failed deployments at any time."
@@ -23,6 +24,8 @@ The first time I saw a red "Error" status on a Vercel deployment, I stared at th
 That was my first deploy, and the lesson I learned — the one this guide is built on — is that Vercel build failures are almost never mysterious. Your laptop quietly forgives things that Vercel's Linux build container does not. Once you know the five things it's strict about, you can read any failed build log and usually know the fix within a minute.
 
 One thing before we start: if your error literally says `Module not found`, that's usually a file-casing problem, and it has its own guide — [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/). For everything else, read on.
+
+One more distinction worth making up front: if your homepage and other pages load fine but a **deep link 404s the instant you refresh it**, that is *not* a build failure — it's a client-side routing problem. Here's [how to fix 404s on refresh for Vercel, Netlify, and Cloudflare Pages](/deploy/client-side-routing-404-vercel-netlify-cloudflare/).
 
 ## First: read the log the right way
 

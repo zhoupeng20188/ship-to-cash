@@ -6,6 +6,7 @@ updatedDate: 2026-08-28
 category: deploy
 difficulty: intermediate
 author: "Peng Zhou"
+image: /og-vercel-custom-domain-ssl-not-working.jpg
 faq:
   - question: "Why is my Vercel custom domain showing 'not secure'?"
     answer: "Because Vercel can't issue the free SSL certificate until your DNS actually points at Vercel. Open the Domains tab in your project — if the domain says 'Invalid Configuration' or 'Pending', the A/CNAME records haven't propagated yet, or the CNAME value is wrong. Once DNS is correct, the cert usually appears within a few minutes."

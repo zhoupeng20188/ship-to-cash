@@ -5,6 +5,7 @@ pubDate: 2026-08-21
 category: payments
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-merchant-of-record-vs-payment-processor.jpg
 faq:
   - question: "Is Stripe a merchant of record?"
     answer: "No. Stripe is a payment processor — you remain the legal seller, and collecting, filing, and remitting sales tax or VAT is your problem. Stripe Tax can calculate the right amount at checkout, but you still register and file in each jurisdiction yourself. Merchant-of-record services like Paddle and Lemon Squeezy take that whole job off your plate."

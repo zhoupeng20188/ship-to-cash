@@ -5,6 +5,7 @@ pubDate: 2026-08-31
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-vercel-environment-variables.jpg
 faq:
   - question: "Do environment variables work immediately after I add them on Vercel?"
     answer: "No. Adding or changing a variable only affects new deployments, so you have to redeploy for the value to take effect. This is the number-one source of 'but I added the variable!' confusion. Open Deployments, click the ⋯ menu on the latest deployment, and choose Redeploy."

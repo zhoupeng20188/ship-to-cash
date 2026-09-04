@@ -5,6 +5,7 @@ pubDate: 2026-08-04
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-vercel-vs-netlify-vs-cloudflare-pages.jpg
 faq:
   - question: "Can I use Vercel's free tier for a commercial project?"
     answer: "No. The Hobby plan is licensed for non-commercial use only. If your app makes money (ads, subscriptions, sales), you need Vercel Pro at $20/month — or use Cloudflare Pages, which allows commercial use on the free plan."

@@ -6,6 +6,7 @@ updatedDate: 2026-08-21
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-deploy-first-app-vercel.jpg
 faq:
   - question: "Is Vercel free for personal projects?"
     answer: "Yes. The Hobby tier is free for non-commercial personal projects and includes automatic HTTPS, preview deployments, and 100 GB of bandwidth per month."
@@ -115,6 +116,8 @@ Two things beginners get wrong here:
 | Build succeeds but page is blank | Client-side JS error or wrong router `base` path | Open DevTools console on the live site — the error is there |
 | `npm ERR! peer dep` during build | Dependency conflict your local install tolerated | Run `npm install` locally, commit the updated `package-lock.json`, push |
 | Deploy hangs or times out | A dev-server command ended up in your build script | Check the framework preset — build must produce output and exit |
+
+> **Blank page, or 404 on refresh?** If the page renders but a **deep link 404s the moment you refresh it**, that's a client-side routing problem, not a render crash. See [how to fix 404s on refresh for Vercel, Netlify, and Cloudflare Pages](/deploy/client-side-routing-404-vercel-netlify-cloudflare/). The row above is for when the page never renders at all.
 
 That first error, `Module not found`, deserves special mention — it's the one that works locally and only breaks on Vercel, and the fix is usually a single character. I broke down [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/) (file casing, mostly) in its own guide.
 

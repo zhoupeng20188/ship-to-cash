@@ -5,6 +5,7 @@ pubDate: 2026-09-02
 category: payments
 difficulty: beginner
 author: "Peng Zhou"
+image: /og-getting-paid-without-stripe-kofi-paypal.jpg
 faq:
   - question: "Do I need Stripe to use Ko-fi?"
     answer: "No. Ko-fi requires you to connect either PayPal or Stripe, not both. If Stripe isn't available in your country, connect PayPal and you're done — Ko-fi never processes the payment itself, so it never needs to onboard you as a merchant."
