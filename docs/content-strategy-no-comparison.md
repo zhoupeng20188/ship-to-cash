@@ -62,6 +62,17 @@
 - 新文第 1 屏放上面的区分表，并内链到对应的已有文章，形成「症状 → 分流」枢纽。
 - 后续 CORS 文（#2）改框架：不再用「本地能跑线上不行」，改为「浏览器报错原文 → header 缺失 → 在 vercel.json / next.config.js / API route 里分别怎么加」。
 
+## 4.2 SERP 实测记录（2026-09-07 蓝海日，5 个候选）
+
+| 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|
+| cors error vercel production | Stack Overflow ×2 + Vercel Community + devhide + exchangetuts = **5/5 UGC/论坛** | 可打 | **P0，本轮最软**。注意 §4.1：改框架为「报错原文 → header 缺失 → 三处分别怎么加」，禁用「本地能跑线上不行」 |
+| lemon squeezy astro integration | Astro 官方文档 ×2（含中文镜像）+ LaunchFast 商业落地页 ×2 | 可打 | P0（affiliate）。无独立博客位，需靠一手踩坑出差异化 |
+| vercel google search console sitemap | whataboutcoding / syedomer.me / techgist.ng / marthakelly.com / wisemixmedia = **5/5 个人博客小站** | 可打 | P1。无 UGC，说明意图偏教程；竞争低但流量上限也低 |
+| vercel function timeout 504 | Vercel 官方 KB + Vercel examples + hivebook.wiki + flowql.com 小站 + Vercel Community | 边缘可打 | P1。官方占位 2/5，需做得比官方文档更「新手向」 |
+| connect neon postgres to vercel | Vercel Marketplace + Neon 官方文档 ×2 + Vercel 模板 + adhdecode 小站 = **4/5 厂商官方** | 暂缓 | **P2 放弃**，符合 §2「全是厂商内容营销页 → 放弃」 |
+| accept payments static site no backend | 实测搜索结果被中文/中国支付语境污染，无有效英文 SERP | 数据不足 | 词不精准，需换长尾再测 |
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |
