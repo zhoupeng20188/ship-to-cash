@@ -36,7 +36,7 @@
 |---|---|---|---|---|---|
 | 1 | 404 on Refresh: Fixing Client-Side Routing on Vercel, Netlify & Cloudflare Pages | deploy | spa 404 on refresh | 2×Stack Overflow | **P0** |
 | 2 | CORS Errors on Vercel: What `Access-Control-Allow-Origin` Means and Where to Add It | deploy | cors error vercel production | 论坛为主 | **P0**（换框架，见 §4.1） |
-| 3 | How to Add Lemon Squeezy Checkout to an Astro/Next.js Site | payments | lemon squeezy astro integration | 官方文档为主，博客位有空间 | **P0**（affiliate） |
+| 3 | ~~How to Add Lemon Squeezy Checkout to an Astro/Next.js Site~~ → **已发 2026-09-09**：Lemon Squeezy Checkout on an Astro Site (No Backend)（`lemon-squeezy-checkout-astro-static-site.md`） | payments | lemon squeezy astro integration | 官方文档为主，博客位有空间 | ✅ 已发 |
 | 4 | How to Submit Your Vercel Site to Google Search Console (and Submit a Sitemap) | deploy | vercel google search console sitemap | 官方 + 博客 | P1 |
 | 5 | How to Roll Back a Bad Deploy on Vercel in 30 Seconds | deploy | vercel rollback deployment | 官方文档 | P1 |
 | 6 | Vercel Serverless Function Timeout: Why It Works Locally and 504s in Production | deploy | vercel function timeout 504 | GitHub Issues 为主 | P1 |
@@ -72,6 +72,31 @@
 | vercel function timeout 504 | Vercel 官方 KB + Vercel examples + hivebook.wiki + flowql.com 小站 + Vercel Community | 边缘可打 | P1。官方占位 2/5，需做得比官方文档更「新手向」 |
 | connect neon postgres to vercel | Vercel Marketplace + Neon 官方文档 ×2 + Vercel 模板 + adhdecode 小站 = **4/5 厂商官方** | 暂缓 | **P2 放弃**，符合 §2「全是厂商内容营销页 → 放弃」 |
 | accept payments static site no backend | 实测搜索结果被中文/中国支付语境污染，无有效英文 SERP | 数据不足 | 词不精准，需换长尾再测 |
+
+## 4.3 SERP 实测记录（2026-09-09 选题日，6 个候选）
+
+| 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|
+| lemon squeezy astro integration（复测） | Astro 官方文档 ×2（EN+中文镜像）+ GitHub 源码 + LaunchFast 商业页 | 可打 | **P0 已发 #3**。前 5 无独立博主一手教程，靠一手踩坑出差异化（is:inline / View Transitions 重绑 / Workers 版验签 / test mode 陷阱） |
+| application error: a client-side exception on vercel | askhandle 小博客 + GitHub Discussions + SO + vercel/next.js#43772 + Vercel Community = **4/5 UGC** | 可打 | **本轮最软，P0 候补**。症状全新：页面能加载、浏览器 JS 崩白屏，与站内 build-failed / module-not-found / 刷新404 / env-undefined / CORS 均不撞，补齐症状分流枢纽 |
+| vercel function timeout 504 | SO ×2 + khaledalam 个人博客 + openillumi ×2（AI 内容农场） | 可打 | P1。⚠️ 必须换框架避开「本地能跑线上不行」（§4.1）；差异化 = maxDuration 默认值≠计划上限（Hobby 10s / Pro 默认 15s 上限 300s），SERP 现存答案（Hobby 5s）已过时 |
+| stripe webhook signature verification failed | Stripe 官方 ×3 + RapidDev ×2（AI 农场） | 边缘 | **放弃**。官方占位重 + 作者无 Stripe 账号，E-E-A-T 立不住 |
+| mixed content https fix | web.dev + CF 官方 + launchcdn + dns.com + httpsornot = **5/5 厂商/工具站** | 放弃 | 符合 §2「全是厂商内容营销页 → 放弃」，且 0 条 UGC |
+| business license sell digital products | dodopayments 内容营销长文 + 4 条中文政务页（地域污染） | 放弃 | 数据不足 + 与已发 do-i-need-an-llc 高度重叠 |
+
+站内查重（2026-09-09 grep）：deploy 簇 12 篇无 504 / client-side exception 覆盖；Lemon Squeezy 在 3 篇 payments 文中仅有顺带提及，无集成教程。
+
+## 4.3 SERP 实测记录（2026-09-09 选题日，6 个新候选）
+
+| 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|
+| "application error a client-side exception" vercel | askhandle 小博客 + GitHub Discussions + Stack Overflow + vercel/next.js Issue + Vercel Community = **4/5 UGC** | 可打 | **P0，本轮最软**。症状全新（页面能加载、浏览器 JS 崩），与 §4.1 已有 5 类症状不撞 |
+| vercel 504 FUNCTION_INVOCATION_TIMEOUT | Stack Overflow ×2 + khaledalam 个人博客 + openillumi ×2（AI 内容农场）= **2/5 UGC + 3 弱站** | 可打 | P1。⚠️ 必须换框架：禁用「本地能跑线上不行」，改「超时」切分。差异化点 = maxDuration 默认值 vs 计划上限的区别（SERP 里还在说 Hobby 5s，已过时） |
+| lemon squeezy astro checkout | Astro 官方文档 ×3（含 CN 镜像 + GitHub 源码）+ LaunchFast 商业页 | 可打 | P0（affiliate）。前 5 **无独立博主一手教程**，靠 test mode / 静态站无后端验签出差异化 |
+| lemon squeezy webhook invalid signature | Stack Overflow + LS 官方文档 ×2 + dev.to 个人一手文 + Strapi 集成页 | 可打 | 作为上一条的姊妹篇，**先不单开**，并入 checkout 文作章节 |
+| mixed content blocked https | web.dev + Cloudflare 官方文档 + launchcdn + dns.com + httpsornot = **5/5 官方/厂商/工具站** | 放弃 | 符合 §2「全是厂商内容营销页 → 放弃」，无 UGC 位 |
+| do you need a business license to sell digital products | dodopayments 长文（竞品内容营销）+ 4 条中文政务页（地域污染，英文 SERP 数据不可用） | 放弃 | 数据不足；且与已发 `do-i-need-an-llc-to-sell-digital-products` 高度重叠 |
+| stripe webhook signature verification failed | Stripe 官方文档 ×3 + RapidDev ×2（AI 农场）= **官方 3/5** | 不推荐 | 官方占位重；作者无 Stripe 账号，一手 E-E-A-T 缺失 |
 
 ## 5. 已暂停（原清单）
 

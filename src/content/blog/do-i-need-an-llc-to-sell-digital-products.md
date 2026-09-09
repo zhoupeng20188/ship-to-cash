@@ -62,6 +62,8 @@ If you bill through a merchant of record like Paddle or Lemon Squeezy, **they** 
 
 So the two questions everyone bundles together — "can I legally take money" and "who handles the tax paperwork" — actually come apart. You can take money as an individual *and* have the tax question handled, by [billing through a merchant of record](/payments/merchant-of-record-vs-payment-processor/). For a first paid app that combo is hard to beat: no LLC, no tax registrations, no accountant on retainer yet.
 
+Picking one is the hard part; wiring it up isn't. [Adding Lemon Squeezy checkout to a static Astro site](/payments/lemon-squeezy-checkout-astro-static-site/) takes two files and no backend — worth knowing before you spend a week deciding whether you're allowed to sell.
+
 This is also why I'd pick the billing model before worrying about the entity. The billing model changes your paperwork by a lot; the LLC changes it by a little.
 
 ## When I'd Actually Form the LLC
