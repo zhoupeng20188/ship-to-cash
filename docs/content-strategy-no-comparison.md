@@ -52,10 +52,11 @@
 | 症状 | 归属文章 | 状态 |
 |---|---|---|
 | 首页也 404 / `No Output Directory` | `vercel-build-failed.md` Cause 4 | 已覆盖 |
-| 首页正常，点进子路由正常，**刷新子路由才 404** | client-side-routing-404-vercel-netlify-cloudflare.md | **已发 #1** |
-| 页面白屏、控制台有 JS 报错 | `deploy-first-app-vercel.md` 排查表 | 已覆盖（一句话） |
+| 首页正常，点进子路由正常，**刷新子路由才 404** | `client-side-routing-404-vercel-netlify-cloudflare.md` | 已发 |
+| **页面能加载，随后白屏，控制台有 JS 报错** | `application-error-client-side-exception-vercel.md` | **已发 2026-09-11（升为专题，取代 `deploy-first-app-vercel.md` 里的一句话排查）** |
 | 构建阶段 `Module not found` | `vercel-module-not-found-works-locally.md` | 已覆盖 |
-| 环境变量加了但还是 undefined | `vercel-environment-variables.md` | 已覆盖 |
+| 环境变量加了但还是 undefined（页面仍能渲染） | `vercel-environment-variables.md` | 已覆盖 |
+| 页面能加载但 fetch 被浏览器拦下 | `cors-error-vercel.md` | 已发 |
 
 配套要求：
 - 新文的「3 个原因」必须排除已覆盖项，不再重复讲输出目录/文件大小写/环境变量。
@@ -97,6 +98,39 @@
 | mixed content blocked https | web.dev + Cloudflare 官方文档 + launchcdn + dns.com + httpsornot = **5/5 官方/厂商/工具站** | 放弃 | 符合 §2「全是厂商内容营销页 → 放弃」，无 UGC 位 |
 | do you need a business license to sell digital products | dodopayments 长文（竞品内容营销）+ 4 条中文政务页（地域污染，英文 SERP 数据不可用） | 放弃 | 数据不足；且与已发 `do-i-need-an-llc-to-sell-digital-products` 高度重叠 |
 | stripe webhook signature verification failed | Stripe 官方文档 ×3 + RapidDev ×2（AI 农场）= **官方 3/5** | 不推荐 | 官方占位重；作者无 Stripe 账号，一手 E-E-A-T 缺失 |
+
+## 4.4 SERP 实测记录（2026-09-11 选题日，8 个候选）
+
+已发 17 篇后查重：deploy 簇 12 篇无「客户端异常 / 504 / CF Pages 环境变量」覆盖；payments 簇 5 篇均为「怎么收 / 怎么接」，**无「收款后怎么交付」**。
+
+| 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|
+| "application error: a client-side exception has occurred" vercel | GitHub Discussions + Stack Overflow + vercel/next.js#43772 + Vercel Community + askhandle 小站 = **4/5 UGC** | **可打** | ✅ **已发 2026-09-11**：`application-error-client-side-exception-vercel.md`。症状全新，补齐分流枢纽第 6 类 |
+| cloudflare pages environment variables not working production build | eastondev ×2 + vdaluz.com + mrobles.work = **4/5 个人博客一手** + deepwiki 聚合 | **可打** | **P0（E-E-A-T 最强）**。⚠️ 与已发 `vercel-environment-variables` 有内耗风险：必须按「平台 × 症状」切分 —— 该文是 Vercel「加了还是 undefined」，本篇是 CF Pages「设了但构建读不到」，文首放区分表 |
+| send download link after payment digital product no backend | dev.to ×2（同一作者，AI 味重）+ tmdm.cn（dev.to 机翻镜像）+ PayRequest + SendOwl = **2/5 可打 + 2/5 厂商** | 边缘可打 | P1（affiliate 位最好）。⚠️ 必须与 `getting-paid-without-stripe-kofi-paypal`（怎么收）和 `lemon-squeezy-checkout-astro-static-site`（怎么接）切分：本篇只讲「付完款文件怎么到买家手里」 |
+| vercel 504 FUNCTION_INVOCATION_TIMEOUT | Vercel examples + vercel.com/guides = **官方 2/5** + prismix.dev / afterbuildlabs / generalistprogrammer（AI 内容农场 ×3） | **降级** | 从 09-09 的「P1 可打」降为 P2。农场站已把 maxDuration 表格 / streaming / QStash 铺满，**0/5 可打位**。唯一缝隙：SERP 里计划限额仍是旧口径（Hobby 5s/10s、Pro 60s），官方 KB 现在讲 Fluid Compute（免费 5 分钟 / 付费 800s） |
+| supabase auth astro tutorial protect route | freecodecamp（DR 极高）+ Supabase 官方文档 + deepwiki ×2 + mihai-andrei.com 个人博客 | 偏硬 | 放弃。freecodecamp + 官方占 3/5，新站排不进 |
+| astro form submission no backend serverless function | forminit + formigo + rizzness（表单 SaaS 厂商内容营销页 ×3）+ dev.to + research.io | **放弃** | 符合 §2「全是厂商内容营销页」 |
+| vercel rollback deployment to previous version | Vercel 官方文档 ×2 + Vercel Academy + Vercel changelog + vercel-ship 子域 = **5/5 官方** | **放弃** | 符合 §2「全官方占位」 |
+| how to accept payments on a static site without a backend | kleap 文档 + **kinsta 大站** + dashbuilds.dev（个人一手）+ dev.to（转载）+ Gatsby 官方教程 | 混合 | 词太宽导致大站进场，需换长尾再测；先并入「收款后交付」方向使用 |
+
+配套要求（本轮新增）：
+- 「客户端异常」新文第 1 屏必须放 §4.1 症状区分表（升级为 6 行），内链到已发的刷新 404 / build-failed / module-not-found / env-undefined / CORS 五篇。
+- 「CF Pages 环境变量」新文第 1 屏放「平台 × 症状」双列表，明确与 `vercel-environment-variables` 的分工，两文互链但不重讲同一症状。
+- 「收款后交付」新文只写交付环节，不回讲收款方式（避免与 payments 簇 5 篇内耗）。
+
+### #1 交付回顾（2026-09-11）—— 一手来源就是最强差异化
+
+`application-error-client-side-exception-vercel.md`：1779 词、H2 ×8、无 H1、FAQ ×6、内链 6 个目标（症状分流表）、外链 4（Next.js ×3 + Vercel ×1）、OG 60KB；构建 28 页全过，canonical / og:image / FAQPage schema / sitemap / 内链落点全部验证通过。
+
+SERP 前 5 全是零散 UGC 帖、没有一篇完整答案，四把差异化武器：
+
+1. **Next.js `retry` vs `reset`**：官方版本历史显示 `retry` 到 16.3.0 才转正（16.2.0 为 `unstable_retry`），而 SERP 与 AI 生成的 `error.tsx` 几乎清一色还在写 `reset`。补上行为差异：`retry` 会重新请求并重渲染，`reset` 只重渲染。
+2. **`global-error` 不含全局样式**：官方明说它渲染自己的 document，主题切换与字体都到不了 → 解释了"为什么错误页像裸 HTML"。
+3. **Skew Protection 默认上限一天**：把"部署后旧标签页崩"这个高频症状归因清楚，并给出「2024-11-19 之后创建的项目默认开启」的适用边界。
+4. **hydration 的 4 类真因 + 浏览器扩展**：含"无痕窗口复现不了 = 扩展干的"这一判别动作。
+
+可复用教训：**写前先抓官方文档的 Version History 与默认值**，比读同题材博客更容易挖到可验证的时间敏感事实（与第 17 篇 Lemon Squeezy「官方示例已过时」同一打法）。
 
 ## 5. 已暂停（原清单）
 
