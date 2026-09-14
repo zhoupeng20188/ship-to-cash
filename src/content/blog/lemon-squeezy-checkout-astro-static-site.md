@@ -183,6 +183,8 @@ Two details worth internalizing:
 
 Store the signing secret as an encrypted secret, not an environment variable: **Pages → Settings → Variables and Secrets → Add → Encrypt**. Locally, put it in a gitignored `.dev.vars` file and it shows up on `env` automatically. Cloudflare documents this under [Functions bindings](https://developers.cloudflare.com/pages/functions/bindings/).
 
+One thing that instruction hides: **a secret isn't a stronger variable, it's a different channel.** Secrets reach Pages Functions at runtime and nothing else. That's why the dashboard can show a value while your build log calls it undefined — [here's how to tell the four causes apart](/deploy/cloudflare-pages-environment-variables-not-working/).
+
 ## Step 5: test mode, and the trap inside it
 
 Turn on Test mode and you can buy your own product with test cards for free. Two things will still catch you.

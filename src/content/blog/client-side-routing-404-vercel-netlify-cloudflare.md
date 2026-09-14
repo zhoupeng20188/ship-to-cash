@@ -113,6 +113,8 @@ You added the file, redeployed, and it still 404s. Almost always one of these:
 
 **You're on Cloudflare Pages with Pages Functions.** If your project has a `/functions` directory, some paths are handled by a worker instead of static files, and the `_redirects` catch-all may not cover them the way you expect. For a pure SPA with no functions, this doesn't apply — remove or scope the functions and the static `_redirects` fallback works as described.
 
+Once you add that `functions/` directory, though, you've changed the kind of site you're running: a purely static deploy has no runtime, and adding Functions gives it one. That flips how environment variables behave — a value the build could read before may now need to be a runtime binding instead, or the reverse. I wrote up [why Cloudflare Pages variables read as undefined](/deploy/cloudflare-pages-environment-variables-not-working/) for anyone hitting that after adding their first Function.
+
 **Verify it worked:** after fixing, re-open the deep link. If it loads, you're done. If `index.html` itself loads but the *wrong view* shows (router renders the homepage instead of `/dashboard`), that's a router `basename` mismatch, not a host problem — see Cause 3's neighbor note below.
 
 ## Cause 3 (rare): it's not a SPA at all — the build didn't emit the route

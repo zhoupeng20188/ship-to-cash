@@ -132,6 +132,40 @@ SERP 前 5 全是零散 UGC 帖、没有一篇完整答案，四把差异化武�
 
 可复用教训：**写前先抓官方文档的 Version History 与默认值**，比读同题材博客更容易挖到可验证的时间敏感事实（与第 17 篇 Lemon Squeezy「官方示例已过时」同一打法）。
 
+## 4.5 SERP 实测记录（2026-09-14 选题日，17 个候选）
+
+已发 18 篇后查重：**deploy 13 篇 / payments 5 篇 / monetize 0 篇 / legal 0 篇 / tools 0 篇** —— monetize、legal、tools 三个分类页目前是空的，三个空分类页既无内链枢纽价值也属薄内容页，本轮起应优先补 monetize。
+
+| # | 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|---|
+| 1 | cloudflare pages environment variables not working production build | deepwiki 聚合 + eastondev（EN/ZH 各一）+ mrobles.work ×2 = **4/5 个人博客一手** | **可打** | **P0（遗留池，E-E-A-T 最强）**。与已发 `vercel-environment-variables` 按「平台 × 症状」切分：本站是 CF Pages「设了但构建读不到」 |
+| 2 | cloudflare pages custom domain not working 522 | CF 官方 docs + CF Community ×2 + witch.work 个人博客 + answeroverflow = **3/5 UGC** | **可打** | **P0**。⚠️ 与已发 `vercel-custom-domain-ssl-not-working` 同症状换平台，须按平台切分。差异化：CF 特有「只加 DNS CNAME 必 522，必须走 Pages 面板 Add custom domain」 |
+| 3 | send download link after payment digital product no backend | dev.to ×2（同一作者，AI 味重）+ tmdm 镜像 + wpsmartpay + vellir = **2/5 可打 + 2/5 厂商** | 边缘可打 | **P1（affiliate 位最好，遗留池）**。承接 `lemon-squeezy-checkout-astro-static-site`；只讲交付不讲收款 |
+| 4 | how to price a digital product for the first time | 60minuteapps + flows4 + dev.to + eaglesdigital + shegrowsvirtual = **5/5 小站（无大站）** | **可打** | **P1**。竞争最低、可开 monetize 簇第一篇。⚠️ 无 affiliate 落点，纯 AdSense/权威向 |
+| 5 | vercel deploy success but site shows old version | Vercel Community ×2 + Vercel 官方 ×3 = 官方 3/5 | 边缘可打 | **P1**。症状全新（不撞 §4.1 已有 6 类）。差异化真因：`.vercel/output` 被误提交仓库导致永远走预构建产物（Vercel Community 实证）+ service worker + 三层缓存分流 |
+| 6 | vibe coded app deployment failed / ai generated code broken | vibego.io + Railway 官方 + deploymyvibe.com + lowcloud.io + blog.vibecoder.me = **4/5 新兴垂直小站** | 可打（需窄化） | **P1**。受众完全对上（vibe coder），0 条传统 UGC 但有 4 个同级别新站。⚠️ 话题太宽，须窄化到单一症状，否则与 deploy 簇 13 篇内耗 |
+| 7 | cloudflare pages nodejs_compat error deployment | CF Community + SO（高赞）+ radar.cloudflare.com + eastondev ×2 | 可打 | **P2**。差异化：dashboard 里输入 `nodejs_compat` 后按 Enter 会误选其他 flag（CF Community 实证）；`FinalizationRegistry is not defined` 需抬 compatibility date |
+| 8 | astro environment variables not working import.meta.env undefined | SO ×2 + Astro 官方 ×2 + eastondev = 混合 | 不单开 | 与 #1 及 `vercel-environment-variables` 三方内耗，并入 #1 作章节 |
+| 9 | cloudflare pages functions 500 internal server error | lobehub skill 页 + CF Community + Latenode 社区 + eastondev + CF 官方 | 边缘可打 | P2。根部与 #1/#7 重叠（env vars 未复制到 preview 分支、nodejs_compat 缺失），暂不单开 |
+| 10 | astro sitemap not generating robots.txt | Astro 官方 ×2 + skillmd.ai + thatdevpro + GitHub Issue #6416 | 边缘 | P2。词太窄，流量上限低 |
+| 11 | how to generate license keys for digital products without backend | toolsbox + generatorcollection + ud5 + conversionproplus（**4/5 工具站**）+ shipanjodder 个人博客 | 偏硬 | P2。可作为 #3 的姊妹章节（RSA 签名离线验签），不单开 |
+| 12 | vercel build failed javascript heap out of memory | Vercel examples + community.vercel.com + vercel-ship + turbostarter + qasimcode 个人博客 | 边缘 | P2。官方 3/5 占位重 |
+| 13 | vercel preview deployment environment variables not available | Vercel 官方 ×3 + edge-cases.com + env.dev | 放弃 | 官方占位重，符合 §2 |
+| 14 | vercel domain already in use another project | Vercel 官方 ×4 + SO ×1 | 放弃 | 5/5 官方/厂商 |
+| 15 | where to sell digital products without your own website | mediasaf + stgnx + resellready + checkoutpage + useclima = **5/5 厂商内容营销页** | 放弃 | 符合 §2「全是厂商内容营销页」 |
+| 16 | paddle checkout integration astro static site no backend | SERP 被中文出海教程 + 完全无关内容（讯飞 Astron、CAT 工具）污染 | 放弃 | 无有效英文 SERP；且 Paddle 需 KYC/护照/地址证明，对新手受众门槛过高 |
+| 17 | astro images not loading after deploy | devhide（SO 镜像）+ astro-aws + GitHub repro + eastondev + gitcode | 边缘 | P2。`base` 配置 + SSR imageService 两类，做完即窄 |
+
+### ⚠️ 竞争格局观察（本轮新增，重要）
+
+SERP 里反复出现同一批**同级别 2026 新站**，说明赛道已被专门玩家盯上：
+
+- **eastondev.com（比邻）**：CF Pages / Astro 话题铺得最广，中英双版本，在候选 #1/#7/#8/#9/#17 的 SERP 里都出现。**最需要盯的同赛道对手。**
+- **vibe coding 部署垂直矩阵**：vibego.io / deploymyvibe.com / blog.vibecoder.me / lowcloud.io —— 2026 年新起的一批站，专打 "vibe coded app won't deploy"。候选 #6 的 SERP 已被它们占满。
+- **mrobles.work**：个人博客，CF Pages 环境变量两篇一手文，E-E-A-T 强。
+
+结论：**护城河必须靠「一手实测 + 症状分流枢纽」**（站内 6 类症状互链），通用「部署失败合集」这类宽题已经打不动，会被垂直站以量取胜。
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |

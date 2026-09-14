@@ -84,6 +84,8 @@ Forgetting the redeploy step cost me an embarrassing amount of "but I ADDED the 
 
 One naming trap: variables prefixed with `NEXT_PUBLIC_` (or `VITE_` in Vite) get baked into the browser bundle and are **publicly visible**. Never put secret keys behind those prefixes — only values that are safe to expose, like a Supabase anon key.
 
+These are Vercel's rules, and they're the ones I'd learn first. But heads up for later: if you move this project to Cloudflare Pages — common once a site starts earning, since the free plan permits commercial use — the same variable can sit in the dashboard and still read as `undefined` at build time, because that platform splits variables and secrets across a runtime boundary Vercel doesn't have. I covered [the four causes and how to tell them apart](/deploy/cloudflare-pages-environment-variables-not-working/) so a migration doesn't cost you the evening this step just saved.
+
 ## Step 4: Understand what you just set up
 
 This is the part that makes it worth it:
