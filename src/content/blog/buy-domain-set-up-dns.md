@@ -112,7 +112,7 @@ If it prints your host's IP, the world sees your new record. If it prints a regi
 - **Judging registrars by the first-year price.** Renewal price is the real price. $3.95 → $21.35 is not a deal.
 - **Editing records at the registrar after moving nameservers.** Once nameservers point elsewhere, the registrar's DNS screen is a museum exhibit.
 - **Expecting instant results.** Propagation takes minutes to hours. Make the change, walk away, check with `dig`.
-- **Turning on Cloudflare's orange-cloud proxy during host verification.** It hides your real records and the host can't verify or issue SSL. DNS-only until verified — I covered the details in the [Vercel domain guide](/deploy/vercel-custom-domain-setup/).
+- **Turning on Cloudflare's orange-cloud proxy during host verification.** It hides your real records and the host can't verify or issue SSL. DNS-only until verified — I covered the details in the [Vercel domain guide](/deploy/vercel-custom-domain-setup/). If your records look right and HTTPS still won't come up, that's a different bug with its own symptoms ([not secure, redirect loops, stuck pending](/deploy/vercel-custom-domain-ssl-not-working/)), not a DNS one.
 - **Forgetting auto-renew.** Set it the day you buy.
 
 ## Next steps

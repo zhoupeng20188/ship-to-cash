@@ -71,7 +71,7 @@ Self-hosting on a VPS instead of a platform? You still don't pay: Caddy and Ngin
 
 Bought nothing, deployed, and the padlock is missing? It's one of these:
 
-- **The certificate hasn't been issued yet.** It happens *after* domain verification, not simultaneously. Wait 10 minutes. If you're on Cloudflare with the orange-cloud proxy on, that's blocking issuance — [the fix is here](/deploy/vercel-custom-domain-setup/).
+- **The certificate hasn't been issued yet.** It happens *after* domain verification, not simultaneously. Wait 10 minutes. If you're on Cloudflare with the orange-cloud proxy on, that's blocking issuance — [the fix is here](/deploy/vercel-custom-domain-setup/). Still nothing after that? Then you're not waiting on a certificate, you're chasing a real error, and the symptoms are specific enough to name: [SSL not working on a Vercel custom domain](/deploy/vercel-custom-domain-ssl-not-working/) walks through which one you're looking at. Either way, buying a certificate is not the answer.
 - **Mixed content.** Your page loads over HTTPS but pulls an image or script over plain `http://`, and the browser flags it. This one's common enough that it gets its own guide in this series — for now, search your code for `http://` in asset URLs and switch them to `https://` or relative paths.
 - **You're visiting the `*.vercel.app`-style preview URL of some old host** — no, those have HTTPS too. If there's genuinely no cert on any modern host, something in the domain setup failed. Check the host's domain dashboard for a warning state.
 

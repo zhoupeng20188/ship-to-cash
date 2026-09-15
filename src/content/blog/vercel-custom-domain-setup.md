@@ -122,7 +122,7 @@ In **Settings → Domains**, Vercel lets you set a redirect from one to the othe
 
 **Stuck on pending or "Invalid Configuration" for over an hour.** Check, in order: leftover parking records at your registrar (delete them), Cloudflare proxy still on (switch to DNS only), a typo in the CNAME value (re-copy from Vercel, don't type it). To see what the internet actually sees, run `dig yourapp.com +short` — it should return `76.76.21.21`. If it returns a Namecheap parking IP, old records are still live.
 
-**SSL errors after the domain resolves.** The certificate is issued after verification, not simultaneously. Wait 10 minutes. If it persists past an hour and you're on Cloudflare, that proxy is almost certainly on.
+**SSL errors after the domain resolves.** The certificate is issued after verification, not simultaneously. Wait 10 minutes. If it persists past an hour and you're on Cloudflare, that proxy is almost certainly on. And if you've checked both of those and the browser still refuses to load your site securely, I broke down the remaining causes one by one — cert errors, redirect loops, CNAMEs that never validate, mixed content — in [Vercel custom domain SSL not working](/deploy/vercel-custom-domain-ssl-not-working/).
 
 ## Next steps
 

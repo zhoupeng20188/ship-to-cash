@@ -85,3 +85,5 @@ Start with Paddle. Not because it's perfect — because it's the reversible opti
 The math flips somewhere around $2,000–3,000 MRR. At $2,000 across forty $50 sales, Paddle keeps about $120 that month. A Wyoming LLC with an accountant runs a few hundred a year. Past that line, route 2 starts paying for itself. (And if you're reading this before you've even [deployed the app](/deploy/deploy-first-app-vercel/) — good. Payments is genuinely the easier half of this problem.)
 
 So, this week: Paddle account, one product, one payment link. Form nothing. Your first sale is the only market research that counts.
+
+And if the Paddle review is slow, or rejects the site you have rather than the site you're planning — you're not blocked. [Ko-fi wired to PayPal](/payments/getting-paid-without-stripe-kofi-paypal/) is the smallest working setup in this whole article: no merchant underwriting, no company, live the same afternoon. It's also a useful rehearsal, because it forces you to answer the delivery question — what does the buyer actually get after they pay — before you pick a permanent rail.
