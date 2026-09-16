@@ -166,6 +166,36 @@ SERP 里反复出现同一批**同级别 2026 新站**，说明赛道已被专�
 
 结论：**护城河必须靠「一手实测 + 症状分流枢纽」**（站内 6 类症状互链），通用「部署失败合集」这类宽题已经打不动，会被垂直站以量取胜。
 
+## 4.6 SERP 实测记录（2026-09-16 选题日，5 个候选）
+
+已发 19 篇：**deploy 14 / payments 5 / monetize 0 / legal 0 / tools 0**。09-14 遗留池里的 CF Pages 环境变量已发，剩余候选本轮复测。
+
+| # | 候选词 | SERP 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|---|
+| 1 | how to sell a boilerplate / starter template as a solo developer | nuxttitle.vercel.app（自推广教程）+ dev.to ×2（AI Study Room 原文、creatoreconomy 向）+ jakeinsight.com（个人博客，带 Gumroad 2026 实测数字）+ tvglobal.world（no-code 向小站）= **5/5 小站个人博客，0 大站 0 官方** | **可打（本轮最软）** | ✅ **已发 2026-09-16**：`how-to-price-a-developer-template.md`（monetize 簇第一篇）。⚠️ 现有内容 4/5 是「创作者经济模板」（$17/$27/$47 卖 worksheet/course），**没有一篇讲开发者模板/boilerplate 定价**（只有 dev.to 那篇提了 ShipFast 等竞品名，未做费率测算）→ 缺口明确 |
+| 2 | cloudflare pages custom domain not working 522 | CF 官方文档 ×2（docs + pages/get-started）+ CF Community ×2（**含官方 Team 成员给出的确切解法**）+ witch.work 个人博客 = **3/5 可打位** | **可打** | **P0**。同 09-14 判定。可验证事实链完整：① 手动加 CNAME 但未在 Pages 面板 Add custom domain → 必 522（CF 官方文档明写）② www 与 apex 必须**分别**注册 hostname（Community 实证）③ CAA 记录拦截证书签发（官方 Known issues）。⚠️ 站内域名类已有 4 篇，这是第 5 篇，必须严格按「平台 × 症状」切分 |
+| 3 | vercel deploy success but site shows old version | Vercel Community ×2（**其中一帖给出确诊根因**）+ Vercel 官方 ×3（新 KB + examples + Academy）= 官方 3/5 | **边缘可打（较 09-14 有新料，可升 P1）** | P1。官方占位重，但 SERP 全是「去 dashboard 点 Purge」，**官方文档这轮新增了 CLI 命令族**（`vercel cache purge --type cdn` / `vercel cache invalidate --tag` / `vercel cache dangerously-delete` / `vercel deploy --force --prod`，`vercel httpstat` 为 beta，需 CLI v48.9.0+）——是新的、可验证的时间敏感事实。叠加 Community 一手根因「`.vercel/output` 被误提交 → Vercel 永远复用预构建产物」 |
+| 4 | lemon squeezy license keys / deliver download after payment | lemonsqueezy.com 官方 ×2 + aitoolbox.hk 评测 + spectraforgeaudio 法务页 + rockxy.io 法务页 = **4/5 厂商/同类卖家页面** | **降级** | 从 09-14 的「边缘可打 P1」**降为 P2**。原词 SERP 已被厂商页占满，符合 §2。若要救，需换长尾（如 `lemon squeezy license key not working` / 离线签名验签），须另测 |
+| 5 | send download link after payment digital product no backend | ⚠️ 本轮搜索被系统拦截，**无有效 SERP 数据** | 数据不足 | 与 #4 同簇，暂缓；下轮换词重测 |
+
+### 本轮结论
+- **优先补 monetize**（分类页仍是空的）：候选 #1 既是本轮最软 SERP，又能给 monetize 分类页填第一篇 + 承接 payments 簇 4 篇内链 + Lemon Squeezy affiliate 落点。→ **2026-09-16 已执行**，monetize 分类页不再是空页。
+- 候选 #2 保留在池中作第二顺位（deploy 簇续命，但域名话题已偏饱和）。
+- 候选 #3 的差异化已从「靠一个新根因」升级为「新 CLI 命令族」，可排 P1。
+
+### #3 交付回顾（2026-09-16）—— 一手来源仍是最强差异化
+
+`how-to-price-a-developer-template.md`：1687 词（正文，不含表格）/ 1794（含表格）、H2 ×7、无 H1、FAQ ×6、内链 7 个目标、外链 4（Vercel / Astro / Lemon Squeezy 定价页 / Gumroad 定价页）、OG 67KB；构建 30 页全过。
+
+四把差异化武器：
+
+1. **「一万美元级」的价格带表**：SERP 里 4/5 是创作者经济定价（$17/$27/$47），没有一篇给开发者模板的分层价格带（$39–$99 / $149–$299 / $299–$499）。带表里点名 ShipFast $199、supastarter 与 MakerKit $299 作为可核实锚点。
+2. **固定费率的反向论证**：用 Lemon Squeezy 官方页的 5% + 50¢ 算出「$19 → 7.6%、$199 → 5.3%」的有效费率表，再折算成「凑够 $1,000 需要卖几份」（53 / 21 / 11 / 6）。SERP 现有内容只讲百分比，没人换算成份数。
+3. **反向观点（价格越低支持成本越高）**：主流创作者经济建议是「没受众就定低价」，本文给出反论——便宜货吸引上下文更少的买家，每美元支持成本更高，低价把产品变成兼职。
+4. **主动标注数据不确定处**：Gumroad 的 10% + 50¢ 是否含卡费，第三方拆解互相矛盾 → 正文与 FAQ 都写明「以 Gumroad 官网为准，别信博客，包括这篇」。这条符合 CLAUDE.md 的事实红线。
+
+可复用教训：**价格/费率类文章的护城河 = 把官方费率页的原始数字自己算一遍**（有效费率、份数、临界点），而不是复述同题材博客的百分比。与第 17 篇「官方示例已过时」、#1 的「官方 Version History」同一打法：**先去官方页抓原始参数，再自己算**。
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |

@@ -119,6 +119,8 @@ Between the two big indie MoRs: **Paddle** is flatter (one 5% + 50¢ rate, no su
 
 For my own stuff, I use an MoR for anything consumer-facing and global, and Stripe for anything B2B. If I were starting my very first paid side project tonight: Lemon Squeezy or Paddle, hosted checkout, done by dinner. The 4-point fee gap is the price of never reading a VAT OSS guide at 1am again, and I say that having read the VAT OSS guide at 1am.
 
+Worth keeping in proportion, though: whichever one you pick, the fee is a commission on a price **you** set. Which means the price moves your take-home more than the platform choice does. [How to price a developer template](/monetize/how-to-price-a-developer-template/) runs that arithmetic at $19, $49, $99 and $199.
+
 The one thing I'd do differently than my first attempt: decide *before* launch. Migrating a few hundred subscribers between billing systems later means re-asking customers for card details, and some of them will quietly churn instead. Pick the rail you can live with for two years.
 
 Already have an app live and a domain connected ([that part's 20 minutes](/deploy/vercel-custom-domain-setup/))? Then you're one hosted checkout page away from your first dollar. Go make the dollar.

@@ -109,7 +109,7 @@ In [the three routes for when Stripe isn't available](/payments/stripe-not-avail
 
 1. Create the Ko-fi page and connect PayPal today.
 2. **Opt out of Standard** before your first tip.
-3. Put one digital product on the shop at a real price — not "pay what you want."
+3. Put one digital product on the shop at a real price — not "pay what you want." [Pricing a developer template](/monetize/how-to-price-a-developer-template/) is a separate problem with its own arithmetic, and it isn't the $27 the creator-economy guides hand you.
 4. Leave money in PayPal and withdraw once a month, in as few transactions as possible.
 5. Revisit the whole stack once you're consistently past ~$300/month. Below that, the $35 withdrawal fee dominates every other cost here.
 

@@ -215,7 +215,7 @@ It's honest about its limits, and so should you be.
 - **There's no database in this example.** The webhook verifies and returns. Actually granting access means writing somewhere — Cloudflare KV or D1 if you want to stay on the platform, or just letting Lemon Squeezy email the download and skipping storage entirely. For a first product, the email option is genuinely sufficient.
 - **No license keys or seat management.** Lemon Squeezy has both, but you have to wire them up.
 - **Merchant of record isn't a legal identity.** They handle tax; they don't make you a company. If you're crossing into real revenue, that's the point where [forming an entity stops being overkill](/payments/do-i-need-an-llc-to-sell-digital-products/).
-- **The 50¢ hurts most on cheap products.** On a $29 sale you keep about $27.05 after the base fee. On a $5 sale the flat 50¢ alone takes 10% of the price, before any surcharge — so either price the small thing higher than feels natural or bundle it into something worth more.
+- **The 50¢ hurts most on cheap products.** On a $29 sale you keep about $27.05 after the base fee. On a $5 sale the flat 50¢ alone takes 10% of the price, before any surcharge — so either price the small thing higher than feels natural or bundle it into something worth more. That fixed fee is one of the quieter arguments for [pricing a developer template higher](/monetize/how-to-price-a-developer-template/): at $199 the same 50¢ costs you 0.25% instead of 10%.
 
 ## What I'd do in your position
 

@@ -90,3 +90,5 @@ What I'd specifically avoid: forming a US LLC from abroad "to look legit." A for
 3. **Open a separate bank account** even as a sole proprietor. Future-you, at tax time, will be grateful.
 4. **If you're in the US, grab an EIN** from the IRS site — free, takes about ten minutes, keeps your SSN off platform signup forms.
 5. **Revisit the LLC question when a trigger above fires.** Not before. The LLC will still be there when the app is making money; the customers won't be if you spend your first month on paperwork.
+
+One more, since it isn't a legal question but it decides whether any of this pays off: [how to price a developer template or boilerplate](/monetize/how-to-price-a-developer-template/). Getting the entity wrong costs you paperwork. Getting the price wrong costs you the product.
