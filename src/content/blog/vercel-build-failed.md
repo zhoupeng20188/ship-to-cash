@@ -27,6 +27,8 @@ One thing before we start: if your error literally says `Module not found`, that
 
 One more distinction worth making up front: if your homepage and other pages load fine but a **deep link 404s the instant you refresh it**, that is *not* a build failure — it's a client-side routing problem. Here's [how to fix 404s on refresh for Vercel, Netlify, and Cloudflare Pages](/deploy/client-side-routing-404-vercel-netlify-cloudflare/).
 
+And if you're not on Vercel at all: Netlify reports build failures with its own string, `build script returned non-zero exit code: 2`, and the causes behind it are different enough that I wrote [a separate guide for the Netlify exit code 2 error](/deploy/netlify-build-failed-exit-code-2/).
+
 ## First: read the log the right way
 
 Open your project in the Vercel dashboard, click **Deployments**, then click the failed deployment. The build log is the **Building** section.

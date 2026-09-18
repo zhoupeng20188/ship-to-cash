@@ -33,7 +33,7 @@ Vercel's build logs are genuinely the clearest of the big three hosts here — o
 
 Your Mac or Windows PC uses a **case-insensitive** filesystem: `Header.tsx` and `header.tsx` are the same file. Vercel builds on **case-sensitive Linux**, where those are two different paths. So `import Header from './components/header'` works on your machine and fails in the cloud.
 
-The sneaky version: you renamed a file and only changed the casing (`header.tsx` → `Header.tsx`). Git on a case-insensitive filesystem often **doesn't register that as a change** — your editor shows the new name, but your commit history still has the old one, and that's what Vercel builds from.
+The sneaky version: you renamed a file and only changed the casing (`header.tsx` → `Header.tsx`). Git on a case-insensitive filesystem often **doesn't register that as a change** — your editor shows the new name, but your commit history still has the old one, and that's what Vercel builds from. Same trap on Netlify, where the build also runs on Linux and the failure surfaces as a [Netlify exit code 2 build error](/deploy/netlify-build-failed-exit-code-2/) instead of a module error.
 
 The fix is a two-step rename through a temporary name:
 

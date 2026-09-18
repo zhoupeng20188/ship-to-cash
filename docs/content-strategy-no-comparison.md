@@ -196,6 +196,27 @@ SERP 里反复出现同一批**同级别 2026 新站**，说明赛道已被专�
 
 可复用教训：**价格/费率类文章的护城河 = 把官方费率页的原始数字自己算一遍**（有效费率、份数、临界点），而不是复述同题材博客的百分比。与第 17 篇「官方示例已过时」、#1 的「官方 Version History」同一打法：**先去官方页抓原始参数，再自己算**。
 
+## 4.7 SERP 实测记录（2026-09-18 选题日，8 个候选）
+
+已发 20 篇：**deploy 15 / payments 5 / monetize 1 / legal 0 / tools 0**。查重：Netlify 仅在 `client-side-routing-404`（9 次）与对比文（10 次）出现，**无 Netlify 主攻文章**；`exit code` / `522` / `license key` 均无专题（license key 仅在 checkout 文与 MoR 文顺带提及 3 次）。
+
+| # | 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|---|
+| 1 | cloudflare pages custom domain not working 522 | CF 官方（preview 域 llms-full）+ CF Community（**MVP 给出确切解法**）+ 掘金中文 + answeroverflow（CF Developers Discord 实证）+ witch.work 个人博客 = **3/5 UGC** | **可打** | **P0（本轮最软）**。同 09-14/09-16 判定，事实链完整：① 手动加 CNAME 但未在 Pages 面板 Add custom domain → 必 522（官方文档明写）② www 与 apex 必须**分别**注册 hostname（Community + answeroverflow 双实证）③ CAA 记录拦截证书签发（官方 Known issues）。⚠️ 域名类已 4 篇，这是第 5 篇，须严格按「平台 × 症状」切分 |
+| 2 | netlify deploy failed / "build script returned non-zero exit code: 2" | Netlify 官方 troubleshooting-tips + **Stack Overflow（高赞，多答案）** + dodatech（AI 味教程）+ answers.netlify.com 官方 Support Guide + codegenes.net（AI 农场）= 官方 2/5 + UGC 1/5 | **边缘可打** | **P1（平台轮换）**。差异化不靠"更全"，靠**报错原文唯一**：`exit code: 2` 是 Netlify 专属字符串，Vercel 的 `vercel-build-failed` 不会报这个 → 与站内 6 类症状零内耗。官方 troubleshooting 页只讲 exit 128 与 warning-as-error，**没讲 exit code 2** |
+| 3 | lemon squeezy license key api generate validate | LS 官方 guide + 官方 API 参考 + hashhackers 个人博客 + eliteai.tools（AI 聚合）+ apievangelist（OpenAPI 聚合）= 官方 2/5 | **可打** | **P1（affiliate 落点最好）**。承接 `lemon-squeezy-checkout-astro-static-site`，只讲「付完款怎么把权限交到买家手里」。可挖的一手点：activate/validate/deactivate 是**免 API key 的公开端点**；官方示例里 `activation_limit: 1` 与 `activation_usage: 5` 自相矛盾（文档陈旧）；`instance.id` 必须落库否则无法 deactivate |
+| 4 | how to get first customers for a developer template | dev.to ×2 + lovaround + dohost（主机商软文，夹带 VPS 推广）+ agilitypr（PR 公司内容营销）= **5/5 小站但 0 篇专讲开发者模板** | 可打 | **P2**。缺口存在（现有全是通用 SaaS 获客），但意图偏软、无报错型 urgency；且 monetize 刚开 1 篇，第二篇更适合做「交付」而非「获客」 |
+| 5 | vercel deploy success but site shows old version | Vercel examples KB（官方）+ CSDN 中文 + solipsxu.xyz（**Vercel docs 镜像**，已完整收录 CLI 命令族）+ solutionfall（SO 镜像）+ Vercel Community（一手根因）= 官方/镜像 3/5 | **降级** | 从 09-16 的「P1 可升」**降为 P2**。⚠️ 关键变化：09-16 赖以差异化的**新 CLI 命令族已被官方收录成 KB 页**（`vercel cache purge --type cdn` / `cache invalidate --tag` / `dangerously-delete` / `deploy --force --prod` / `httpstat` beta），且被 docs 镜像站铺满 → 时间敏感优势消失。仅剩 Community 那条 `.vercel/output` 误提交根因 |
+| 6 | vercel hobby plan commercial use | Vercel docs/plans/hobby ×3（含 graph 变体）+ vercel.com/terms + vercel.com/pricing = **5/5 官方** | **放弃** | 符合 §2「全是厂商/官方占位」。话题本身对 vibe coder 高价值，若要救须换长尾（如「Hobby 上能不能挂收款链接」），另测 |
+| 7 | vercel bandwidth exceeded hobby plan what happens | Vercel docs/plans/hobby ×3 + temps.sh（**竞品自推广**，推 self-host 替代）+ hivebook.wiki（AI 农场）= 官方 3/5 + 竞品营销 1 | **放弃** | 官方占 3/5；且 SERP 出现竞品替代品内容营销，说明商业意图强、新站排不进 |
+| 8 | do i need a privacy policy for my side project saas | privacypolicygenerator.info + lovaround + mylegalpal + termsfeed + launchadvisor = **5/5 法律文档生成工具站** | **放弃** | 符合 §2「全是厂商内容营销页」。legal 簇开簇失败，下轮须换非工具站角度（如「欧盟买家要发票怎么办」） |
+
+### 本轮结论
+
+- **遗留池 #1（CF Pages 522）保持 P0**，三条事实链两轮复测均成立，是最稳的一篇。
+- **新增 #2 为平台轮换机会**：deploy 簇 15 篇里 Netlify 从无主攻，`exit code: 2` 这个报错原文与站内 6 类症状零重叠，是唯一不靠「更全」而靠「唯一」的差异化。
+- **#5 的降级值得记一笔**：时间敏感型差异化（新 CLI / 新默认值）有保质期——官方文档一收录、镜像站一铺，优势就没了。以后做这类判断要顺带查「官方是否已出对应 KB 页」。
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |

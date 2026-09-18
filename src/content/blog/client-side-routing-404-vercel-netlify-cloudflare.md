@@ -87,7 +87,7 @@ Create `public/_redirects` with this single line:
 /* /index.html 200
 ```
 
-The `/*` catches every path, `/index.html` is the destination, and `200` means "serve it" (not a redirect — the URL stays exactly what the user typed). Netlify reads this file from your build output, which is why it goes in `public/`: the build copies it into `dist/` automatically.
+The `/*` catches every path, `/index.html` is the destination, and `200` means "serve it" (not a redirect — the URL stays exactly what the user typed). Netlify reads this file from your build output, which is why it goes in `public/`: the build copies it into `dist/` automatically. If the deploy never gets that far, then you have a [Netlify build that fails before routing ever runs](/deploy/netlify-build-failed-exit-code-2/) — fix the build first, because routing rules can't rescue a site that never shipped.
 
 ### Cloudflare Pages
 
