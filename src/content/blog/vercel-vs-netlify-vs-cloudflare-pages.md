@@ -58,6 +58,7 @@ Netlify basically invented this category of Git-based static hosting, and it's s
 - The free tier limits **build minutes to 300/month**. Sounds fine until you're iterating with an AI tool and pushing 20 times a day — a 2-minute build means 150 deploys and you're done for the month. I've hit this ceiling. It's annoying.
 - Smaller free bandwidth (100 GB) and a community that's quieter than the other two.
 - Build failures report differently there, too: you get `build script returned non-zero exit code: 2` rather than a framework error, and [the three causes behind that Netlify error](/deploy/netlify-build-failed-exit-code-2/) catch out most first deploys.
+- Vercel's version of this confusion is quieter still: sometimes a push produces **no deployment at all**, not even a failed one. That's not a build error, it's a trigger that never fired — [the checks for a Vercel deploy that never starts](/deploy/vercel-git-push-not-triggering-deploy/) cover it.
 
 ## Cloudflare Pages: the one I actually use now
 

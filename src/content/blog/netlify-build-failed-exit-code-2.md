@@ -42,6 +42,7 @@ So the whole job is finding the real error, and on Netlify there are only three 
 | `Module not found` at build time | File-name casing or a file that isn't in git | [Module not found on deploy](/deploy/vercel-module-not-found-works-locally/) |
 | Build succeeded, deep link 404s on refresh | Client-side routing, not a build problem | [404s on refresh](/deploy/client-side-routing-404-vercel-netlify-cloudflare/) |
 | Site loads, then goes blank with a JS error | Client-side exception at runtime | [Client-side exception on deploy](/deploy/application-error-client-side-exception-vercel/) |
+| Push reaches GitHub, Vercel shows **no deployment at all** | The trigger never fired; there's no log to read | [A Vercel push that never produces a deployment](/deploy/vercel-git-push-not-triggering-deploy/) |
 
 If you're on `exit status 128` specifically, stop here — that's a repo permissions problem, and Netlify's fix is to relink the repository, not to touch your build command.
 

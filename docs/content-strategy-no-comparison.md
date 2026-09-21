@@ -217,6 +217,31 @@ SERP 里反复出现同一批**同级别 2026 新站**，说明赛道已被专�
 - **新增 #2 为平台轮换机会**：deploy 簇 15 篇里 Netlify 从无主攻，`exit code: 2` 这个报错原文与站内 6 类症状零重叠，是唯一不靠「更全」而靠「唯一」的差异化。
 - **#5 的降级值得记一笔**：时间敏感型差异化（新 CLI / 新默认值）有保质期——官方文档一收录、镜像站一铺，优势就没了。以后做这类判断要顺带查「官方是否已出对应 KB 页」。
 
+## 4.8 SERP 实测记录（2026-09-21 蓝海日，8 个候选）
+
+已发 21 篇：**deploy 15 / payments 5 / monetize 1 / legal 0 / tools 0**。查重：`git push` / `deploymentEnabled` / `deploy hook PENDING` 站内 0 覆盖；`license key` 仍仅在 checkout 文与 MoR 文顺带提及；`522` 无专题。
+
+| # | 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|---|
+| 1 | cloudflare pages custom domain 522（**第三轮复测**） | answeroverflow（CF Developers Discord，**MVP Cyb3r-Jak3 给出确切解法并引用官方文档原句**）+ 掘金中文 + CF Community（Walshy 解答）+ farrosfr.com（个人博客，讲 www/apex 分别注册）+ CF Community（**CF Team janik1 实证**）= **5/5 UGC，官方 0/5** | **可打** | **P0，三轮复测中最软的一轮**（09-14 与 09-18 均为 3/5，本轮官方页连直接占位都没有，只被引用）。事实链三条依旧成立，且本轮多两条新料：① CF Team 明确要求「**先删掉你自己建的 www 记录**，再到 Pages 面板 Add custom domain」——手动加 CNAME 反而坏事，这是官方实证 ② NuxtHub / preview 环境场景：先 Add custom domain 再改 branch alias 才能生效 |
+| 2 | vercel git push not triggering deploy / auto deploy stopped | Vercel 官方 KB ×2（含 staging 镜像）+ lilting.ch（**个人一手根因**）+ Vercel Community ×2（多人实证 + Leaderboard 解答）= 官方 2/5 + UGC 3/5 | **可打** | **P1（症状全新）**。站内 7 类症状全是「部署了但坏了」，**没有一类是「push 了根本没部署」**——枢纽缺口。差异化点：① 官方 KB 明写「反复手动 redeploy 排查会耗尽 Hobby 100/day 限额，反而复现症状」（反直觉）② `git config user.email` 与 Vercel 账号不匹配 → **静默跳过**，dashboard 什么都不显示，只有 CLI 才报错 ③ `github.enabled: false` 与 `git.deploymentEnabled: false` 新旧两种写法 ④ deploy hook 返回 `{"job":{"state":"PENDING"}}` 但永不落地，绕过办法是走 `/v13/deployments` API |
+| 3 | lemon squeezy license key api tutorial（开发者侧） | LS 官方 guide + LS 官方 API 参考 + claude-plugins.dev（AI 聚合）+ npm `lemonsqueezy-license-manager` README + lmsqueezy/lemonsqueezy.js GitHub wiki = 官方 2/5 + 包/仓库文档 2/5 + 聚合 1/5 | **可打** | **P1（affiliate 落点最好）**。前 5 **零独立博主教程**，全是官方与包文档。可用一手点：activate/validate/deactivate **免 API key**（官方 sk 注释明写）；官方示例里 `activation_limit: 1` 与 `activation_usage: 5` 自相矛盾（文档陈旧）；`instance.id` 不落库则无法 deactivate；必须校验 `meta.store_id/product_id` 否则别家产品的 key 能解锁你的 app |
+| 4 | send download link after payment digital product no backend（重测） | dev.to ×2（**同一作者，AI 味**）+ PayLink（厂商）+ tmdm.cn（dev.to 机翻镜像）+ PayRequest（厂商）= 厂商 2/5 + AI 农场 2/5 | **边缘可打** | **P1（有一手反驳点）**。⚠️ 排名前 2 的教程都教读者把 **Cloudinary API Secret 写进浏览器**（`btoa('API_KEY:API_SECRET')`）或**用 `?success=true` 当支付凭证**（任何人加个 query 就能白嫖下载）——可直接反驳。承接 `getting-paid-without-stripe`（怎么收）与 `lemon-squeezy-checkout-astro-static-site`（怎么接），本篇只讲「付完款文件怎么到买家手里」 |
+| 5 | cloudflare pages build failed | CF 官方 docs ×2（含两个 preview 镜像）+ 官方 llms-full + 官方 git-integration troubleshooting + Stack Overflow = **官方 4/5** | **放弃** | 符合 §2「全官方占位」。且唯一可打的 SO 症状 `Output directory "dist/..." not found` 与 `vercel-build-failed` Cause 4 重叠 |
+| 6 | netlify forms not receiving submissions | Netlify 官方 ×3（forms troubleshooting / setup / FAQ）+ 官方 2017 blog + Stack Overflow = **官方 4/5** | **放弃** | 官方占位重；且 Netlify Forms 属平台专属功能，与我们「部署 + 收款」主线偏离 |
+| 7 | lemon squeezy license key not working（§4.7 #3 的换词尝试） | kit-maker（**卖家给买家的帮助页**）+ LS 官方 ×2 + autodocguide（卖家文档）+ negativelabpro 论坛（**买家求助**）= 卖家页 2/5 + 官方 2/5 + 买家 UGC 1/5 | **放弃** | 🔴 **重要：换长尾后意图错位。** 搜 `license key not working` 的人是**买了软件激活不了的买家**，不是要给自家产品加验证的开发者。原词（#3 `license key api tutorial`）才是开发者意图，别再往「not working」方向换词 |
+| 8 | where to sell developer boilerplate / marketplace 2026 | dev.to（AI Study Room 转载）+ SprukoMarket + SellRamp + ScriptRipple + CheckoutPage = **4/5 平台自推广 + 1 AI 农场** | **放弃** | 符合 §2「全是厂商内容营销页」。且 dev.to 那篇的费率数字（ThemeForest 37.5–50% / Creative Market 30% / Gumroad 5–10%）与已发 `how-to-price-a-developer-template` 高度重合 → 内耗风险 |
+
+### 本轮结论
+
+- **遗留池 #1（CF Pages 522）第三轮复测，从 3/5 UGC 升到 5/5**，官方页退出直接占位 → 目前全池最软。但站内域名类已有 4 篇，这是第 5 篇，仍须严格「平台 × 症状」切分。
+- **新增 #2 是枢纽缺口**：`vercel git push not triggering deploy` 对应「静默不部署」，是站内症状分流表**唯一没覆盖的前置环节**——现有 7 篇全部假设「部署已经发生」，push 没触发的读者一篇都接不住。
+- **#7 的失败值得记一笔（新规则）**：换长尾能降低竞争，但**也可能换掉意图**。以后换词前后必须对比「搜索者身份」——同一个产品，卖家搜的和买家搜的是两套完全不同的词，写错方向等于白写。
+
+### 站点结构提醒（2026-09-21）
+
+deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若继续只发 deploy，分类失衡会拖慢 AdSense 申请（需 25–30 篇且结构合理）。**下一轮建议优先 #3（payments）或 #4（payments/monetize）**，除非 #2 的枢纽缺口更急。
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |

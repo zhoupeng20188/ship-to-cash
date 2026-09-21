@@ -123,7 +123,9 @@ Two things beginners get wrong here:
 
 That first error, `Module not found`, deserves special mention — it's the one that works locally and only breaks on Vercel, and the fix is usually a single character. I broke down [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/) (file casing, mostly) in its own guide.
 
-Hit something not in this table? If the build itself failed, I keep a running list of [the Vercel build failures I hit most often](/deploy/vercel-build-failed/) and what fixed each one. Otherwise, copy the exact error from the Vercel build log and paste it into your AI tool along with "my Vercel deploy fails with this error." Deploy errors are one of the things AI debugs best, because build logs are extremely literal.
+Hit something not in this table? If the build itself failed, I keep a running list of [the Vercel build failures I hit most often](/deploy/vercel-build-failed/) and what fixed each one.
+
+And if there's no error to copy — you pushed, GitHub has the commit, and Vercel shows no deployment whatsoever — none of this applies. That's the trigger never firing, and [the fix when Vercel shows no deployment after a push](/deploy/vercel-git-push-not-triggering-deploy/) begins with a question you can answer in five seconds: did the Vercel Bot comment on your commit? Otherwise, copy the exact error from the Vercel build log and paste it into your AI tool along with "my Vercel deploy fails with this error." Deploy errors are one of the things AI debugs best, because build logs are extremely literal.
 
 ## What the free tier actually covers
 
