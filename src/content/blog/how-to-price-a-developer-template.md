@@ -58,7 +58,7 @@ Below all of them sits $0. [Vercel](https://vercel.com/templates) and [Astro](ht
 
 Two rules for picking your row:
 
-**Price what's wired up, not what you built.** The band is set by the integrations, not by your hours. A kit with Stripe webhooks, subscriptions and a customer portal is in a different row than one with a checkout button, and buyers know the difference even if they can't articulate it.
+**Price what's wired up, not what you built.** The band is set by the integrations, not by your hours. A kit with Stripe webhooks, subscriptions and a customer portal is in a different row than one with a checkout button, and buyers know the difference even if they can't articulate it. The same holds for [license key activation](/payments/lemon-squeezy-license-key-api/) — a buyer who can move their license to a second machine is paying for wiring, not for files.
 
 **Anchor at the bottom of your band until you have proof.** No live demo, no docs, no testimonials: bottom of the row. Live demo, screenshots in the README, three buyers who shipped something: middle of the row. You move up by adding things, not by waiting.
 

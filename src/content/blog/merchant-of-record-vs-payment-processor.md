@@ -110,7 +110,7 @@ If two or more of those describe you, skip the MoR and budget for a CPA instead.
 
 - **You sell to consumers globally.** EU VAT alone justifies it from your first French customer.
 - **You're solo.** Every hour in a tax portal is an hour not shipping.
-- **Your product is simple.** A subscription, a one-time download, a license key. MoRs eat these for breakfast — Lemon Squeezy even bundles license keys, download delivery, and an affiliate program into the same 5%.
+- **Your product is simple.** A subscription, a one-time download, a license key. MoRs eat these for breakfast — Lemon Squeezy even bundles [license keys](/payments/lemon-squeezy-license-key-api/), download delivery, and an affiliate program into the same 5%.
 - **It's your first paid thing.** The goal is learning whether anyone will pay, not building a finance department.
 
 Between the two big indie MoRs: **Paddle** is flatter (one 5% + 50¢ rate, no surcharge surprises) and more SaaS-serious. **Lemon Squeezy** is faster to set up and friendlier for downloads and licenses, but read the surcharge list twice — international PayPal subscribers stack up to 8.5% + 50¢. Paddle has also been an Apple-style gatekeeper about what products it approves, so read their acceptable-use policy before building on either.

@@ -242,6 +242,22 @@ SERP 里反复出现同一批**同级别 2026 新站**，说明赛道已被专�
 
 deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若继续只发 deploy，分类失衡会拖慢 AdSense 申请（需 25–30 篇且结构合理）。**下一轮建议优先 #3（payments）或 #4（payments/monetize）**，除非 #2 的枢纽缺口更急。
 
+## 4.9 SERP 实测记录（2026-09-23 选题日，3 个候选）
+
+已发 22 篇：**deploy 16 / payments 5 / monetize 1 / legal 0 / tools 0**（deploy 占 73%，连续 4 篇新文都是 deploy）。本轮按 §4.8 结构提醒，**只对非 deploy 方向做实测**。查重：`license key` 仍仅在 checkout 文与 MoR 文顺带提及 3 次，无专题；`522` 无专题（遗留池）。
+
+| # | 候选词 | SERP 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|---|
+| 1 | lemon squeezy license key api generate validate | hashhackers 个人博客（泛讲 LS 全流程）+ **usertourkit（SaaS 产品自推广，唯一真讲 License API）** + eliteai.tools（AI 聚合）+ apicostcalc（费用工具站）+ make community（论坛帖）= **官方 0/5、独立博主一手教程 0/5** | **可打** | **P0（本轮最软，affiliate 落点最好）**。可挖的一手点：① activate/validate/deactivate 是**免 API key 的公开端点**（usertourkit 也提到，需再深挖）② 官方示例 `activation_limit: 1` 与 `activation_usage: 5` 自相矛盾（文档陈旧）③ `instance.id` 不落库则无法 deactivate ④ **必须校验 `meta.store_id/product_id`**，否则别家产品的 key 能解锁你的 app ⑤ validate 响应含买家邮箱/订单号，直接透传给前端是隐私泄漏，需裁剪字段 |
+| 2 | send download link after payment digital product no backend | dev.to ×2（**同一作者，且明确教 `btoa('API_KEY:API_SECRET')` 放进浏览器** + 用 `?success=true` 当支付凭证）+ PayLink（厂商）+ PayRequest（厂商）+ davidutke 个人博客（Google Drive 公开链接法）= 厂商 2/5 + 弱个人站 3/5 | **可打** | **P1（差异化最硬：反驳型）**。两条可直接反驳的安全硬伤：① 把 Cloudinary **API Secret 写进前端** = 任何人 F12 就能拿到全库读写权限 ② 用 `?success=true` 判断是否付款 = 任何人手加 query 就能白嫖下载。承接 `getting-paid-without-stripe`（怎么收）与 `lemon-squeezy-checkout-astro-static-site`（怎么接），本篇只讲「付完款文件怎么到买家手里」 |
+| 3 | EU VAT / MoR 后要不要自己注册 VAT 并开票（**legal 开簇第二次尝试**） | 词 A「EU VAT digital products sole trader」：eubiztools ×2 + vattoolkit + 1stopvat + linkdash = **5/5 税务 SaaS/工具站**；词 B「MoR do I still need VAT registration invoice」：inflowpay（MoR 服务商自推广）+ nsaccounting（会计所）+ sumup（POS 厂商）+ gov.uk（官方）+ **中文税务局页面（地域污染）** | **放弃 ×2** | 🔴 **结论：legal 簇不能用税务角度开簇。** 两次实测一致——税务词的 SERP 被会计所/报税 SaaS 内容营销占满，且这类话题 E-E-A-T 门槛最高（作者非税务从业者，写错有实际风险）。下轮换非税务角度再试（退款政策 / ToS），若仍失败则接受 legal/tools 暂空，不硬填 |
+
+### 本轮结论
+
+- **#1 与 #2 都是非 deploy，都能补结构失衡**，且 affiliate 落点分别是 Lemon Squeezy License API 与文件交付工具，符合 §3 的 Tier 2 打法。
+- **#1 更软**（官方 0/5 + 零独立博主教程），**#2 差异化更硬**（有可反驳的安全错误）。若今天只写一篇，优先 #1；若写两篇，#1 + #2 组合正好补齐 payments 簇「接了支付 → 付完怎么交付 → 怎么验权」的完整链路。
+- 🔑 **新规则（本轮新增）**：E-E-A-T 门槛要跟 SERP 竞争分开判。**税务/法务/医疗类即使 SERP 软也不能写**——写错的代价是读者真的去照做并被罚，且作者无资质背书。此前 §4.5 #16（Paddle 需 KYC）与 §4.7 #8（隐私政策工具站）各有各的失败原因，本轮把「专业资质门槛」单列为一条独立否决项。
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |

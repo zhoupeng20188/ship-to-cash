@@ -100,7 +100,7 @@ Past a few hundred dollars a month, third-party receivers — Wise, Payoneer, Wo
 I use it, and I'd use it again, but not for everything.
 
 - **No tax handling.** You're the seller of record, so EU VAT and US sales tax are yours. [A merchant of record](/payments/merchant-of-record-vs-payment-processor/) solves this by legally taking the sale, and that's most of what Paddle's fee pays for.
-- **It's a tip jar, not a billing system.** Digital downloads, one-off sales, and simple memberships are fine. Metered SaaS billing, trials, and dunning are not.
+- **It's a tip jar, not a billing system.** Digital downloads, one-off sales, and simple memberships are fine. Metered SaaS billing, trials, and dunning are not, and neither is proving someone still owns a copy — that's a [license key check on every launch](/payments/lemon-squeezy-license-key-api/), which Ko-fi has no version of.
 - **PayPal, with everything that implies.** Dispute resolution leans toward buyers, and account-level holds are a real risk if your volume spikes unexpectedly.
 
 In [the three routes for when Stripe isn't available](/payments/stripe-not-available-in-my-country/), this is the smallest and fastest. It isn't the endgame — it's the thing that lets you charge money this week instead of next quarter.
