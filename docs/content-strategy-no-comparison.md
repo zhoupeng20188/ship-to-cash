@@ -258,6 +258,54 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 - **#1 更软**（官方 0/5 + 零独立博主教程），**#2 差异化更硬**（有可反驳的安全错误）。若今天只写一篇，优先 #1；若写两篇，#1 + #2 组合正好补齐 payments 簇「接了支付 → 付完怎么交付 → 怎么验权」的完整链路。
 - 🔑 **新规则（本轮新增）**：E-E-A-T 门槛要跟 SERP 竞争分开判。**税务/法务/医疗类即使 SERP 软也不能写**——写错的代价是读者真的去照做并被罚，且作者无资质背书。此前 §4.5 #16（Paddle 需 KYC）与 §4.7 #8（隐私政策工具站）各有各的失败原因，本轮把「专业资质门槛」单列为一条独立否决项。
 
+## 4.10 SERP 实测记录（2026-09-28 蓝海日，6 个候选）
+
+已发 23 篇：**deploy 16 / payments 6 / monetize 1 / legal 0 / tools 0**（deploy 占 70%）。本轮继续按 §4.8 结构提醒约束，**只对非 deploy 方向做优先实测**，遗留池两个 deploy 候选仅复测。
+
+查重：`webhook` 在 5 篇顺带提及（LS checkout / LS license key / CF env vars / git-push / how-to-price）但**无专题**；`adsense` 仅对比文提及 1 次、`ads.txt` 全站 0 覆盖；`522` 全站 0 覆盖；`download link` 仅 license key 文提及。
+
+| # | 候选词 | 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|---|
+| 1 | lemon squeezy webhook not firing / signature verification（**新**） | Hookmetry（webhook SaaS 内容营销）+ **Stack Overflow** + LS 官方文档 + **GitHub Issue ×2（lemonsqueezy-go #7 / lemonsqueezy.js #44）** + GitHub Gist（PocketBase Goja）= **UGC 4/8，前 5 内 UGC 3/5** | **可打** | **P0（本轮最软之一）**。承接 LS 两篇（checkout 接支付 → license key 验权），本篇补「付完款服务器怎么知道」这一环，payments 链路闭合。一手点：① 必须用 **raw body 字节**做 HMAC，框架 body parser（Express `json()` / Next App Router / Astro `request.json()`）重新序列化即失配 ② signing secret 是 `whsec_` 且**每个 endpoint 独立**，换 endpoint 不换 secret 必失败 ③ 返回非 200 → 官方最多重发 3 次，日志里表现为重复事件 ④ PocketBase Goja 引擎的 crypto 实现不兼容（Gist 实证）⑤ 本地调试需转发，官方 dashboard 可 replay 失败事件 |
+| 2 | how to add google adsense to astro site（**新**） | intzzzero.dev（个人博客）+ deku.posstree.com（个人博客）+ **Google AdSense 社区论坛** + **Stack Overflow ×2** + GitHub Discussions（astro-paper，无人解答）= **5/5 UGC，官方 0/5**（adsense 官方帮助页排到第 10） | **可打** | **P0（本轮最软，monetize 开簇第二篇）**。SO 两条都是「代码加了但广告不显示」，GitHub Discussions 未解答 → 有明确未满足需求。一手点：① `ads.txt` 必须落在 `public/` 根且可公网访问 ② **Astro View Transitions 下切页广告不刷新**（Astro 专属坑，现有教程没讲）③ dev 环境必须不注入脚本，否则无效点击会封号 ④ 站点自己加过 CSP/CORS header（见 `cors-error-vercel`）会拦 `pagead2.googlesyndication.com` ⑤ 作者本人即将走 AdSense 申请（满 25–30 篇后），有一手流程经验 |
+| 3 | send download link after payment no backend（**遗留，§4.9 #2 重测**） | Dodo Payments（厂商）+ PayLink（厂商）+ mctaba.com（个人博客，Paystack）+ Zapier（厂商模板）+ conversionproplus（个人博客，Shopify）= **厂商 3/5 + 弱博客 2/5** | **边缘可打** | **P1（保留）**。⚠️ 与 §4.9 那次实测构成不同（本轮厂商从 2/5 升到 3/5，新进 Dodo Payments），说明**这类词的商业占位在变重**——Dodo/PayLink 这类新品 MoR 正在用「自动交付」做 SEO。差异化仍靠可反驳的安全硬伤（Cloudinary API Secret 进前端 / `?success=true` 当支付凭证），但性价比已低于 #1 #2 |
+| 4 | stripe webhook signature verification failed（**新，与 #1 对照测**） | Stripe 官方文档 + axonbuild（个人博客）+ webhooker.eu（**厂商**）+ tellmewhendown（个人博客）+ openwebhook.co（**厂商**）；第 6–8 位 HookSense / FixDevs / Buglyst **全是 webhook 工具站** = 官方 1/8 + 个人博客 2/8 + **厂商 5/8** | **边缘可打（不推荐）** | 🔑 **本轮最重要的一条对照结论**：同一个症状（webhook 签名失败），**Stripe 词的 SERP 已被一批 webhook SaaS 批量内容营销占位**（Webhooker / OpenWebhook / HookSense / Buglyst / Hookmetry），Lemon Squeezy 侧仍是原生态 UGC。**新规则：当某词的 SERP 出现 3 家以上同类 SaaS 工具站在做同一症状的 SEO 时，说明商业意图已起 —— 该避的是这个「症状 × 大平台」组合，换平台比换长尾更有效。** |
+| 5 | cloudflare pages custom domain 522（**遗留，第四轮复测**） | CF Community ×2 + **CF 官方文档 ×2** + Hostinger（主机厂商）+ Stack Overflow + Reddit = UGC 4/8，官方 2/8 | **可打** | **P0 但本轮不优先**。事实链四轮成立（SO 那条明写「不要在 DNS 里手动建记录，要去 Pages 面板 Add custom domain」），仍是遗留池最稳的一篇。但域名类已有 4–5 篇、deploy 占 70%，**本轮继续让位给非 deploy** |
+| 6 | refund policy for digital products（**legal 开簇第三次尝试，非税务角度**） | TermsFeed + freeprivacypolicy.com + dealindigital（弱博客）+ privacypolicygenerator.info + wpeka = **法律文档生成工具站 4/5 + 弱博客 1/5** | **放弃** | 🔴 **legal 簇两角度均失败（§4.9 税务 + 本轮退款政策）**，与 §4.7 #8（隐私政策工具站）三次一致：法律类词的 SERP 结构性地被文档生成工具站占满。**按 §4.9 结论执行：接受 legal / tools 暂空，不硬填**，把资源投到 payments / monetize |
+
+### 本轮结论
+
+- **#1（LS webhook）与 #2（AdSense + Astro）是本轮最软的两篇**，且都是非 deploy，正好各补一个失衡方向：#1 闭合 payments 的「接支付 → 通知 → 验权」链路，#2 让 monetize 从 1 篇变 2 篇。
+- **#4 的对照结论要记住**：判断「能不能打」不能只看 UGC 条数，还要看**占位的是谁**。同为 webhook 签名症状，Stripe 侧被 5 家 webhook SaaS 围攻，LS 侧只有 1 家（Hookmetry）且还没进前 3 —— 差异不在词，在平台生态成熟度。
+- **#3 的退化值得记一笔**：遗留候选的 SERP 会变。上一轮还能打的「边缘可打」词，两轮后厂商占位从 2/5 涨到 3/5。**遗留池每次复测都要重新判，不能沿用旧分级。**
+- legal 簇按计划放弃第三轮尝试，下轮不再为 legal 单独出题，除非出现非工具站角度（如「平台要求你提供什么才能上架」这类程序性话题）。
+
+### 本轮交付（2026-09-28）：`lemon-squeezy-webhook-not-firing.md`（第 24 篇，payments）
+
+1506 词 / title 62 / desc 154 / OG 67KB / FAQ 6 条 / 出链 8 条（跨簇 4）。**未推送。**
+
+⚠️ **差点写成内耗篇，值得记下来**：`lemon-squeezy-checkout-astro-static-site.md` Step 4 已用整节讲签名验证
+（HMAC-SHA256 hex、raw body、Workers 的 Web Crypto 代码、safeEqual、200 重试、test_mode）。
+新文若按「怎么验证签名」写就与它直接撞车。
+
+**解法：同一功能按「集成 vs 排查」拆两篇，并用运行时划边界** —— checkout 文 = 集成 + Cloudflare Workers；
+新文 = 排查 + Node/Express、Next.js（App + Pages Router）、Go，CF 只在症状分流表里内链过去。
+文首放 5 类症状 → Cause 分流表，符合 §4.1。
+
+**新规则（本轮新增）**：写新文前若站内已有文章覆盖同一功能模块，判重不能只看标题与关键词，
+**必须打开该文看它的小节覆盖到哪一层**。报错类文章的边界要落在「运行时 / 症状」上，而不是落在「功能」上。
+
+一手点（SERP 前 5 无人写）：① 官方 signing 示例的 `request.rawBody` 不是 Express 属性 → 裸 Express 里 `undefined`
+→ `hmac.update(undefined)` 抛错 → 500 → 触发重试 ② Node `crypto.timingSafeEqual` 长度不等是 **throw** 不是 false，
+把「签名失败」与「同一事件收 4 次」连成一条因果链 ③ Go SDK issue #7：hex 字符串与原始字节直接比较永远 false
+④ 官方示例的 `throw new Error('Invalid signature.')` 会让伪造请求被重试 3 次 ⑤ 幂等要去重，但
+`subscription_payment_success` 必须按 **invoice ID** 去重，按 subscription ID 会把第二次续费起全部静默丢弃。
+
+回链 4 条（锚文本互不相同，含 1 条核心关键词）：checkout / license-key / cf-env-vars / how-to-price。
+
+**遗留**：#2（AdSense + Astro，5/5 UGC 最软）未写，下轮可优先；#3（send download link）厂商占位仍在变重，
+下次复测若厂商升到 4/5 就移出池子。
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |

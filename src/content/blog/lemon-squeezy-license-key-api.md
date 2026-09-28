@@ -21,7 +21,7 @@ faq:
     answer: "Activate returns activated false with the error message \"This license key has reached the activation limit.\" The limit itself is a per-product setting in the Lemon Squeezy dashboard — the docs use the example of a $9 product limited to one computer and a $19 variant of the same product allowing three. If buyers regularly run out of activations, raise the limit on the variant or add a higher-priced one rather than resetting keys manually."
 ---
 
-I added [Lemon Squeezy checkout to a static site](/payments/lemon-squeezy-checkout-astro-static-site/) and felt finished. Payments went through, webhooks fired, the money landed. Then a buyer asked how to move his license to a new laptop, and I had no answer, because I had shipped a paid product with no way to tell a customer from someone who'd been forwarded the download link.
+I added [Lemon Squeezy checkout to a static site](/payments/lemon-squeezy-checkout-astro-static-site/) and felt finished. Payments went through, and once I'd sorted out [a webhook that wouldn't fire](/payments/lemon-squeezy-webhook-not-firing/), the money landed. Then a buyer asked how to move his license to a new laptop, and I had no answer, because I had shipped a paid product with no way to tell a customer from someone who'd been forwarded the download link.
 
 License keys are the fix, and the API behind them is small enough to hold in your head: three endpoints, no authentication, no SDK. I wired up all three in an afternoon. Five things about it surprised me, and four of them would have shipped as bugs if I'd written the obvious version and moved on.
 

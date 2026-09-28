@@ -70,7 +70,7 @@ Sit with that objection for a minute, because it kills most first templates: eve
 
 What people pay for is the boring middle that free starters deliberately skip. Free templates get you to "runs on localhost." They stop right where the work gets tedious and specific:
 
-- webhook handling that survives a retry
+- webhook handling that survives [a provider resending the same event four times](/payments/lemon-squeezy-webhook-not-firing/)
 - tax and VAT, if you're not routing through a merchant of record
 - transactional email that lands in the inbox instead of the spam folder — the SPF, DKIM and DMARC setup nobody enjoys
 - deploy config and environment variables that don't fall over on the second deploy

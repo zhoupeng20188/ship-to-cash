@@ -105,7 +105,7 @@ const url = import.meta.env.API_URL; // no PUBLIC_ prefix → not available clie
 
 The rule that follows: **on a static site, the only environment variables that exist are the ones the build wrote into your files.** If you were hoping to rotate a value without rebuilding, this route won't do it — you need a Function, or a config fetched at runtime.
 
-That has a real consequence if you're selling something. In [my Lemon Squeezy + Astro setup](/payments/lemon-squeezy-checkout-astro-static-site/), the static page renders the checkout button while a Pages Function verifies webhook signatures — the signing secret can only live in that Function. That isn't a style preference, it's the runtime boundary.
+That has a real consequence if you're selling something. In [my Lemon Squeezy + Astro setup](/payments/lemon-squeezy-checkout-astro-static-site/), the static page renders the checkout button while a Pages Function verifies webhook signatures — the signing secret can only live in that Function. That isn't a style preference, it's the runtime boundary. If the secret is genuinely in place and signatures still fail, the variable isn't your problem any more — [Lemon Squeezy webhook not firing](/payments/lemon-squeezy-webhook-not-firing/) covers the five causes, ranked.
 
 ## Cause 4: The setting moved, and you're reading stale instructions
 
