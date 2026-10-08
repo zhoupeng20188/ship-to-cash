@@ -306,6 +306,24 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 **遗留**：#2（AdSense + Astro，5/5 UGC 最软）未写，下轮可优先；#3（send download link）厂商占位仍在变重，
 下次复测若厂商升到 4/5 就移出池子。
 
+## 4.11 SERP 实测记录（2026-10-08 选题日，3 个候选）
+
+已发 24 篇：**deploy 16 / payments 7 / monetize 1 / legal 0 / tools 0**（deploy 占 67%）。按 §4.8/§4.9/§4.10 结构提醒，**继续优先非 deploy**。9-28 之后未发新文，上轮遗留池原样保留，本轮复测（当日 DDG HTML 端点返回空页，改用通用 WebSearch 实时检索）。
+
+| # | 候选词 | 2026-10-08 SERP 前 5 实际构成 | 判定 | 结论 |
+|---|---|---|---|---|
+| 1 | how to add google adsense to astro site | tutorialspoint（通用教程）+ tycp.xyz（中文通用）+ wikihow（通用大站）+ **adsterratech（Adsterra 竞品软文）** + **purpleads.io（PurpleAds 竞品软文）** = **Astro 专属教程 0/5，竞品广告网络软文 2/5** | **可打（理由变了）** | **P0（monetize 开簇第 2 篇）**。⚠️ 与 09-28 DDG 实测（5/5 UGC）构成不同：今日前 5 全是通用 AdSense 教程 + 广告网络竞品软文，**Astro 专属内容 0 条** → 缺口更明确而非更软。竞品软文出现 = 商业意图信号（值得写）。差异化点 SERP 全无：① Astro `<head>` 注入 vs 通用 HTML ② **View Transitions 切页广告不刷新** ③ `ads.txt` 必须落 `public/` 根 ④ 站点自有 CSP/CORS（见 `cors-error-vercel`）会拦 `pagead2.googlesyndication.com` ⑤ dev 环境不注入脚本否则无效点击封号。⚠️ 必须写 **Astro 专属角度**，不要写通用 AdSense 教程（会直接撞 wikihow/tutorialspoint） |
+| 2 | send download link after payment digital product no backend（复测） | **dev.to 同一作者 ×2**（均教 `btoa('API_KEY:API_SECRET')` 写前端 + `?success=true` 当支付凭证，AI 味重）+ tmdm.cn（dev.to 机翻镜像）+ **paylink.systems（厂商）** + **hushlink.me（厂商）** = 厂商 2/5 + 同作者 AI 博客 3/5 | **边缘可打** | **P1（反驳型差异化最强）**。SERP 前 2 名的安全硬伤可直接反驳：① Cloudinary API Secret 写进浏览器 = 任何人 F12 拿全库读写 ② `?success=true` 当支付凭证 = 手加 query 白嫖下载。承接 `getting-paid-without-stripe`（怎么收）与 `lemon-squeezy-checkout-astro-static-site`（怎么接），本篇只讲「付完款文件怎么到买家手里」。⚠️ 厂商占位仍在轮替（PayLink/HushLink/Dodo/Zapier），商业意图明显，性价比低于 #1 |
+| 3 | lemon squeezy affiliate program tutorial（新测） | userion.com（卖家自推广）+ fromzero.ai（卖家自推广）+ minsjohnfrancis.com（affiliate 营销博客）+ rekomi.com（LS 联盟 SaaS 竞品软文）+ docs.modr8.net（卖家自推广）= **5/5 卖家自推广页 + 竞品软文 + 营销博客** | **放弃** | 符合 §2「全是厂商内容营销页 → 放弃」。意图偏「拉人头/赚快钱」，与站点的「vibe coder 技术教程」不匹配；affiliate 落点更适合自然带进已有的 LS 单平台集成教程，不单开 |
+
+### 本轮结论
+
+- **#1（AdSense + Astro）已写**：2026-10-08 发布 `google-adsense-on-astro.md`（monetize 簇第 2 篇，全站第 25 篇）。monetize 失衡已补。Astro 专属五个一手点全部经官方/权威源核实：① `is:inline` 强制（否则 Astro 打包远程 URL 失败）② `public/ads.txt`→根 ③ View Transitions 切页广告消失→`astro:page-load` 重触发 ④ 站点 CSP 拦 `pagead2` ⑤ `import.meta.env.PROD` 门控避免自点击封号。出链 7（跨簇 6）/ 回链 4。
+- **#2（send download link）保留 P1**：反驳型差异化硬（SERP 前 2 教把 Secret 写前端），但厂商占位轮替、性价比低于 #1。
+- **#3（LS affiliate）放弃**：全卖家自推广页，意图错位。
+- legal / tools 继续空着不硬填（§4.9 结论）。
+- 🔑 **新观察**：同一个词（AdSense+Astro）在 09-28（DDG：5/5 UGC）与 10-08（WebSearch：通用教程+竞品软文）构成差异极大 —— **数据源不同（DDG vs Google）会显著改变 SERP 观感**，以后判「软不软」要同时看「是否有 Astro 专属缺口」而非只看 UGC 条数；且竞品软文出现是商业意图信号，反而说明该词值得写。
+
 ## 5. 已暂停（原清单）
 
 | 原选题 | 原因 |

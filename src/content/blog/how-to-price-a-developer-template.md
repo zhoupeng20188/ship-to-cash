@@ -136,3 +136,5 @@ That's also why you'll eventually want a [real company structure](/payments/do-i
 Pick the band off the catalog. Run the one-tenth check. Confirm the fee table doesn't punish the price you chose. Then say the number out loud to a stranger and see whether you flinch.
 
 The first person who pays $199 without hesitating will teach you more about your product than any amount of tuning. And the first person who tells you it's too expensive was never going to be your buyer.
+
+And when the traffic finally shows up, [layering Google AdSense on top of your product sales](/monetize/google-adsense-on-astro/) is the slow but hands-off second revenue stream — it earns while you sleep, unlike support tickets.

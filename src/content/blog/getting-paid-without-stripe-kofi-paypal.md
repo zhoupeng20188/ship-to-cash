@@ -113,4 +113,4 @@ In [the three routes for when Stripe isn't available](/payments/stripe-not-avail
 4. Leave money in PayPal and withdraw once a month, in as few transactions as possible.
 5. Revisit the whole stack once you're consistently past ~$300/month. Below that, the $35 withdrawal fee dominates every other cost here.
 
-The first sale is the only market research that counts. Everything above is just plumbing to make it possible.
+The first sale is the only market research that counts. Everything above is just plumbing to make it possible. Once those sales are steady, [add Google AdSense as the hands-off passive layer](/monetize/google-adsense-on-astro/) — it pays per view, not per sale, and asks nothing of your buyers.

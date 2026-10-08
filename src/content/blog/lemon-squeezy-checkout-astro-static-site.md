@@ -222,7 +222,7 @@ It's honest about its limits, and so should you be.
 ## What I'd do in your position
 
 1. Create one product and paste a plain `<a href>` link to it on a real page today. Skip the overlay. Take one real payment before you optimize anything.
-2. Add `lemon.js` with `is:inline`, then add the `astro:page-load` rebind if you use View Transitions.
+2. Add `lemon.js` with `is:inline`, then add the `astro:page-load` rebind if you use View Transitions — [the same View Transitions rebind also trips up Google AdSense](/monetize/google-adsense-on-astro/) if you add ads later.
 3. Add the webhook function and log payloads for a day before you act on them. Reading the real JSON is worth more than any doc.
 4. Only then write the access-granting logic, with the `test_mode` check and the status switch already in it.
 
