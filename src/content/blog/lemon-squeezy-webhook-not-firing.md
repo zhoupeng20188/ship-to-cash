@@ -192,6 +192,6 @@ Then confirm the real path once: resend an event from the dashboard and watch fo
 
 ## If you'd rather not run an endpoint at all
 
-A webhook is only needed when your code has to react to a payment. Lemon Squeezy will email the buyer their download and handle the invoice without one, and for a first product that is a legitimate endpoint-free setup — [the same conclusion I reached with Ko-fi and PayPal](/payments/getting-paid-without-stripe-kofi-paypal/). Being a [merchant of record](/payments/merchant-of-record-vs-payment-processor/) means they own the tax side too, so the only thing you're giving up is automatic access control.
+A webhook is only needed when your code has to react to a payment. Lemon Squeezy will email the buyer their download and handle the invoice without one, and for a first product that is a legitimate endpoint-free setup — [the same conclusion I reached with Ko-fi and PayPal](/payments/getting-paid-without-stripe-kofi-paypal/). Being a [merchant of record](/payments/merchant-of-record-vs-payment-processor/) means they own the tax side too, so the only thing you're giving up is automatic access control. When you do want automatic access, [the safe way to send a download after the webhook fires](/payments/send-download-link-after-payment-no-backend/) keeps the signing key server-side.
 
 Add the endpoint when you have something to grant. Until then, ship the product.

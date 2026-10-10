@@ -203,7 +203,7 @@ SERP 里反复出现同一批**同级别 2026 新站**，说明赛道已被专�
 | # | 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
 |---|---|---|---|---|
 | 1 | cloudflare pages custom domain not working 522 | CF 官方（preview 域 llms-full）+ CF Community（**MVP 给出确切解法**）+ 掘金中文 + answeroverflow（CF Developers Discord 实证）+ witch.work 个人博客 = **3/5 UGC** | **可打** | **P0（本轮最软）**。同 09-14/09-16 判定，事实链完整：① 手动加 CNAME 但未在 Pages 面板 Add custom domain → 必 522（官方文档明写）② www 与 apex 必须**分别**注册 hostname（Community + answeroverflow 双实证）③ CAA 记录拦截证书签发（官方 Known issues）。⚠️ 域名类已 4 篇，这是第 5 篇，须严格按「平台 × 症状」切分 |
-| 2 | netlify deploy failed / "build script returned non-zero exit code: 2" | Netlify 官方 troubleshooting-tips + **Stack Overflow（高赞，多答案）** + dodatech（AI 味教程）+ answers.netlify.com 官方 Support Guide + codegenes.net（AI 农场）= 官方 2/5 + UGC 1/5 | **边缘可打** | **P1（平台轮换）**。差异化不靠"更全"，靠**报错原文唯一**：`exit code: 2` 是 Netlify 专属字符串，Vercel 的 `vercel-build-failed` 不会报这个 → 与站内 6 类症状零内耗。官方 troubleshooting 页只讲 exit 128 与 warning-as-error，**没讲 exit code 2** |
+| 2 | netlify deploy failed / "build script returned non-zero exit code: 2" | Netlify 官方 troubleshooting-tips + **Stack Overflow（高赞，多答案）** + dodatech（AI 味教程）+ answers.netlify.com 官方 Support Guide + codegenes.net（AI 农场）= 官方 2/5 + UGC 1/5 | **边缘可打** | **P1（平台轮换）**。差异化不靠"更全"，靠**报错原文唯一**：`exit code: 2` 是 Netlify 专属字符串，Vercel 的 `vercel-build-failed` 不会报这个 → 与站内 6 类症状零内耗。官方 troubleshooting 页只讲 exit 128 与 warning-as-error，**没讲 exit code 2** ✅ **已发 2026-09-18**：`netlify-build-failed-exit-code-2.md`（全站第 21 篇） |
 | 3 | lemon squeezy license key api generate validate | LS 官方 guide + 官方 API 参考 + hashhackers 个人博客 + eliteai.tools（AI 聚合）+ apievangelist（OpenAPI 聚合）= 官方 2/5 | **可打** | **P1（affiliate 落点最好）**。承接 `lemon-squeezy-checkout-astro-static-site`，只讲「付完款怎么把权限交到买家手里」。可挖的一手点：activate/validate/deactivate 是**免 API key 的公开端点**；官方示例里 `activation_limit: 1` 与 `activation_usage: 5` 自相矛盾（文档陈旧）；`instance.id` 必须落库否则无法 deactivate |
 | 4 | how to get first customers for a developer template | dev.to ×2 + lovaround + dohost（主机商软文，夹带 VPS 推广）+ agilitypr（PR 公司内容营销）= **5/5 小站但 0 篇专讲开发者模板** | 可打 | **P2**。缺口存在（现有全是通用 SaaS 获客），但意图偏软、无报错型 urgency；且 monetize 刚开 1 篇，第二篇更适合做「交付」而非「获客」 |
 | 5 | vercel deploy success but site shows old version | Vercel examples KB（官方）+ CSDN 中文 + solipsxu.xyz（**Vercel docs 镜像**，已完整收录 CLI 命令族）+ solutionfall（SO 镜像）+ Vercel Community（一手根因）= 官方/镜像 3/5 | **降级** | 从 09-16 的「P1 可升」**降为 P2**。⚠️ 关键变化：09-16 赖以差异化的**新 CLI 命令族已被官方收录成 KB 页**（`vercel cache purge --type cdn` / `cache invalidate --tag` / `dangerously-delete` / `deploy --force --prod` / `httpstat` beta），且被 docs 镜像站铺满 → 时间敏感优势消失。仅剩 Community 那条 `.vercel/output` 误提交根因 |
@@ -224,7 +224,7 @@ SERP 里反复出现同一批**同级别 2026 新站**，说明赛道已被专�
 | # | 候选词 | Google 前 5 实际构成 | 判定 | 结论 |
 |---|---|---|---|---|
 | 1 | cloudflare pages custom domain 522（**第三轮复测**） | answeroverflow（CF Developers Discord，**MVP Cyb3r-Jak3 给出确切解法并引用官方文档原句**）+ 掘金中文 + CF Community（Walshy 解答）+ farrosfr.com（个人博客，讲 www/apex 分别注册）+ CF Community（**CF Team janik1 实证**）= **5/5 UGC，官方 0/5** | **可打** | **P0，三轮复测中最软的一轮**（09-14 与 09-18 均为 3/5，本轮官方页连直接占位都没有，只被引用）。事实链三条依旧成立，且本轮多两条新料：① CF Team 明确要求「**先删掉你自己建的 www 记录**，再到 Pages 面板 Add custom domain」——手动加 CNAME 反而坏事，这是官方实证 ② NuxtHub / preview 环境场景：先 Add custom domain 再改 branch alias 才能生效 |
-| 2 | vercel git push not triggering deploy / auto deploy stopped | Vercel 官方 KB ×2（含 staging 镜像）+ lilting.ch（**个人一手根因**）+ Vercel Community ×2（多人实证 + Leaderboard 解答）= 官方 2/5 + UGC 3/5 | **可打** | **P1（症状全新）**。站内 7 类症状全是「部署了但坏了」，**没有一类是「push 了根本没部署」**——枢纽缺口。差异化点：① 官方 KB 明写「反复手动 redeploy 排查会耗尽 Hobby 100/day 限额，反而复现症状」（反直觉）② `git config user.email` 与 Vercel 账号不匹配 → **静默跳过**，dashboard 什么都不显示，只有 CLI 才报错 ③ `github.enabled: false` 与 `git.deploymentEnabled: false` 新旧两种写法 ④ deploy hook 返回 `{"job":{"state":"PENDING"}}` 但永不落地，绕过办法是走 `/v13/deployments` API |
+| 2 | vercel git push not triggering deploy / auto deploy stopped | Vercel 官方 KB ×2（含 staging 镜像）+ lilting.ch（**个人一手根因**）+ Vercel Community ×2（多人实证 + Leaderboard 解答）= 官方 2/5 + UGC 3/5 | **可打** | **P1（症状全新）**。站内 7 类症状全是「部署了但坏了」，**没有一类是「push 了根本没部署」**——枢纽缺口。差异化点：① 官方 KB 明写「反复手动 redeploy 排查会耗尽 Hobby 100/day 限额，反而复现症状」（反直觉）② `git config user.email` 与 Vercel 账号不匹配 → **静默跳过**，dashboard 什么都不显示，只有 CLI 才报错 ③ `github.enabled: false` 与 `git.deploymentEnabled: false` 新旧两种写法 ④ deploy hook 返回 `{"job":{"state":"PENDING"}}` 但永不落地，绕过办法是走 `/v13/deployments` API ✅ **已发 2026-09-21**：`vercel-git-push-not-triggering-deploy.md`（全站第 22 篇，承接症状分流表前置环节） |
 | 3 | lemon squeezy license key api tutorial（开发者侧） | LS 官方 guide + LS 官方 API 参考 + claude-plugins.dev（AI 聚合）+ npm `lemonsqueezy-license-manager` README + lmsqueezy/lemonsqueezy.js GitHub wiki = 官方 2/5 + 包/仓库文档 2/5 + 聚合 1/5 | **可打** | **P1（affiliate 落点最好）**。前 5 **零独立博主教程**，全是官方与包文档。可用一手点：activate/validate/deactivate **免 API key**（官方 sk 注释明写）；官方示例里 `activation_limit: 1` 与 `activation_usage: 5` 自相矛盾（文档陈旧）；`instance.id` 不落库则无法 deactivate；必须校验 `meta.store_id/product_id` 否则别家产品的 key 能解锁你的 app |
 | 4 | send download link after payment digital product no backend（重测） | dev.to ×2（**同一作者，AI 味**）+ PayLink（厂商）+ tmdm.cn（dev.to 机翻镜像）+ PayRequest（厂商）= 厂商 2/5 + AI 农场 2/5 | **边缘可打** | **P1（有一手反驳点）**。⚠️ 排名前 2 的教程都教读者把 **Cloudinary API Secret 写进浏览器**（`btoa('API_KEY:API_SECRET')`）或**用 `?success=true` 当支付凭证**（任何人加个 query 就能白嫖下载）——可直接反驳。承接 `getting-paid-without-stripe`（怎么收）与 `lemon-squeezy-checkout-astro-static-site`（怎么接），本篇只讲「付完款文件怎么到买家手里」 |
 | 5 | cloudflare pages build failed | CF 官方 docs ×2（含两个 preview 镜像）+ 官方 llms-full + 官方 git-integration troubleshooting + Stack Overflow = **官方 4/5** | **放弃** | 符合 §2「全官方占位」。且唯一可打的 SO 症状 `Output directory "dist/..." not found` 与 `vercel-build-failed` Cause 4 重叠 |
@@ -248,7 +248,7 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 
 | # | 候选词 | SERP 前 5 实际构成 | 判定 | 结论 |
 |---|---|---|---|---|
-| 1 | lemon squeezy license key api generate validate | hashhackers 个人博客（泛讲 LS 全流程）+ **usertourkit（SaaS 产品自推广，唯一真讲 License API）** + eliteai.tools（AI 聚合）+ apicostcalc（费用工具站）+ make community（论坛帖）= **官方 0/5、独立博主一手教程 0/5** | **可打** | **P0（本轮最软，affiliate 落点最好）**。可挖的一手点：① activate/validate/deactivate 是**免 API key 的公开端点**（usertourkit 也提到，需再深挖）② 官方示例 `activation_limit: 1` 与 `activation_usage: 5` 自相矛盾（文档陈旧）③ `instance.id` 不落库则无法 deactivate ④ **必须校验 `meta.store_id/product_id`**，否则别家产品的 key 能解锁你的 app ⑤ validate 响应含买家邮箱/订单号，直接透传给前端是隐私泄漏，需裁剪字段 |
+| 1 | lemon squeezy license key api generate validate | hashhackers 个人博客（泛讲 LS 全流程）+ **usertourkit（SaaS 产品自推广，唯一真讲 License API）** + eliteai.tools（AI 聚合）+ apicostcalc（费用工具站）+ make community（论坛帖）= **官方 0/5、独立博主一手教程 0/5** | **可打** | **P0（本轮最软，affiliate 落点最好）**。可挖的一手点：① activate/validate/deactivate 是**免 API key 的公开端点**（usertourkit 也提到，需再深挖）② 官方示例 `activation_limit: 1` 与 `activation_usage: 5` 自相矛盾（文档陈旧）③ `instance.id` 不落库则无法 deactivate ④ **必须校验 `meta.store_id/product_id`**，否则别家产品的 key 能解锁你的 app ⑤ validate 响应含买家邮箱/订单号，直接透传给前端是隐私泄漏，需裁剪字段 ✅ **已发 2026-09-23**：`lemon-squeezy-license-key-api.md`（全站第 23 篇） |
 | 2 | send download link after payment digital product no backend | dev.to ×2（**同一作者，且明确教 `btoa('API_KEY:API_SECRET')` 放进浏览器** + 用 `?success=true` 当支付凭证）+ PayLink（厂商）+ PayRequest（厂商）+ davidutke 个人博客（Google Drive 公开链接法）= 厂商 2/5 + 弱个人站 3/5 | **可打** | **P1（差异化最硬：反驳型）**。两条可直接反驳的安全硬伤：① 把 Cloudinary **API Secret 写进前端** = 任何人 F12 就能拿到全库读写权限 ② 用 `?success=true` 判断是否付款 = 任何人手加 query 就能白嫖下载。承接 `getting-paid-without-stripe`（怎么收）与 `lemon-squeezy-checkout-astro-static-site`（怎么接），本篇只讲「付完款文件怎么到买家手里」 |
 | 3 | EU VAT / MoR 后要不要自己注册 VAT 并开票（**legal 开簇第二次尝试**） | 词 A「EU VAT digital products sole trader」：eubiztools ×2 + vattoolkit + 1stopvat + linkdash = **5/5 税务 SaaS/工具站**；词 B「MoR do I still need VAT registration invoice」：inflowpay（MoR 服务商自推广）+ nsaccounting（会计所）+ sumup（POS 厂商）+ gov.uk（官方）+ **中文税务局页面（地域污染）** | **放弃 ×2** | 🔴 **结论：legal 簇不能用税务角度开簇。** 两次实测一致——税务词的 SERP 被会计所/报税 SaaS 内容营销占满，且这类话题 E-E-A-T 门槛最高（作者非税务从业者，写错有实际风险）。下轮换非税务角度再试（退款政策 / ToS），若仍失败则接受 legal/tools 暂空，不硬填 |
 
@@ -313,16 +313,32 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 | # | 候选词 | 2026-10-08 SERP 前 5 实际构成 | 判定 | 结论 |
 |---|---|---|---|---|
 | 1 | how to add google adsense to astro site | tutorialspoint（通用教程）+ tycp.xyz（中文通用）+ wikihow（通用大站）+ **adsterratech（Adsterra 竞品软文）** + **purpleads.io（PurpleAds 竞品软文）** = **Astro 专属教程 0/5，竞品广告网络软文 2/5** | **可打（理由变了）** | **P0（monetize 开簇第 2 篇）**。⚠️ 与 09-28 DDG 实测（5/5 UGC）构成不同：今日前 5 全是通用 AdSense 教程 + 广告网络竞品软文，**Astro 专属内容 0 条** → 缺口更明确而非更软。竞品软文出现 = 商业意图信号（值得写）。差异化点 SERP 全无：① Astro `<head>` 注入 vs 通用 HTML ② **View Transitions 切页广告不刷新** ③ `ads.txt` 必须落 `public/` 根 ④ 站点自有 CSP/CORS（见 `cors-error-vercel`）会拦 `pagead2.googlesyndication.com` ⑤ dev 环境不注入脚本否则无效点击封号。⚠️ 必须写 **Astro 专属角度**，不要写通用 AdSense 教程（会直接撞 wikihow/tutorialspoint） |
-| 2 | send download link after payment digital product no backend（复测） | **dev.to 同一作者 ×2**（均教 `btoa('API_KEY:API_SECRET')` 写前端 + `?success=true` 当支付凭证，AI 味重）+ tmdm.cn（dev.to 机翻镜像）+ **paylink.systems（厂商）** + **hushlink.me（厂商）** = 厂商 2/5 + 同作者 AI 博客 3/5 | **边缘可打** | **P1（反驳型差异化最强）**。SERP 前 2 名的安全硬伤可直接反驳：① Cloudinary API Secret 写进浏览器 = 任何人 F12 拿全库读写 ② `?success=true` 当支付凭证 = 手加 query 白嫖下载。承接 `getting-paid-without-stripe`（怎么收）与 `lemon-squeezy-checkout-astro-static-site`（怎么接），本篇只讲「付完款文件怎么到买家手里」。⚠️ 厂商占位仍在轮替（PayLink/HushLink/Dodo/Zapier），商业意图明显，性价比低于 #1 |
+| 2 | send download link after payment digital product no backend（复测） | **dev.to 同一作者 ×2**（均教 `btoa('API_KEY:API_SECRET')` 写前端 + `?success=true` 当支付凭证，AI 味重）+ tmdm.cn（dev.to 机翻镜像）+ **paylink.systems（厂商）** + **hushlink.me（厂商）** = 厂商 2/5 + 同作者 AI 博客 3/5 | **边缘可打** | **P1（反驳型差异化最强）**。SERP 前 2 名的安全硬伤可直接反驳：① Cloudinary API Secret 写进浏览器 = 任何人 F12 拿全库读写 ② `?success=true` 当支付凭证 = 手加 query 白嫖下载。承接 `getting-paid-without-stripe`（怎么收）与 `lemon-squeezy-checkout-astro-static-site`（怎么接），本篇只讲「付完款文件怎么到买家手里」。⚠️ 厂商占位仍在轮替（PayLink/HushLink/Dodo/Zapier），商业意图明显，性价比低于 #1 ✅ **已发 2026-10-10**：`send-download-link-after-payment-no-backend.md`（全站第 26 篇，本地未推） |
 | 3 | lemon squeezy affiliate program tutorial（新测） | userion.com（卖家自推广）+ fromzero.ai（卖家自推广）+ minsjohnfrancis.com（affiliate 营销博客）+ rekomi.com（LS 联盟 SaaS 竞品软文）+ docs.modr8.net（卖家自推广）= **5/5 卖家自推广页 + 竞品软文 + 营销博客** | **放弃** | 符合 §2「全是厂商内容营销页 → 放弃」。意图偏「拉人头/赚快钱」，与站点的「vibe coder 技术教程」不匹配；affiliate 落点更适合自然带进已有的 LS 单平台集成教程，不单开 |
 
 ### 本轮结论
 
 - **#1（AdSense + Astro）已写**：2026-10-08 发布 `google-adsense-on-astro.md`（monetize 簇第 2 篇，全站第 25 篇）。monetize 失衡已补。Astro 专属五个一手点全部经官方/权威源核实：① `is:inline` 强制（否则 Astro 打包远程 URL 失败）② `public/ads.txt`→根 ③ View Transitions 切页广告消失→`astro:page-load` 重触发 ④ 站点 CSP 拦 `pagead2` ⑤ `import.meta.env.PROD` 门控避免自点击封号。出链 7（跨簇 6）/ 回链 4。
-- **#2（send download link）保留 P1**：反驳型差异化硬（SERP 前 2 教把 Secret 写前端），但厂商占位轮替、性价比低于 #1。
+- **#2（send download link）已发**：2026-10-10 发布 `send-download-link-after-payment-no-backend.md`（payments 簇第 8 篇，全站第 26 篇，本地未推）。反驳型差异化经 10-10 复测仍成立（SERP 前 2 名仍教把 Cloudinary Secret 写进前端、用 `?success=true` 当支付凭证）；正确做法 = 无服务器函数做 HMAC 验真 + 限时预签名 URL + Lemon Squeezy MoR 零代码路径，自然带 LS affiliate。
 - **#3（LS affiliate）放弃**：全卖家自推广页，意图错位。
 - legal / tools 继续空着不硬填（§4.9 结论）。
 - 🔑 **新观察**：同一个词（AdSense+Astro）在 09-28（DDG：5/5 UGC）与 10-08（WebSearch：通用教程+竞品软文）构成差异极大 —— **数据源不同（DDG vs Google）会显著改变 SERP 观感**，以后判「软不软」要同时看「是否有 Astro 专属缺口」而非只看 UGC 条数；且竞品软文出现是商业意图信号，反而说明该词值得写。
+
+## 4.12 交付回顾（2026-10-10）：send-download-link-after-payment-no-backend.md（第 26 篇，payments）
+
+已发 26 篇（含本地未推）：**deploy 16 / payments 8 / monetize 2 / legal 0 / tools 0**。payments 簇从第 7 篇升到第 8 篇，结构失衡继续缓解（deploy 仍占 62%）。
+
+**SERP 复测（10-10）**：dev.to ×2（同一作者，AI 味重，明确教 `btoa('API_KEY:API_SECRET')` 写进浏览器 + 用 `?success=true` 当支付凭证）+ tmdm.cn（dev.to 机翻镜像）+ paylink.systems（厂商）+ hushlink.me（厂商）= 厂商 2/5 + 同作者 AI 博客 3/5。**反驳点未退化**——两个可反驳的安全硬伤仍稳稳占据前 2 名，没被厂商占位挤出池子。
+
+**规格**：1558 词（去代码块）/ title 62 字符 / desc 154 字符 / OG 61KB / FAQ 6 条 / 无 H1 / 正文英文。
+
+**内链（双向）**：出链 7 条老文，含跨簇 2（monetize/how-to-price-a-developer-template、deploy/cloudflare-pages-environment-variables-not-working）；回链 4 条（checkout / webhook-not-firing / license-key-api / getting-paid），锚文本互不相同，checkout 篇保留核心关键词「send download link after payment no backend」。
+
+**防内耗边界**：只讲「付完款文件怎么到买家手里」（无服务器函数 HMAC 验真 + 限时预签名 URL + LS MoR 零代码路径），不回讲收款方式，避免与 `getting-paid` / `lemon-squeezy-checkout-astro-static-site` 内耗。
+
+**校验**：`npm run build` 通过（36 页）；本地预览 `http://localhost:4321/` 返回 200；7 条出链目标页在 dist 全部存在（无 404）；10 个 H2 标题 id 全部正确生成（Astro 自动 slug，无手写锚点）。
+
+**状态**：本地未推送（按 git 规范，推送前需用户确认）。
 
 ## 5. 已暂停（原清单）
 
