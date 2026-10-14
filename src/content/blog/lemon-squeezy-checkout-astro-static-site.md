@@ -189,7 +189,7 @@ And if you've done all of the above and it still doesn't work — the dashboard 
 
 ## Step 5: test mode, and the trap inside it
 
-Turn on Test mode and you can buy your own product with test cards for free. Two things will still catch you.
+Turn on Test mode and you can buy your own product with test cards for free. Two things will still catch you — and if you want the full rehearsal, including firing the webhook through a tunnel on your own machine, the [Lemon Squeezy test-mode walkthrough for localhost](/payments/lemon-squeezy-test-mode-local/) covers the whole loop before you flip it off.
 
 **Simulating renewals requires a real renewal first.** The dashboard has a "Simulate event" button, but for `subscription_payment_*` events it only works after at least one renewal has actually happened on a test subscription. Their documented workaround: create a test product with a **daily** billing interval, buy it, wait until tomorrow, and then the simulation options appear. This is not obvious, and it means subscription testing spans two days. Plan for that.
 

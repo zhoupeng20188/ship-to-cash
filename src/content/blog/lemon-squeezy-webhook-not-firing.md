@@ -167,7 +167,7 @@ Then handle the events that take things away. `order_refunded` and `subscription
 If the dashboard has no delivery records, none of the above applies.
 
 - **The event isn't subscribed.** Each webhook carries an explicit event list. Nothing arrives for events you didn't tick — including `license_key_created`, which is the one you need if you are [issuing and validating license keys](/payments/lemon-squeezy-license-key-api/).
-- **You're testing against localhost.** Lemon Squeezy cannot reach `http://localhost:3000`. Put a tunnel in front of it, or deploy first and test there.
+- **You're testing against localhost.** Lemon Squeezy cannot reach `http://localhost:3000`. Put a tunnel in front of it ([how to test Lemon Squeezy webhooks locally with a tunnel](/payments/lemon-squeezy-test-mode-local/)), or deploy first and test there.
 - **Your code isn't deployed yet.** A webhook fix that never shipped looks identical to one that didn't work — [the same trap as a git push that didn't trigger a deploy](/deploy/vercel-git-push-not-triggering-deploy/).
 - **You're looking at the wrong mode.** Test-mode purchases send test-mode events, and the payload carries `test_mode` in its attributes. Check it and return 200 early, or your test purchases will grant real access.
 

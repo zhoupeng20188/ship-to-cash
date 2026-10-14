@@ -219,7 +219,7 @@ If you're deploying the Worker alongside the rest of your project, keep the stor
 
 ## Test it before you ship
 
-Work through these against a real key in test mode:
+Work through these against a real key in test mode — the [localhost test-mode walkthrough](/payments/lemon-squeezy-test-mode-local/) shows how to fire them through a tunnel if you want the full loop before going live:
 
 1. Activate once, save the `instance.id`, and confirm `activation_usage` goes up by one on the next validate.
 2. Activate a second time with a different `instance_name` on a key with a limit of 1, and confirm you get `activated: false` plus "This license key has reached the activation limit."
