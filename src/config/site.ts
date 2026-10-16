@@ -12,8 +12,6 @@ export const SITE = {
     { label: "Deploy", href: "/deploy/" },
     { label: "Payments", href: "/payments/" },
     { label: "Monetize", href: "/monetize/" },
-    { label: "Legal", href: "/legal/" },
-    { label: "Tools", href: "/tools/" },
   ],
 };
 

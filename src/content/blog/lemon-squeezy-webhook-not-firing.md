@@ -25,7 +25,7 @@ Payments were working. That was the annoying part. I had [Lemon Squeezy checkout
 
 Three hours later the picture was clear. The signature check itself is four lines. What breaks is everything around it: your framework already consumed the request body, you are comparing a hex string against raw bytes, or your handler is returning the wrong status code and Lemon Squeezy is quietly retrying behind your back.
 
-This post is for the case where the endpoint exists and doesn't work. If you are still building one on a static site, read the checkout walkthrough first — it has the full Cloudflare Workers version, which is the one runtime where this is genuinely easy.
+This post is for the case where the endpoint exists and doesn't work. If you are still building one on a static site, read the checkout walkthrough first — it has the full Cloudflare Workers version, which is the one runtime where this is genuinely easy. If your handler is a native Astro APIRoute and the signature fails or the route 404s, that's usually Astro prerendering the endpoint — [verify a Lemon Squeezy webhook signature inside an Astro APIRoute](/payments/lemon-squeezy-webhook-signature-astro/) walks through the exact setup.
 
 ## Which symptom is yours
 

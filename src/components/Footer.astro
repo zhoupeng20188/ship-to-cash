@@ -1,7 +1,14 @@
 ---
+import { getCollection } from "astro:content";
 import { SITE, CATEGORIES } from "../config/site";
 
 const year = new Date().getFullYear();
+
+// Only surface categories that actually have published guides.
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const liveCategories = CATEGORIES.filter((cat) =>
+  posts.some((p) => p.data.category === cat.slug)
+);
 ---
 
 <footer class="bg-brand-900 text-[#cbd5e1] mt-20">
@@ -21,7 +28,7 @@ const year = new Date().getFullYear();
       <div>
         <h3 class="text-white font-semibold text-sm mb-3">Guides</h3>
         <ul class="space-y-2 text-sm">
-          {CATEGORIES.map((cat) => (
+          {liveCategories.map((cat) => (
             <li>
               <a href={`/${cat.slug}/`} class="hover:text-brand-400 transition-colors">
                 {cat.name}

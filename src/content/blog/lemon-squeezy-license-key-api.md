@@ -231,6 +231,8 @@ Step 4 is the one that matters most and the one people skip, because it's the on
 
 ## Where this fits
 
+Before you call the License API from a webhook, make sure the webhook itself is verified first — [the Astro-native webhook signature walkthrough](/payments/lemon-squeezy-webhook-signature-astro/) covers the Astro APIRoute setup if that's where your handler lives.
+
 A license key is proof of purchase you can re-check at any time. If your product is a one-off file and you never need to re-check anything, you don't need this at all — [a payment link and a delivery email](/payments/getting-paid-without-stripe-kofi-paypal/) will do, and so will [taking payments without Stripe](/payments/stripe-not-available-in-my-country/) in the first place. Keys earn their keep when access is ongoing: a CLI, a plugin, a private repo, a members-only page. And [emailing the download link once the license checks out](/payments/send-download-link-after-payment-no-backend/) is the handoff step a keyed product still needs.
 
 They also cost you nothing extra in fees, because they're bundled into what Lemon Squeezy already charges as a [merchant of record](/payments/merchant-of-record-vs-payment-processor/) rather than sold as an add-on. And if you're deciding what to charge before you wire any of this up, the activation limit is worth setting alongside your [price tiers](/monetize/how-to-price-a-developer-template/) — one seat versus three is a pricing decision, not an implementation detail.

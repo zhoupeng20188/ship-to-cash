@@ -185,7 +185,7 @@ Store the signing secret as an encrypted secret, not an environment variable: **
 
 One thing that instruction hides: **a secret isn't a stronger variable, it's a different channel.** Secrets reach Pages Functions at runtime and nothing else. That's why the dashboard can show a value while your build log calls it undefined — [here's how to tell the four causes apart](/deploy/cloudflare-pages-environment-variables-not-working/).
 
-And if you've done all of the above and it still doesn't work — the dashboard insists the event was sent while your function logs nothing — the problem has moved somewhere else. [Debugging a webhook that never arrives](/payments/lemon-squeezy-webhook-not-firing/) is a separate hunt, and the signature check is only two of the five causes.
+And if you've done all of the above and it still doesn't work — the dashboard insists the event was sent while your function logs nothing — the problem has moved somewhere else. [Debugging a webhook that never arrives](/payments/lemon-squeezy-webhook-not-firing/) is a separate hunt, and the signature check is only two of the five causes. If your endpoint is a native Astro APIRoute on Vercel rather than a Cloudflare Pages function, the 404 you'll hit first isn't a signature problem at all — [the Astro APIRoute version of the Lemon Squeezy signature check](/payments/lemon-squeezy-webhook-signature-astro/) covers the `prerender = false` trap that causes it.
 
 ## Step 5: test mode, and the trap inside it
 

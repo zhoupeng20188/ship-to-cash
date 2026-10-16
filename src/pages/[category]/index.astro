@@ -5,8 +5,13 @@ import ArticleCard from '../../components/ArticleCard.astro';
 import { CATEGORIES } from '../../content.config';
 import { getCategoryBySlug } from '../../config/site';
 
-export function getStaticPaths() {
-  return CATEGORIES.map((category) => ({ params: { category } }));
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  // Skip categories with zero published guides: an empty page saying
+  // "guides are on the way" is a low-value / under-construction signal.
+  return CATEGORIES.filter((category) =>
+    posts.some((p) => p.data.category === category)
+  ).map((category) => ({ params: { category } }));
 }
 
 const { category } = Astro.params;

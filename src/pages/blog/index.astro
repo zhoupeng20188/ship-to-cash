@@ -6,6 +6,11 @@ import { CATEGORIES } from '../../config/site';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Only surface categories that actually have published guides.
+const liveCategories = CATEGORIES.filter((cat) =>
+  posts.some((p) => p.data.category === cat.slug)
+);
 ---
 
 <BaseLayout
@@ -28,7 +33,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       >
         All
       </a>
-      {CATEGORIES.map((cat) => (
+      {liveCategories.map((cat) => (
         <a
           href={`/${cat.slug}/`}
           class="px-4 py-1.5 rounded-full text-sm font-medium bg-ink-100 text-ink-600 hover:bg-brand-50 hover:text-brand-700 transition-colors dark:hover:bg-brand-900 dark:hover:text-brand-200"

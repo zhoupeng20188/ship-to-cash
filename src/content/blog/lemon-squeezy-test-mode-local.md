@@ -77,6 +77,8 @@ cloudflared tunnel --url http://localhost:8788
 
 Point your Lemon Squeezy webhook at the tunnel URL, set a **test** signing secret, and do a `4242` purchase. Watch the event land on your laptop. Your handler should verify the signature (the [webhook signing rules](https://docs.lemonsqueezy.com/guides/developer-guide/webhooks) are identical in test and live) and then hit the `test_mode` short-circuit:
 
+If that handler is a plain Astro endpoint rather than a Cloudflare function, the setup differs — [how to verify the Lemon Squeezy signature in a plain Astro endpoint](/payments/lemon-squeezy-webhook-signature-astro/) has the `prerender = false` version.
+
 ```js
 // functions/api/ls-webhook.js
 const payload = JSON.parse(rawBody);
