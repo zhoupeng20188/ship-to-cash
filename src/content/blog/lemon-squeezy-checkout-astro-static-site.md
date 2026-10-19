@@ -227,3 +227,5 @@ It's honest about its limits, and so should you be.
 4. Only then write the access-granting logic, with the `test_mode` check and the status switch already in it.
 
 Two files. A static site that takes money in an afternoon, with someone else doing your VAT.
+
+Once the button works, the harder problem is [where to actually find your first buyers](/monetize/get-first-customers-developer-template/) — long-tail SEO and community answers beat a better landing page.

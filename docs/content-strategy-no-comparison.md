@@ -412,3 +412,19 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 2. **markdown 不支持 `{#custom-id}` 语法**（需额外装 remark-heading-id 才支持）。写了不会生效，而且 `{#cert-error}` 会被**当成正文字符串渲染到页面上给读者看**——2026-09-15 在 `vercel-custom-domain-ssl-not-working.md` 发现 4 个 H2 标题中招，已修。
 
 **校验锚点的正确姿势**（不要靠肉眼比对）：改完 `npm run build`，从 dist 的 HTML 里抽出所有 `href="#xxx"`，逐个 grep 页面里 `id="xxx"` 是否存在。20/20 全解析才算过。
+
+## 4.13 选题日 SERP 实测与结论（2026-10-19）
+
+- 实测 5 候选：adsense not showing / first customers boilerplate / cloudflare pages 522 / lemon squeezy payout / netlify preview not updating。
+- 关键发现：`google-adsense-on-astro`（2026-10-08）已覆盖 AdSense 不显示全部 5 个 Astro 技术坑（is:inline、ads.txt、View Transitions、CSP、PROD gate），原定 A 方向（AdSense 不显示排查）与已发 100% 内耗，废弃。
+- 改走 B：`get-first-customers-developer-template`（monetize 第 3 篇），开发者模板获客，与已发 `how-to-price` 零内耗、关键词不重叠，补结构失衡。
+- B 落点：正文 1525 词（达标 1500–1800）、出链 8 篇老文（跨簇 6）、回链 3 篇（how-to-price / google-adsense-on-astro / lemon-squeezy-checkout，锚文本互不相同）、OG 已生成、构建 37 页通过、dist 链接零缺失。
+- 候选结论：CF Pages 522 仍 P0 但让位非 deploy（deploy 已 62%+）；netlify preview 官方 3/5 放弃；lemon squeezy payout 边缘 P2（payments 已 8 篇）。
+- 状态：本地已建未推（遵守 push 前口头确认）。
+
+## 4.14 外链规范（2026-10-19 确立）
+
+- 痛点：经验/教程类文章（获客、定价、复盘等）初稿容易只用站内链接、**零外链**，缺"引用出处"可信度锚点，对 E-E-A-T 不利。
+- 规则：**每篇经验叙事文须含 2–3 条真实外链**——1 条一手实证帖（dev.to / Indie Hackers 等真实 case study，须与文中数据逐字对应）+ 1–2 条社区（Indie Hackers 社区站 / 相关 subreddit 如 r/Supabase、r/expo）。
+- 硬约束：外链 URL **必须真实可访问**，写前先 WebSearch 确认，**禁止编造 404 链接**；锚文本用描述性短语，不堆砌。
+- 实例：`get-first-customers-developer-template`（2026-10-19，monetize 第 3 篇）初稿 0 外链，后补 4 条：dev.to cold-start 实证帖（内容逐字对应文中 5 bets / CAC / 时间线）+ r/expo + r/Supabase + Indie Hackers 社区。报错类技术文不强制。

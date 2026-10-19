@@ -25,7 +25,7 @@ I added Google AdSense to my Astro site the way every generic tutorial told me t
 
 Astro is not plain HTML. The framework does things to your `<script>` tags and your static files that a vanilla tutorial never accounts for. Here are the five Astro-specific reasons your AdSense ads don't show — in the order I hit them.
 
-If you already wired up [Lemon Squeezy checkout on your Astro site](/payments/lemon-squeezy-checkout-astro-static-site/), AdSense is the slower second revenue stream; checkout pays per sale, ads pay per view, and you'll wait weeks for the latter to matter.
+If you already wired up [Lemon Squeezy checkout on your Astro site](/payments/lemon-squeezy-checkout-astro-static-site/), AdSense is the slower second revenue stream; checkout pays per sale, ads pay per view, and you'll wait weeks for the latter to matter. Before that wait pays off, [landing your first 100 customers through direct sales](/monetize/get-first-customers-developer-template/) is what actually pays the bills early.
 
 ## 1. Astro bundled your script and broke the remote URL
 
