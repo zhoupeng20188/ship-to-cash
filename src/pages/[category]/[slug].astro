@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
 import AuthorBio from '../../components/AuthorBio.astro';
+import { SITE, getCategoryBySlug } from '../../config/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -32,6 +33,18 @@ if (relatedPosts.length < 3) {
 }
 
 const faq = post.data.faq ?? [];
+
+/* ---- Structured data (BlogPosting + BreadcrumbList) ---- */
+const site = Astro.site ?? new URL('https://shiptocash.com');
+const cat = getCategoryBySlug(post.data.category);
+const canonicalUrl = new URL(Astro.url.pathname, site).toString();
+const categoryName = cat?.name ?? post.data.category;
+const categoryUrl = new URL(`/${post.data.category}/`, site).toString();
+const authorUrl = new URL('/about/', site).toString();
+const articleImage = new URL(post.data.image ?? `/og-${post.id}.jpg`, site).toString();
+const authorImage = new URL(SITE.avatar, site).toString();
+const publisherLogo = new URL('/og-default.jpg', site).toString();
+const dateModified = (post.data.updatedDate ?? post.data.pubDate).toISOString();
 ---
 
 <PostLayout
@@ -66,6 +79,52 @@ const faq = post.data.faq ?? [];
     <AuthorBio />
 
     <RelatedPosts posts={relatedPosts} currentId={post.id} />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'BlogPosting',
+            '@id': `${canonicalUrl}#article`,
+            headline: post.data.title,
+            description: post.data.description,
+            image: [articleImage],
+            datePublished: post.data.pubDate.toISOString(),
+            dateModified,
+            inLanguage: 'en',
+            wordCount,
+            articleSection: categoryName,
+            author: {
+              '@type': 'Person',
+              name: post.data.author,
+              url: authorUrl,
+              image: authorImage,
+              jobTitle: 'Vibe coder & Founder of ShipToCash',
+              sameAs: [SITE.github, 'https://aikitguides.com'],
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: SITE.name,
+              url: site.toString(),
+              logo: { '@type': 'ImageObject', url: publisherLogo },
+            },
+            mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+            isPartOf: { '@type': 'Blog', '@id': `${site.toString()}#blog`, name: SITE.name },
+          },
+          {
+            '@type': 'BreadcrumbList',
+            '@id': `${canonicalUrl}#breadcrumb`,
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', site).toString() },
+              { '@type': 'ListItem', position: 2, name: categoryName, item: categoryUrl },
+              { '@type': 'ListItem', position: 3, name: post.data.title, item: canonicalUrl },
+            ],
+          },
+        ],
+      })}
+    />
 
     {faq.length > 0 && (
       <script

@@ -28,9 +28,17 @@ const cat = getCategoryBySlug(category);
 
 const formattedDate = pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 const formattedUpdated = updatedDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+// Google renders roughly 60 characters of a title in desktop SERPs (~50 on
+// mobile). Append the brand only when it still fits; otherwise send the bare
+// title so the primary keyword is never truncated off the end.
+const BRAND_SUFFIX = ' | ShipToCash';
+const MAX_TITLE_LENGTH = 60;
+const pageTitle =
+  title.length + BRAND_SUFFIX.length <= MAX_TITLE_LENGTH ? `${title}${BRAND_SUFFIX}` : title;
 ---
 
-<BaseLayout title={`${title} | ShipToCash`} description={description} image={image} type="article">
+<BaseLayout title={pageTitle} description={description} image={image} type="article">
   <div class="max-w-3xl lg:max-w-6xl mx-auto px-4 pt-8">
     <nav class="flex items-center gap-2 text-sm text-ink-500 mb-6" aria-label="Breadcrumb">
       <a href="/" class="hover:text-brand-600">Home</a>

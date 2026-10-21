@@ -1,5 +1,5 @@
 ---
-title: "How to Deploy Your First App to Vercel (No DevOps Experience Needed)"
+title: "Deploy Your First App to Vercel (No DevOps Experience)"
 description: "You built an app with AI. Here's how to get it off your laptop and onto the internet with Vercel — step by step, no prior deployment experience required."
 pubDate: 2026-08-04
 updatedDate: 2026-08-21

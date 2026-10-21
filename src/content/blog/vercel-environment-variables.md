@@ -1,5 +1,5 @@
 ---
-title: "Environment Variables on Vercel: Where Your API Keys Should Live"
+title: "Environment Variables on Vercel: Where API Keys Live"
 description: "Where do your API keys actually go on Vercel? How to add environment variables, why they stay undefined until you redeploy, and the prefix that leaks keys."
 pubDate: 2026-08-31
 category: deploy
