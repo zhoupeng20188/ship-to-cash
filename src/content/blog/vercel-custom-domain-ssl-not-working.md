@@ -1,8 +1,8 @@
 ---
-title: "Vercel Custom Domain SSL Not Working: Redirect Loop & DNS Fixes"
-description: "Your Vercel domain shows 'not secure', throws a redirect loop, or stays pending? Here are the exact fixes for SSL cert errors, too-many-redirects, and DNS that won't propagate — including the Cloudflare setting that causes most of them."
+title: "Vercel Domain Not Secure? SSL & Redirect Loop Fixes"
+description: "Vercel domain 'not secure', looping on redirects, or stuck pending? Four fixes in the order I check them — the Cloudflare SSL mode is guilty 9 times in 10."
 pubDate: 2026-08-28
-updatedDate: 2026-08-28
+updatedDate: 2026-10-21
 category: deploy
 difficulty: intermediate
 author: "Peng Zhou"
@@ -50,14 +50,25 @@ Vercel requests the SSL certificate *from the certificate authority* only after 
 
 Vercel shows the exact records it wants at the bottom of that Domains panel. As of 2026 they are:
 
-- **Apex (yourdomain.com):** an `A` record pointing to `76.76.21.21`
-- **www:** a `CNAME` record pointing to `cname.vercel-dns.com`
+- **Apex (yourdomain.com):** an `A` record — `76.76.21.21` on most projects
+- **www:** a `CNAME` record whose value is **unique to your project**, something like `d1d4fc829fe7bc7c.vercel-dns-017.com`
 
-I once typed `your-app.vercel.app` into the CNAME instead of `cname.vercel-dns.com` because it "looked more correct." It isn't — use the `cname.vercel-dns.com` value Vercel prints, exactly.
+Two things worth internalising here. First, Vercel has been expanding its address pool, so newer projects sometimes get a different apex IP — treat both values as "whatever my dashboard prints", not constants. Second, older tutorials tell you to use `cname.vercel-dns.com` for the CNAME. That's the legacy shared target and it still resolves, but Vercel now verifies against the per-project value it shows you.
+
+I once typed `your-app.vercel.app` into the CNAME instead of the value Vercel printed, because it "looked more correct." It isn't — copy the dashboard's value character for character. If A records and CNAMEs are still opaque to you, [the DNS records explained from scratch](/deploy/buy-domain-set-up-dns/) covers what each one is actually doing before you paste anything else.
 
 ### Step 3: Wait for propagation (or verify it)
 
 DNS changes can take minutes to a few hours depending on the registrar's TTL. Check whether the world can see your records at [whatsmydns.net](https://whatsmydns.net) — enter your domain, pick `A` or `CNAME`, and watch the map turn green. Only when records show Vercel's values globally will the cert issue.
+
+### If the browser shows a different certificate error code
+
+`NET::ERR_CERT_AUTHORITY_INVALID` is the usual one when no certificate exists yet. Two others look like the same problem but aren't:
+
+- **`ERR_CERT_COMMON_NAME_INVALID`** — a certificate *was* issued, but for a different hostname. Almost always the `www` versus apex split: you added `www` but visit the apex, or the reverse. Both hostnames need to be in **Settings → Domains**, not just one.
+- **`ERR_SSL_PROTOCOL_ERROR` or "This site can't provide a secure connection"** — the TLS handshake itself failed, which means something is sitting in front of Vercel. Usually Cloudflare's orange cloud on a record that doesn't point at Vercel, or a corporate network doing TLS inspection. Test on a phone over cellular data before you touch any DNS.
+
+If **Settings → Domains** says *"Domain does not resolve to the Vercel deployment"*, that's Vercel's own wording for "the A or CNAME records still point elsewhere." Go back to Step 2 — don't remove and re-add the domain, it only resets the clock.
 
 <a id="redirect-loop"></a>
 ## Redirect loop: ERR_TOO_MANY_REDIRECTS
@@ -97,7 +108,7 @@ The domain never leaves "Pending." This is purely a DNS problem — Vercel can't
 
 ### Step 1: Verify the CNAME value
 
-If you added a `www` CNAME, the value must be exactly `cname.vercel-dns.com` — **not** your project's `.vercel.app` URL. This is the single most common typo.
+If you added a `www` CNAME, the value must match the one in your project's **Settings → Domains** card, character for character — **not** your project's `.vercel.app` URL, and not the `cname.vercel-dns.com` value from an older tutorial. This is the single most common typo.
 
 ### Step 2: Verify the apex A record
 
@@ -131,4 +142,6 @@ On Pro and above you can upload a custom certificate, but for a personal or indi
 
 ## Next steps
 
-Most of these errors trace back to one root cause: DNS not quite pointing at Vercel, or Cloudflare sitting in the middle with the wrong SSL mode. Walk the [custom domain setup guide](/deploy/vercel-custom-domain-setup/) end to end if you set the records up from memory — it has the exact Namecheap and Cloudflare values side by side. If you bought the domain somewhere else and are wondering whether to move it, you don't have to: [pointing DNS is enough](/deploy/transfer-domain-to-vercel/), and transferring can actually reset your records and bring all this back. And no, none of this means you need to [buy an SSL certificate](/deploy/do-i-need-to-buy-ssl-certificate/) — Vercel's is free and automatic.
+Most of these errors trace back to one root cause: DNS not quite pointing at Vercel, or Cloudflare sitting in the middle with the wrong SSL mode. If you set the records up from memory, walk it end to end with [the exact Namecheap and Cloudflare values side by side](/deploy/vercel-custom-domain-setup/). If you bought the domain somewhere else and are wondering whether to move it, you don't have to: [pointing DNS is enough](/deploy/transfer-domain-to-vercel/), and transferring can actually reset your records and bring all this back. And no, none of this means you need to [buy an SSL certificate](/deploy/do-i-need-to-buy-ssl-certificate/) — Vercel's is free and automatic.
+
+One consequence worth knowing if you plan to make money from the site: a padlock that still throws a warning gets judged as a navigation problem long after you've stopped thinking about it. That's one of the reasons [AdSense reads an insecure domain as a broken site](/monetize/adsense-low-value-content-rejected/) and rejects it during review — fix the cert before you submit, not after.

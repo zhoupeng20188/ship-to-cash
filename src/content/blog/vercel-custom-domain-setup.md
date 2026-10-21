@@ -1,8 +1,8 @@
 ---
-title: "How to Set Up a Vercel Custom Domain (Namecheap & Cloudflare)"
+title: "Vercel Custom Domain Setup: Namecheap & Cloudflare Records"
 description: "Vercel custom domain setup for Namecheap & Cloudflare: the exact DNS records (A + CNAME), auto SSL, www vs apex, and the mistakes that break verification."
 pubDate: 2026-08-06
-updatedDate: 2026-08-10
+updatedDate: 2026-10-21
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -56,6 +56,8 @@ Vercel now shows you the DNS records it expects:
 - For `www`: a **CNAME record** — and here's what trips people up — the value is **unique to your project**, something like `d1d4fc829fe7bc7c.vercel-dns-017.com`
 
 Older tutorials tell you to use `cname.vercel-dns.com`. That's outdated. Copy the exact CNAME value your dashboard shows, character for character.
+
+Newer projects sometimes get a different apex IP as well — Vercel has been expanding its address pool — so treat both values as "whatever my dashboard prints", not as constants you can memorise.
 
 Leave this tab open. You'll come back to check verification.
 
@@ -127,3 +129,5 @@ In **Settings → Domains**, Vercel lets you set a redirect from one to the othe
 ## Next steps
 
 Domain connected, SSL green padlock, canonical URL picked — your app now looks like a real product. But if the domain connects and instead you get a "not secure" warning or a redirect loop, my [Vercel SSL troubleshooting guide](/deploy/vercel-custom-domain-ssl-not-working/) covers the exact Cloudflare and DNS fixes. If you're wondering why that padlock matters beyond appearances (and whether you'd ever need to buy a certificate), I answered that in [do you need to buy an SSL certificate?](/deploy/do-i-need-to-buy-ssl-certificate/) — short version: no. And if this DNS stuff felt like magic incantations, my [beginner's guide to buying a domain and setting up DNS](/deploy/buy-domain-set-up-dns/) makes the records actually make sense.
+
+The question after this one is rarely technical. You just spent $10 on a name and ten minutes on DNS, so the obvious next thought is how the site starts paying that back — [the ad layer that needs a verified domain first](/monetize/google-adsense-on-astro/) is where most people go, and the approval review is the part that actually stops them.

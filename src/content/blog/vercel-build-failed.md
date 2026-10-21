@@ -1,7 +1,8 @@
 ---
-title: "Vercel Build Failed: 5 Real Causes and Exact Fixes"
-description: "Build works locally but Vercel says 'Build failed'? The 5 causes behind almost every red deployment — with the exact error text and fixes, from real build logs."
+title: "Vercel Build Failed? 5 Causes Matched to Your Error Log"
+description: "Log stuck on 'exited with 1'? Match the first red line to one of 5 causes — each with the exact fix, pulled from my own failed build logs."
 pubDate: 2026-08-19
+updatedDate: 2026-10-21
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -21,15 +22,9 @@ faq:
 
 The first time I saw a red "Error" status on a Vercel deployment, I stared at the log for twenty minutes. The app built fine on my laptop. It built fine five minutes earlier. What changed?
 
-That was my first deploy, and the lesson I learned — the one this guide is built on — is that Vercel build failures are almost never mysterious. Your laptop quietly forgives things that Vercel's Linux build container does not. Once you know the five things it's strict about, you can read any failed build log and usually know the fix within a minute.
+That was my first deploy. The lesson: Vercel build failures are rarely mysterious — your laptop quietly forgives things Vercel's Linux build container doesn't. Once you know the five things it's strict about, you can usually name the fix within a minute.
 
-One thing before we start: if your error literally says `Module not found`, that's usually a file-casing problem, and it has its own guide — [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/). For everything else, read on.
-
-One more distinction worth making up front: if your homepage and other pages load fine but a **deep link 404s the instant you refresh it**, that is *not* a build failure — it's a client-side routing problem. Here's [how to fix 404s on refresh for Vercel, Netlify, and Cloudflare Pages](/deploy/client-side-routing-404-vercel-netlify-cloudflare/).
-
-The most basic version of "not a build failure": you push to GitHub and Vercel shows **no new deployment at all** — not a failed one, nothing. The trigger never fired, so there is no log to read. That's [why a git push stops triggering a Vercel deploy](/deploy/vercel-git-push-not-triggering-deploy/), and it's usually a commit author or Git connection problem rather than anything in your code.
-
-And if you're not on Vercel at all: Netlify reports build failures with its own string, `build script returned non-zero exit code: 2`, and the causes behind it are different enough that I wrote [a separate guide for the Netlify exit code 2 error](/deploy/netlify-build-failed-exit-code-2/).
+Three failures look like build failures but aren't, and each has its own fix. `Module not found` is usually file casing — [why Vercel says Module not found when your laptop doesn't](/deploy/vercel-module-not-found-works-locally/). Pages that render fine but [404 the moment you refresh a deep link](/deploy/client-side-routing-404-vercel-netlify-cloudflare/) are a routing problem. And when Vercel shows no new deployment at all, the trigger never fired — [Vercel never even started a deployment](/deploy/vercel-git-push-not-triggering-deploy/), so there's no log to read. Off Vercel entirely? Netlify's `build script returned non-zero exit code: 2` is [its own flavor of this error](/deploy/netlify-build-failed-exit-code-2/).
 
 ## First: read the log the right way
 
@@ -41,15 +36,22 @@ The mistake everyone makes (me included, for those twenty minutes) is reading th
 
 Now, the five causes.
 
-Here's the quick map — match your log's first red line to the cause, then scroll to it:
+Here's the lookup table I wish I'd had. Find your exact string, read the cause, then jump to the section — most of these resolve in a minute once you know which of the five you're in.
 
-| Your log shows… | The cause | Which one |
+| Exact string in your log | What it actually means | Jump to |
 |---|---|---|
-| `ERESOLVE` / `command not found` | Dependencies differ from local | Cause 1 |
-| Node syntax error / cryptic crash | Node version mismatch | Cause 2 |
-| `Type error:` / `Cannot find module` | TypeScript error surfaces at build | Cause 3 |
-| `No Output Directory` / 404 after build | Wrong build command or output | Cause 4 |
-| `heap out of memory` / build times out | Out of time or memory | Cause 5 |
+| `Command "npm run build" exited with 1` | The wrapper, not the error. The real one is 10–20 lines above it | Cause 1–3, scroll up |
+| `npm ERR! code ERESOLVE` | Two packages want incompatible peer versions | Cause 1 |
+| `Error: Command "npm install" exited with 1` | Install died before your build ever started | Cause 1 |
+| `ELIFECYCLE Command failed with exit code 1` | Your own build script threw — read the first error above it | Cause 3 |
+| `ERR_PNPM_OUTDATED_LOCKFILE` | `package.json` and `pnpm-lock.yaml` disagree | Cause 1 |
+| `SyntaxError: Unexpected token` inside a dependency | Build image's Node is older than that package expects | Cause 2 |
+| `Type error:` / `error TS2307` | Type check ran at build; dev mode skips it | Cause 3 |
+| `No Output Directory named "dist" found` | Build succeeded, output landed somewhere else | Cause 4 |
+| `Module not found: Can't resolve` | File casing, or a dependency missing from `package.json` | Cause 1 |
+| `heap out of memory` / `Build exceeded maximum allowed runtime` | Hit the memory wall or the 45-minute cap | Cause 5 |
+
+Two of those strings actively lie to you. `exited with 1` and `ELIFECYCLE` are both generic wrappers that npm prints after *something* failed — neither tells you what failed, and both are the last line of the log rather than the first. If the section under them is only cleanup noise, scroll up.
 
 ## 1. Dependencies install fine locally but break on Vercel
 
@@ -128,7 +130,8 @@ Type error: Cannot find module '@/components/Logo' or its corresponding type dec
 **What the log says:**
 
 ```
-Error: No Output Directory named "dist" found using the Vercel Speed API.
+Error: No Output Directory named "dist" found after the Build completed.
+Error: No Output Directory named "public" found after the Build completed.
 ```
 
 Or your build "succeeds" in the log but the deployment still 404s.
@@ -166,7 +169,7 @@ NODE_OPTIONS=--max_old_space_size=4096 next build
 
 For timeouts, look at what the log says the build is *doing* when it stalls. Ninety percent of the time it's not one slow step — it's a loop generating an unreasonable number of pages, or a build script that's quietly waiting on a network request that never completes. If you're on Next.js with a large static site, incremental static regeneration lets you pre-render a subset at build time and generate the rest on demand.
 
-One rate-limit gotcha while you're iterating on builds: the Hobby plan allows 100 deployments per day and 100 per hour. If you're pipelining fixes with an AI tool, you can hit that wall without noticing — the symptom is builds that won't start, which looks a lot like a build failure but isn't one.
+One rate-limit gotcha while you're iterating on builds: the Hobby plan caps you at 100 deployments per day. If you're pipelining fixes with an AI tool, you can hit that wall without noticing — the symptom is builds that won't start, which looks like a build failure but isn't.
 
 ## A 60-second pre-flight check that prevents most of this
 
@@ -182,3 +185,5 @@ If both pass locally, your odds of a green first deployment go way up. It's the 
 ## Next steps
 
 Fix the build, and you're back to the fun part: the thing actually being online. If red deployments are becoming a pattern and your project is mostly static, it's worth knowing that [Cloudflare Pages and Vercel trade blows differently](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) — I run projects on both, and build behavior is one of the places they genuinely differ. And once the deploy is green, the next milestone is a custom domain — here's [how to point a domain at Vercel](/deploy/vercel-custom-domain-setup/) when you're ready, or [whether transferring the domain is even worth it](/deploy/transfer-domain-to-vercel/).
+
+And when the deploy has stayed green for a week, the next wall stops being technical. Usually the reason you wanted this thing deployed is to charge for it, and that turns out to be [taking money without a Stripe account](/payments/getting-paid-without-stripe-kofi-paypal/) — fees, payouts, and the parts nobody explains up front.
