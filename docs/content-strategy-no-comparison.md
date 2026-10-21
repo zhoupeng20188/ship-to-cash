@@ -428,3 +428,27 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 - 规则：**每篇经验叙事文须含 2–3 条真实外链**——1 条一手实证帖（dev.to / Indie Hackers 等真实 case study，须与文中数据逐字对应）+ 1–2 条社区（Indie Hackers 社区站 / 相关 subreddit 如 r/Supabase、r/expo）。
 - 硬约束：外链 URL **必须真实可访问**，写前先 WebSearch 确认，**禁止编造 404 链接**；锚文本用描述性短语，不堆砌。
 - 实例：`get-first-customers-developer-template`（2026-10-19，monetize 第 3 篇）初稿 0 外链，后补 4 条：dev.to cold-start 实证帖（内容逐字对应文中 5 bets / CAC / 时间线）+ r/expo + r/Supabase + Indie Hackers 社区。报错类技术文不强制。
+
+## 4.15 选题日 SERP 实测与交付（2026-10-21）
+
+已发 29 篇：**deploy 16（55%）/ payments 10（34%）/ monetize 3 / legal 0 / tools 0**。deploy 已从 73% 回落，「让位红线」不再触发；本轮仍优先非 deploy。
+
+| # | 候选词 | 2026-10-21 前 5 实际构成 | UGC | 判定 |
+|---|---|---|---|---|
+| 1 | cloudflare pages custom domain 522 | CF 官方(中文镜像) + xbkjz.cn(个人博客) + 掘金 + Stack Overflow + CSDN | 4/5 | **P0 可打**（英文 SERP 近空白；四轮验证最稳，仍未写） |
+| 2 | adsense low value content rejected | Google 官方 + AdSense 社区 ×1 + wordpressadapproval.website ×3 | 1/5 | **边缘可打**（SERP 被单一低质代理站占 3 席；未过 ≥2 UGC 硬线，须靠一手技术角度差异化） |
+| 3 | lemon squeezy payout not received | tryorbye 聚合 + Trustpilot + owelet + BBB + passivekit | 2/5（全是投诉页） | **弃/P2**（意图是「靠不靠谱」，与教程意图错配；payments 已 10 篇） |
+| 4 | paddle payout not received | Paddle 官方 ×2 + 10100 + labanph(padala) + help.peddle.com | **0/5** | **弃**（被 padala / Peddle 同音词污染，意图错配） |
+
+**决策**：SEO 推荐 #1，用户选 #2（补 monetize 空薄 + 换赛道）。#1 保持 P0 遗留，下轮仍可首发。
+
+**#2 的差异化核心（关键发现）**：Google 词表对 low value content 的官方定义**很窄**——「难以理解且对用户无价值的内容（例如填充文本或 Lorem ipsum）」，并非博客圈通行的「少于 600 词」。政策条款实际覆盖四类：无发布商内容/低价值内容、建设中、仅用于提示导航、自动生成无编辑。据此把文章从「通用 checklist」改为「URL 存在理由审计」，并引 Search Central 的 Who/How/Why 自评框架。
+
+**交付**：`adsense-low-value-content-rejected.md`（monetize 第 4 篇）
+- 正文 1542 词（去代码块；达标 1500–1800）、title 54 字符、description 153 字符。
+- 内链 7 条（/about/ + 6 篇老文，含跨簇 payments ×2；dist 落点零 404）。
+- 外链 4 条，全部实测可访问：Publisher Policies 10502938、词表 10563033#low-value-content、Search Central helpful content、AdSense 社区 thread 461239165。
+- 回链 4 篇，锚文本互不相同：google-adsense-on-astro / getting-paid-without-stripe / how-to-price / get-first-customers。
+- OG 67KB（≤100KB）、构建 38 页通过、BlogPosting + BreadcrumbList + FAQPage 三类 schema 齐全。
+- 本篇是 10-21 schema 模板升级后的第一篇，无需额外处理即自动带 Article/Breadcrumb。
+- 状态：本地已建未推（遵守 push 前口头确认）。

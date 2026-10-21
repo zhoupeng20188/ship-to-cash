@@ -137,6 +137,6 @@ Pick the band off the catalog. Run the one-tenth check. Confirm the fee table do
 
 The first person who pays $199 without hesitating will teach you more about your product than any amount of tuning. And the first person who tells you it's too expensive was never going to be your buyer.
 
-And when the traffic finally shows up, [layering Google AdSense on top of your product sales](/monetize/google-adsense-on-astro/) is the slow but hands-off second revenue stream — it earns while you sleep, unlike support tickets.
+And when the traffic finally shows up, [layering Google AdSense on top of your product sales](/monetize/google-adsense-on-astro/) is the slow but hands-off second revenue stream — it earns while you sleep, unlike support tickets. [Getting past AdSense's approval review](/monetize/adsense-low-value-content-rejected/) is a separate job from pricing, and it happens before the first impression.
 
 But ads don't bring the traffic that makes them pay. Before you lean on any of that, [here's how to get your first paying customers for a template](/monetize/get-first-customers-developer-template/) through long-tail SEO and community answers — the distribution work that has to happen first.

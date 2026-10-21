@@ -25,7 +25,7 @@ I shipped a developer template I was proud of. I priced it at $79 after reading 
 
 The guides had promised the opposite: build something good, list it somewhere, watch it sell. What they don't tell you is that "good" is not a distribution strategy. A template is a risk purchase — buyers can't return it, can't trial the codebase, and have been burned by abandoned starters before. Your entire job before the first sale is removing that risk for people who have never heard of you.
 
-If you haven't set a price yet, [that comes first](/monetize/how-to-price-a-developer-template/) — at low traffic a single $79 sale beats a month of ads, and [ad revenue is the slow stream](/monetize/google-adsense-on-astro/) that only matters once you actually have readers. This is the part after pricing: how to get the first hundred people to pay.
+If you haven't set a price yet, [that comes first](/monetize/how-to-price-a-developer-template/) — at low traffic a single $79 sale beats a month of ads, and [ad revenue is the slow stream](/monetize/google-adsense-on-astro/) that only matters once you actually have readers. Approval comes before either — [the audit that actually gets a site approved](/monetize/adsense-low-value-content-rejected/) is worth doing while you're still small. This is the part after pricing: how to get the first hundred people to pay.
 
 ## Why "just make it good" doesn't work
 
