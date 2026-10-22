@@ -20,8 +20,8 @@ export const ANALYTICS = {
 };
 
 export const ADSENSE = {
-  client: "", // AdSense 过审后填入 ca-pub-xxxx
-  enabled: false,
+  client: "ca-pub-2558991461210670",
+  enabled: true,
 };
 
 export const CATEGORIES = [

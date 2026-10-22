@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import AdScript from '../components/AdScript.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -54,7 +55,8 @@ const ogImage = new URL(image, Astro.site);
         'analytics_storage': 'denied'
       });
     </script>
-    <!-- TODO: 接入 GA4 / AdSense（申请到 ID 后填 src/config/site.ts，并把 gtag('js')/config 接在上方桩之后） -->
+    <!-- Google AdSense: ad tag is gated by ADSENSE.enabled in src/config/site.ts. -->
+    <AdScript />
   </head>
   <body class="min-h-screen flex flex-col bg-white dark:bg-ink-50">
     <Header />
