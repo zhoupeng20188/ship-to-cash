@@ -452,3 +452,50 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 - OG 67KB（≤100KB）、构建 38 页通过、BlogPosting + BreadcrumbList + FAQPage 三类 schema 齐全。
 - 本篇是 10-21 schema 模板升级后的第一篇，无需额外处理即自动带 Article/Breadcrumb。
 - 状态：本地已建未推（遵守 push 前口头确认）。
+
+## 4.16 选题日 SERP 实测与交付（2026-10-28）—— LS/MoR 赛道判定饱和
+
+已发 30 篇：**deploy 16 / payments 10 / monetize 4 / legal 0 / tools 0**。本轮一次测 11 个候选，**9 个判死**，结论比以往任何一轮都负面，但它省下的是后面 8 篇的无效劳动。
+
+| # | 候选词 | 2026-10-28 前 5 实际构成 | 判定 |
+|---|---|---|---|
+| 1 | cloudflare pages custom domain **522** / not working | CF 官方 Debugging Pages 文档已覆盖 CAA、Access 阻断 acme 验证、Page Rule Cache Everything、改 DNS Only 四类根因 + Known issues 占 2 席 | ❌ **判死（推翻四轮 P0）** |
+| 2 | paddle checkout nextjs | Paddle 官方 starter kit 占 4/5 | ❌ 官方通吃 |
+| 3 | polar.sh checkout nextjs | Polar 官方 **5/5**（官网 + docs ×2 + integrate + mintlify 镜像），且适配器一行代码 | ❌ 官方通吃 + 无教程空间 |
+| 4 | lemon squeezy alternative | Creem 自家软文占 2 席 + tolodora/statpit/affonso；**SERP 内对既有事实的错误表述**（误称 Paddle 收购 LS） | ❌ 竞品软文红海 |
+| 5 | migrate from gumroad to lemon squeezy | migratingto.dev + 3 篇对比文 | ❌ 对比红海 |
+| 6 | how to sell license keys desktop app | 5/5 MoR 厂商软文（Fungies 同篇占 2 席） | ❌ 厂商内容营销占领 |
+| 7 | lemon squeezy discount code checkout link | 工具页 + 个人 note + **优惠券聚合站（意图污染：搜的人在找折扣码）** | ❌ 意图错配 |
+| 8 | lemon squeezy store approval rejected | checkoutready（申诉工具站）+ Trustpilot 1 星 + HN Ask + tinyforestlabs 一手 | ❌ 意图是投诉/申诉；且本站无被拒一手经历（E-E-A-T 否决） |
+| 9 | lemon squeezy license validation supabase | Supabase 官网 + make 社区（含完整 Worker 代码）+ **2 条隐私政策页**（SEO 噪音） | ❌ 词量极小 |
+| 10 | lemon squeezy license key activation limit exceeded | **5/5 卖家自建帮助页**（snapback / kitmaker / masteriyo / tontontools / xeroqode） | △ **卖家侧 0 条**，可写但词量仅数百 |
+| 11 | black friday digital products | 4/5 营销博客 + GitHub awesome 聚合（讲"选哪种促销"） | △ 红海，但**执行层 0 条** |
+
+### 🔴 本轮最重要的两个判断
+
+1. **`cloudflare pages 522` 从 P0 直接判死。** 四轮（10-08 / 10-21 及更早）一直把它标「英文 SERP 近空白、最稳遗留」。今天实测真相是：**官方 Debugging Pages 文档已经把四个根因全写完了**，前 5 里三条是官方文档的不同镜像（甚至带 `:2087` / `:8443` 端口的镜像站）。这正是 10-21 §3 修正判据里「单一答案页通吃全部原因 → −3」的典型，之前四轮都只看了「有没有低 DR 站」，没看「官方是否已通吃」。
+2. **Lemon Squeezy / MoR 词族已系统性饱和**，占领者分三类：① 官方文档 ② MoR 竞品内容营销（Creem、Polar、Dodo、Fungies、PayRequest、Eden 都在写）③ AI 生成聚合站。**10-21 定的「LS 待写 8 篇」清单需整体重评**，其中 #6 api rate limit 429、#8 license validation supabase 属于 #9 同类（词量极小），#1 activation limit 只剩卖家侧角度可写。
+
+### 本轮交付：`lemon-squeezy-black-friday-discount.md`（monetize 第 5 篇）
+
+选它是因为它是 11 个候选里唯一满足「商业意图 + 多步骤 + 前 5 存在明确内容缺口 + 有时间窗口」四项的：
+
+- **时间窗口**：黑五 2026-11-27、Cyber Monday 11-30（经 eden.so 二次核实）。新文需 3–4 周积曝光，10-28 发布正好卡住。
+- **SERP 缺口**：前 5 全在讲"选哪种促销类型/折扣打多深/邮件节奏"，**0 条讲后台怎么配**——`starts_at` / `expires_at` 的 UTC 陷阱、`status: draft` 作为熔断开关、`duration: once|repeating|forever` 对订阅 ARPU 的影响、`checkout%5Bdiscount_code%5D` 的编码。
+- **差异化全部来自官方字段表**（`docs.lemonsqueezy.com/api/discounts/the-discount-object` 逐字段核对，非二手转述）。
+- 规格：正文 1797 词（去代码块）/ title 47 字符（渲染后 60，带品牌）/ desc 145 / FAQ 6 条 / OG 60KB / 无 H1。
+- 内链：出链 7（payments 4 + monetize 2 + **deploy 跨簇 1**）；回链 4，锚文本互不相同：how-to-price（"running a timed sale instead of a permanent price cut"）/ get-first-customers（"Lemon Squeezy Black Friday discount"，保留核心词）/ checkout-astro（"how to put a discount code in a Lemon Squeezy checkout link"）/ test-mode-local（"creating and testing a scheduled discount"）。
+- 外链 3 条，均实测可访问：LS Discount Object 官方、remkusdevries（`checkout%5Bdiscount_code%5D` 原始出处）、eden.so（2026 黑五日期 + "促销必须写清时区"）。
+- 校验：构建 39 页通过；正文 7 条内链在 dist 零 404；8 个 H2 自动 id 与模板目录锚点全部解析；BlogPosting + BreadcrumbList + FAQPage 齐全。
+- 状态：本地已建未推（遵守 push 前口头确认）。
+
+### 防内耗边界
+
+本篇只讲「促销的时间控制与折扣参数」，不重讲收款方式（getting-paid / stripe-not-available）、不重讲 checkout 嵌入（checkout-astro）、不重讲 API 字段用途（license-key-api）。与 `how-to-price` 的边界：**那篇讲"定多少"，本篇讲"什么时候、以什么方式临时打折，以及怎么准时收回"**。
+
+### 下轮方向（替代已死的 LS 清单）
+
+1. **tools 簇开簇**：手续费**反算器**（"我要净收 $30 该定价多少"），绕开对比文红线，同时解决 11 周 0 外链的结构问题。
+2. **卖家侧 license 自助门户**（#10 的唯一可写角度）：前 5 全是卖家给客户写的帮助页，教卖家怎么搭的教程为 0。
+3. **Track A 优先于新文**：改 8 篇有展示低 CTR 的标题，收益高于第 32 篇（见 traffic-breakout-plan §1.2）。
+

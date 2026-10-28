@@ -146,6 +146,8 @@ Before you flip test mode off:
 
 Run that list and launch day is boring — which is the highest compliment you can pay a payment integration.
 
+If a promotion ships alongside the launch, add one more item: [creating and testing a scheduled discount](/monetize/lemon-squeezy-black-friday-discount/) in test mode first. Test-mode discounts are separate objects from live ones, so the timestamps you set there don't carry across — and a wrong `expires_at` kills the code mid-sale rather than at midnight.
+
 ## What I'd do next
 
 Set up the tunnel once and keep it running while you build; testing a purchase should be a five-second loop, not a redeploy. Then the real question stops being "does it work" and becomes "what should I charge for it" — [pricing a developer template](/monetize/how-to-price-a-developer-template/) is where most of the upside actually lives, and it's a better use of your evening than refreshing a dashboard.

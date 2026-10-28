@@ -85,6 +85,8 @@ The part the "I made $10k in 30 days" posts skip: the documented first 100 took 
 
 That asymmetry is the whole story. Early sales are slow because every channel compounds — a blog post climbs, a community answer keeps earning clicks, one SKU starts pulling another. None of it shows up in the first two weeks, which is precisely when most templates get abandoned. The unglamorous distribution work is the product's real marketing budget.
 
+The one lever you can pull without waiting is a dated event. A launch week, or a [Lemon Squeezy Black Friday discount](/monetize/lemon-squeezy-black-friday-discount/) that actually expires, gives hesitant buyers a reason to decide this week instead of someday. It only works if the end date is real — a deadline you extend twice teaches people to wait for the next one.
+
 ## Before you start — two prerequisites
 
 None of the five bets convert if the basics aren't in place:
