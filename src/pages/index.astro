@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import { CATEGORIES } from '../config/site';
+import { FEATURED_TOOL, toolHref } from '../data/tools';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -42,6 +43,25 @@ const liveCategories = CATEGORIES.filter((cat) =>
         </a>
       ))}
     </div>
+  </section>
+
+  <!-- Free tool -->
+  <section class="max-w-6xl mx-auto px-4 mt-12">
+    <a
+      href={toolHref(FEATURED_TOOL)}
+      class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-brand-200 bg-brand-50 p-5 hover:shadow-lg hover:border-brand-300 transition-all duration-200 dark:border-brand-800 dark:bg-brand-900/40"
+    >
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-300">{FEATURED_TOOL.featured.eyebrow}</p>
+        <h2 class="mt-1 font-bold text-lg text-ink-900">{FEATURED_TOOL.featured.headline}</h2>
+        <p class="mt-1 text-sm text-ink-600">
+          {FEATURED_TOOL.featured.blurb}
+        </p>
+      </div>
+      <span class="inline-flex items-center px-4 py-2 rounded-lg bg-brand-600 text-white text-sm font-medium whitespace-nowrap">
+        {FEATURED_TOOL.featured.cta}
+      </span>
+    </a>
   </section>
 
   <!-- Latest guides -->

@@ -97,6 +97,8 @@ Lemon Squeezy's [published rate](https://www.lemonsqueezy.com/pricing) is **5% +
 
 Going from $19 to $199 doesn't just multiply revenue. It nearly halves the share of each sale that leaves your account before you ever see it.
 
+Most people run this arithmetic in the wrong direction: pick a price, then find out what is left. If you would rather set the number from the other end — start from what you need to keep and work back to a list price — [the reverse fee calculator](/tools/fee-reverse-calculator/) does it with the fixed fee, the surcharges and the tax-inclusive base all included.
+
 The percentage is still a distraction, though. The number that decides things is how many sales you need:
 
 | Price | Sales needed for $1,000 |

@@ -1,0 +1,917 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { PROVIDERS, RATES_VERIFIED } from '../../data/fees';
+
+const TITLE = 'Reverse Fee Calculator for Digital Products';
+const DESCRIPTION =
+  'Work out the list price that leaves you exactly the net you want — after platform fees, stacked surcharges, and tax-inclusive MoR fee bases.';
+
+const faqs = [
+  {
+    q: 'How do I work out what to charge so I net a specific amount?',
+    a: 'Divide what you want to keep, plus the platform fixed fee, by one minus the percentage fee. Price = (net + fixed fee) / (1 - rate). If tax is added at checkout and your platform charges its percentage on the tax-inclusive total, multiply the rate by (1 + tax) first. The calculator above does both steps, including the surcharges.',
+  },
+  {
+    q: 'Why cannot I just add the fee percentage to my price?',
+    a: 'Because the fee is taken from the higher number. On a $30 target at 5% + 50c, adding 5% gives $31.50, and the fee on $31.50 is $2.08, so you keep $29.43. You are 57 cents short, every sale. The correct price is $32.11.',
+  },
+  {
+    q: 'Does sales tax change how much the platform takes?',
+    a: 'Yes, on a merchant of record. Lemon Squeezy states that its fee is calculated on the total order value including tax. On a $20 sale to a French buyer with 20% VAT, the charge is $24.00 and the fee is $2.06, not the $1.50 you would get from 5% of $20. You still keep the $20 minus fee, because the VAT was never yours.',
+  },
+  {
+    q: 'Do these rates include payment processing?',
+    a: 'For the merchant-of-record platforms, yes — Lemon Squeezy, Paddle and Polar are all-in, and card processing is inside the percentage. Gumroad charges 10% + 50c separately from card processing at 2.9% + 30c, which is why its preset here is 12.9% + 80c. Stripe is a processor, so 2.9% + 30c is the processing itself and the tax filing is yours.',
+  },
+  {
+    q: 'What is not included in the result?',
+    a: 'Payout fees (Lemon Squeezy charges 1% to non-US bank accounts), refunds, chargeback fees, affiliate commissions and abandoned-cart recovery percentages. If any of those apply to you, add them in the Advanced row as a per-sale cost.',
+  },
+  {
+    q: 'Which tax rate should I enter?',
+    a: 'If you sell worldwide through a merchant of record, no single rate is right, because the buyer location decides it. Enter the rate you most often see, or 0 if most of your buyers are in the US, and read the sensitivity table to see how far your take-home moves between 0% and 25%.',
+  },
+];
+
+const pageTitle = TITLE.length + ' | ShipToCash'.length <= 60 ? `${TITLE} | ShipToCash` : TITLE;
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://shiptocash.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://shiptocash.com/tools/' },
+    { '@type': 'ListItem', position: 3, name: TITLE, item: 'https://shiptocash.com/tools/fee-reverse-calculator/' },
+  ],
+};
+
+const appLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: TITLE,
+  url: 'https://shiptocash.com/tools/fee-reverse-calculator/',
+  applicationCategory: 'BusinessApplication',
+  applicationSubCategory: 'Payment fee calculator',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  isAccessibleForFree: true,
+  description: DESCRIPTION,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  featureList: [
+    'Reverse calculation from a target net amount to a list price',
+    'Merchant-of-record fee base that includes sales tax or VAT',
+    'Stackable surcharges for international cards, PayPal and subscriptions',
+    'Sensitivity table across buyer tax rates',
+  ],
+  publisher: {
+    '@type': 'Organization',
+    name: 'ShipToCash',
+    url: 'https://shiptocash.com/',
+  },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout title={pageTitle} description={DESCRIPTION} image="/og-tools-fee-reverse-calculator.jpg">
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(appLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
+
+  <div class="max-w-4xl mx-auto px-4 pt-10">
+    <nav class="flex items-center gap-2 text-sm text-ink-500 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-brand-600">Home</a>
+      <span>/</span>
+      <a href="/tools/" class="hover:text-brand-600">Tools</a>
+    </nav>
+
+    <header class="mb-8">
+      <p class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-50 text-brand-700 dark:bg-brand-900 dark:text-brand-200">
+        Free tool
+      </p>
+      <h1 class="mt-4 text-3xl md:text-4xl font-extrabold text-ink-900 leading-tight">{TITLE}</h1>
+      <p class="mt-4 text-lg text-ink-600 leading-relaxed">
+        Set the price from the money you want to end up with, not the other way round. This one accounts for
+        the detail most calculators miss: a merchant of record charges its percentage on the order total
+        <em>including tax</em>, so a $20 sale to a buyer paying VAT is charged as $24.
+      </p>
+    </header>
+
+    <!-- ================= Calculator ================= -->
+    <div class="not-prose rounded-2xl border border-ink-200 bg-white shadow-sm overflow-hidden dark:bg-ink-100">
+      <div class="grid lg:grid-cols-2">
+        <!-- Inputs -->
+        <div class="p-5 sm:p-6 space-y-5">
+          <div>
+            <span class="block text-xs font-semibold uppercase tracking-wide text-ink-500 mb-2">Mode</span>
+            <div class="inline-flex rounded-lg border border-ink-200 p-0.5 bg-ink-50 dark:bg-ink-50" role="group" aria-label="Calculation mode">
+              <button type="button" data-mode="reverse" class="mode-btn px-3 py-1.5 rounded-md text-sm font-medium">
+                I want to net
+              </button>
+              <button type="button" data-mode="forward" class="mode-btn px-3 py-1.5 rounded-md text-sm font-medium">
+                I charge
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="amount" id="amount-label" class="block text-sm font-medium text-ink-700 mb-1.5">
+              Net you want to keep
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400">$</span>
+              <input
+                id="amount"
+                type="number"
+                min="0"
+                step="0.01"
+                value="30"
+                inputmode="decimal"
+                class="w-full pl-7 pr-3 py-2.5 rounded-lg border border-ink-300 bg-white text-ink-900 text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:bg-ink-100"
+              />
+            </div>
+          </div>
+
+          <div>
+            <span id="provider-label" class="block text-sm font-medium text-ink-700 mb-1.5">Where you sell</span>
+            <button
+              type="button"
+              id="provider-trigger"
+              role="combobox"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="provider-menu"
+              aria-labelledby="provider-label provider-value"
+              class="provider-trigger w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg border border-ink-300 bg-white text-ink-800 text-left transition-colors hover:border-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:bg-ink-100"
+            >
+              <span id="provider-value" class="truncate">Lemon Squeezy</span>
+              <svg
+                class="provider-chevron w-4 h-4 shrink-0 text-ink-400 transition-transform duration-150"
+                viewBox="0 0 20 20"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M5.5 8 10 12.5 14.5 8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+
+            <ul
+              id="provider-menu"
+              role="listbox"
+              aria-labelledby="provider-label"
+              class="hidden fixed z-50 p-1.5 rounded-xl border border-ink-200 bg-white shadow-xl shadow-ink-900/10 max-h-72 overflow-y-auto dark:bg-ink-100 dark:shadow-black/40"
+            >
+              {PROVIDERS.map((p, i) => (
+                <li
+                  id={`provider-opt-${p.id}`}
+                  role="option"
+                  data-provider={p.id}
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  class="provider-option flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-ink-700 cursor-pointer select-none transition-colors hover:bg-ink-50"
+                >
+                  <span class="truncate">{p.name}</span>
+                  <svg
+                    class="provider-check w-4 h-4 shrink-0 text-brand-600"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M4.5 10.5 8 14l7.5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </li>
+              ))}
+            </ul>
+
+            <p id="provider-note" class="mt-2 text-xs text-ink-500 leading-relaxed"></p>
+            <p class="mt-1 text-xs text-ink-400">
+              Rates read from each provider's pricing page in {RATES_VERIFIED}. Override them below if yours differ.
+              <a id="provider-source" href="#" target="_blank" rel="noopener nofollow" class="hidden text-brand-600 hover:underline">Official pricing</a>
+            </p>
+          </div>
+
+          <fieldset>
+            <legend class="block text-sm font-medium text-ink-700 mb-2">Fee structure</legend>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="fee-percent" class="block text-xs text-ink-500 mb-1">Percentage</label>
+                <div class="relative">
+                  <input
+                    id="fee-percent"
+                    type="number"
+                    min="0"
+                    max="99"
+                    step="0.1"
+                    value="5"
+                    inputmode="decimal"
+                    class="w-full pl-3 pr-7 py-2 rounded-lg border border-ink-300 bg-white text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-ink-100"
+                  />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 text-sm">%</span>
+                </div>
+              </div>
+              <div>
+                <label for="fee-fixed" class="block text-xs text-ink-500 mb-1">Fixed per sale</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400 text-sm">$</span>
+                  <input
+                    id="fee-fixed"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value="0.50"
+                    inputmode="decimal"
+                    class="w-full pl-7 pr-3 py-2 rounded-lg border border-ink-300 bg-white text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-ink-100"
+                  />
+                </div>
+              </div>
+            </div>
+            <div id="surcharges" class="mt-3 space-y-1.5"></div>
+          </fieldset>
+
+          <div>
+            <label for="tax-rate" class="block text-sm font-medium text-ink-700 mb-1.5">
+              Tax added at checkout
+            </label>
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <input
+                  id="tax-rate"
+                  type="number"
+                  min="0"
+                  max="60"
+                  step="0.5"
+                  value="0"
+                  inputmode="decimal"
+                  class="w-full pl-3 pr-7 py-2 rounded-lg border border-ink-300 bg-white text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-ink-100"
+                />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 text-sm">%</span>
+              </div>
+              <div class="flex gap-1">
+                <button type="button" data-tax="0" class="tax-chip px-2.5 py-1.5 rounded-md text-xs border border-ink-300 text-ink-600 hover:border-brand-400">None</button>
+                <button type="button" data-tax="10" class="tax-chip px-2.5 py-1.5 rounded-md text-xs border border-ink-300 text-ink-600 hover:border-brand-400">10</button>
+                <button type="button" data-tax="20" class="tax-chip px-2.5 py-1.5 rounded-md text-xs border border-ink-300 text-ink-600 hover:border-brand-400">20</button>
+                <button type="button" data-tax="25" class="tax-chip px-2.5 py-1.5 rounded-md text-xs border border-ink-300 text-ink-600 hover:border-brand-400">25</button>
+              </div>
+            </div>
+          </div>
+
+          <details class="rounded-lg border border-ink-200 bg-ink-50 px-3 py-2 dark:bg-ink-50">
+            <summary class="text-xs font-medium text-ink-600 cursor-pointer">Advanced</summary>
+            <div class="mt-3 space-y-3">
+              <div>
+                <label for="extra-cost" class="block text-xs text-ink-500 mb-1">Extra cost per sale (payout fee, chargeback reserve)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400 text-sm">$</span>
+                  <input
+                    id="extra-cost"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value="0"
+                    inputmode="decimal"
+                    class="w-full pl-7 pr-3 py-2 rounded-lg border border-ink-300 bg-white text-ink-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:bg-ink-100"
+                  />
+                </div>
+              </div>
+              <label class="flex items-start gap-2 text-xs text-ink-600 leading-relaxed">
+                <input id="tax-inclusive" type="checkbox" checked class="mt-0.5 rounded border-ink-300" />
+                <span>Take the percentage on the tax-inclusive total. True for merchant-of-record fees; untick if your provider charges on the pre-tax subtotal.</span>
+              </label>
+            </div>
+          </details>
+        </div>
+
+        <!-- Results -->
+        <div class="p-5 sm:p-6 bg-brand-50 border-t lg:border-t-0 lg:border-l border-brand-200 dark:bg-brand-900/40 dark:border-brand-800">
+          <p id="result-label" class="text-xs font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-300">
+            Set this price
+          </p>
+          <p id="result-big" class="mt-1 text-4xl font-extrabold text-ink-900 tabular-nums">$32.11</p>
+          <p id="result-sub" class="mt-1 text-sm text-ink-600"></p>
+
+          <dl class="mt-5 space-y-2 text-sm">
+            <div class="flex justify-between gap-4">
+              <dt class="text-ink-600">Price you set</dt>
+              <dd id="row-price" class="font-medium text-ink-900 tabular-nums text-right"></dd>
+            </div>
+            <div class="flex justify-between gap-4">
+              <dt class="text-ink-600">Buyer pays, incl. tax</dt>
+              <dd id="row-total" class="font-medium text-ink-900 tabular-nums text-right"></dd>
+            </div>
+            <div class="flex justify-between gap-4">
+              <dt class="text-ink-600">Platform fee</dt>
+              <dd id="row-fee" class="font-medium text-ink-900 tabular-nums text-right"></dd>
+            </div>
+            <div class="flex justify-between gap-4">
+              <dt class="text-ink-600">Tax remitted, not yours</dt>
+              <dd id="row-tax" class="font-medium text-ink-900 tabular-nums text-right"></dd>
+            </div>
+            <div class="flex justify-between gap-4 border-t border-brand-200 dark:border-brand-800 pt-2">
+              <dt class="font-semibold text-ink-900">You keep</dt>
+              <dd id="row-net" class="font-bold text-ink-900 tabular-nums text-right"></dd>
+            </div>
+          </dl>
+
+          <p id="row-rate" class="mt-3 text-xs text-ink-600"></p>
+          <p id="row-round" class="mt-2 text-xs text-ink-600"></p>
+          <p id="row-warn" class="mt-2 text-xs font-medium text-red-600 hidden"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= Secondary tables ================= -->
+    <div class="not-prose mt-6 grid md:grid-cols-2 gap-4">
+      <div class="rounded-xl border border-ink-200 bg-white p-4 dark:bg-ink-100">
+        <h2 class="text-sm font-bold text-ink-900">Same net, different provider</h2>
+        <p class="mt-1 text-xs text-ink-500">Base published rates, no optional surcharges.</p>
+        <table class="mt-3 w-full text-xs">
+          <thead>
+            <tr class="text-ink-500">
+              <th class="text-left font-medium pb-1">Provider</th>
+              <th class="text-right font-medium pb-1">Fee</th>
+              <th class="text-right font-medium pb-1">List price</th>
+            </tr>
+          </thead>
+          <tbody id="cross-body" class="text-ink-800"></tbody>
+        </table>
+      </div>
+
+      <div class="rounded-xl border border-ink-200 bg-white p-4 dark:bg-ink-100">
+        <h2 class="text-sm font-bold text-ink-900">Same price, different buyer</h2>
+        <p class="mt-1 text-xs text-ink-500">Your take-home as the buyer's tax rate changes.</p>
+        <table class="mt-3 w-full text-xs">
+          <thead>
+            <tr class="text-ink-500">
+              <th class="text-left font-medium pb-1">Buyer tax</th>
+              <th class="text-right font-medium pb-1">You keep</th>
+              <th class="text-right font-medium pb-1">Fee share</th>
+            </tr>
+          </thead>
+          <tbody id="tax-body" class="text-ink-800"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="mt-4 text-xs text-ink-400 leading-relaxed">
+      Estimates only. The fee is applied to the order total the platform actually sees; refunds, chargebacks,
+      payout fees, currency conversion spreads and affiliate commissions are outside this model. Nothing you type
+      leaves your browser.
+    </p>
+
+    <!-- ================= Content ================= -->
+    <div class="prose mt-14">
+      <h2>The two steps, and the one everyone gets wrong</h2>
+      <p>
+        If a platform charged a flat percentage and nothing else, the arithmetic would be one line. You want to
+        keep <code>$30</code>, the fee is 5%, so you charge <code>$31.58</code> rather than adding 5% to 30. Adding
+        the percentage to your number is the mistake, and it is the mistake that shows up as a few dozen dollars
+        missing at the end of the month.
+      </p>
+      <p>
+        Adding 5% to a <code>$30</code> target gives <code>$31.50</code>. The platform then takes 5% of
+        <code>$31.50</code> — which is <code>$1.575</code> — plus the 50 cent fixed fee, leaving you
+        <code>$29.43</code>. You are 57 cents short on every single sale. Solve it properly and the number is
+        <code>$32.11</code>, because the fee has to be covered by the higher price, not by the price you started
+        with.
+      </p>
+
+      <h2>Then the merchant-of-record wrinkle: the fee base includes tax</h2>
+      <p>
+        This is where the general-purpose reverse calculators stop being useful. They were built for freelancers
+        invoicing a client through Stripe, where there is no VAT line. When you sell a digital product through a
+        merchant of record, the platform is the legal seller, it adds the buyer's local tax at checkout, and it
+        takes its percentage from that larger total.
+      </p>
+      <p>
+        Lemon Squeezy documents this directly: its fee is 5% plus 50 cents per transaction, calculated on the
+        total order value including any tax collected. Its own worked example is a $20 sale to a buyer in France.
+        With 20% VAT added the order total is <code>$24.00</code>, the fee comes to <code>$2.06</code>, and the
+        seller nets <code>$17.94</code>. The VAT was never the seller's money, so it does not reduce the net —
+        but it does inflate the fee base, and that is the part people miss.
+      </p>
+      <p>
+        In numbers a solo developer can feel: on a $30 net target with a 20% VAT buyer and Lemon Squeezy's
+        international surcharge, ignoring the tax in the fee base underprices you by about 46 cents. With a
+        $49 price it is closer to 75 cents. Multiply by every European sale you will ever make.
+      </p>
+      <p>
+        Paddle and Polar quote the same way — a percentage of the checkout transaction — but only Lemon Squeezy
+        spells out in writing that tax is part of that total. If your provider deducts from the pre-tax subtotal
+        instead, untick the box in Advanced and the calculator follows your reading of your own contract.
+      </p>
+
+      <h2>Surcharges stack, and they stack on the higher number too</h2>
+      <p>
+        Lemon Squeezy adds 1.5% for cards issued outside the US, 1.5% for PayPal and 0.5% for subscription
+        payments. A French subscriber paying by PayPal is not a 5% customer, they are an 8.5% customer plus 50
+        cents. Those are checkboxes in the calculator because whether they apply to you depends on who buys and
+        how they pay — and it is worth running your real mix once rather than guessing.
+      </p>
+      <p>
+        Stripe has the same shape: 2.9% plus 30 cents domestically, then 1.5% for an international card and
+        another 1% if the currency has to be converted. The headline rate is the best case, not the average.
+      </p>
+
+      <h2>The 50 cents is what kills cheap products</h2>
+      <p>
+        A percentage fee is survivable at any price. A fixed fee is not, because it does not scale down. At
+        Lemon Squeezy's domestic 5% + 50 cents, here is what the fee actually takes:
+      </p>
+      <div class="not-prose my-6 overflow-hidden rounded-lg border border-ink-200">
+        <table class="w-full text-sm">
+          <thead class="bg-ink-50 dark:bg-ink-50">
+            <tr class="text-ink-600">
+              <th class="text-left px-4 py-2 font-medium">Price</th>
+              <th class="text-left px-4 py-2 font-medium">Fee</th>
+              <th class="text-left px-4 py-2 font-medium">Effective rate</th>
+            </tr>
+          </thead>
+          <tbody class="text-ink-800">
+            <tr class="border-t border-ink-200"><td class="px-4 py-2">$5</td><td class="px-4 py-2">$0.75</td><td class="px-4 py-2">15.0%</td></tr>
+            <tr class="border-t border-ink-200"><td class="px-4 py-2">$9</td><td class="px-4 py-2">$0.95</td><td class="px-4 py-2">10.6%</td></tr>
+            <tr class="border-t border-ink-200"><td class="px-4 py-2">$19</td><td class="px-4 py-2">$1.45</td><td class="px-4 py-2">7.6%</td></tr>
+            <tr class="border-t border-ink-200"><td class="px-4 py-2">$49</td><td class="px-4 py-2">$2.95</td><td class="px-4 py-2">6.0%</td></tr>
+            <tr class="border-t border-ink-200"><td class="px-4 py-2">$99</td><td class="px-4 py-2">$5.45</td><td class="px-4 py-2">5.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        This is the argument against a $5 product that has nothing to do with demand. A third of your margin goes
+        to a fixed fee before anyone has charged back a card. Two $9 products are worse than one $19 product for
+        the same revenue, and the calculator makes that visible in one number: the effective rate line.
+      </p>
+
+      <h2>What the result deliberately leaves out</h2>
+      <p>
+        A calculator that quietly ignored the rest of the cost surface would be worse than no calculator. Not in
+        the model: payout fees (Lemon Squeezy charges 1% to non-US bank accounts, and 50 cents to a US PayPal
+        account), refunds (the platform fee is generally not returned), chargeback fees (around $15 at both
+        Stripe and Lemon Squeezy), affiliate commissions (3% on referred sales at Lemon Squeezy) and abandoned-cart
+        recovery percentages. If you use any of those, put the per-sale cost in the Advanced field.
+      </p>
+      <p>
+        Tax is the other thing no single number can capture. The buyer's location sets the rate, so a worldwide
+        store has no one tax figure. The sensitivity table shows what happens across 0% to 25% on the price you
+        just calculated, which is usually a more useful picture than a single guess.
+      </p>
+
+      <h2>Before you commit the number</h2>
+      <p>
+        If you are still choosing the price rather than the platform, the more useful exercise is
+        <a href="/monetize/how-to-price-a-developer-template/">working out what your product is worth</a> first,
+        then using this page to check what actually lands in the bank. And if the tax question is the one you are
+        stuck on — whether to hand it to a merchant of record or file it yourself —
+        <a href="/payments/merchant-of-record-vs-payment-processor/">that trade-off is its own decision</a>, with
+        its own real numbers.
+      </p>
+      <p>
+        Running a discount? Remember that a 30% code cuts the price but not the fixed fee, so the effective rate
+        on a discounted sale is higher than on a full-price one. The
+        <a href="/monetize/lemon-squeezy-black-friday-discount/">Black Friday discount setup</a> covers the timing
+        side of that; this page covers what the discount leaves you.
+      </p>
+      <p>
+        Once the price is set, the next question is whether the checkout can take the money at all —
+        <a href="/payments/lemon-squeezy-checkout-astro-static-site/">wiring Lemon Squeezy into a static Astro site</a>
+        is the shortest version of that path, and
+        <a href="/payments/stripe-not-available-in-my-country/">if Stripe will not onboard you</a>, the fee
+        structure you are calculating against changes entirely.
+      </p>
+    </div>
+
+    <!-- ================= FAQ ================= -->
+    <section class="mt-14 not-prose">
+      <h2 class="text-2xl font-bold text-ink-900">Questions</h2>
+      <dl class="mt-6 space-y-6">
+        {faqs.map((f) => (
+          <div>
+            <dt class="font-semibold text-ink-900">{f.q}</dt>
+            <dd class="mt-1.5 text-ink-600 leading-relaxed">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <div class="h-16"></div>
+  </div>
+
+  <script type="application/json" id="provider-data" set:html={JSON.stringify(PROVIDERS)} />
+
+  <script>
+    const byId = (id) => document.getElementById(id);
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const providers = JSON.parse(byId('provider-data').textContent);
+    const state = { mode: 'reverse', providerId: providers[0].id };
+
+    const fmtMoney = (n) => money.format(Math.round(n * 100) / 100);
+    const fmtPct = (n) => `${(n * 100).toFixed(1)}%`;
+
+    function readAssumptions() {
+      const pct = (parseFloat(byId('fee-percent').value) || 0) / 100;
+      const fixed = parseFloat(byId('fee-fixed').value) || 0;
+      const extra = parseFloat(byId('extra-cost').value) || 0;
+      const taxRate = (parseFloat(byId('tax-rate').value) || 0) / 100;
+      const taxInclusive = byId('tax-inclusive').checked;
+      let surcharge = 0;
+      document.querySelectorAll('[data-surcharge]:checked').forEach((cb) => {
+        surcharge += parseFloat(cb.dataset.percent) || 0;
+      });
+      return {
+        pct: pct + surcharge / 100,
+        fixed: fixed + extra,
+        taxRate,
+        taxInclusive,
+      };
+    }
+
+    function feeFor(price, a) {
+      const tax = price * a.taxRate;
+      const base = a.taxInclusive ? price + tax : price;
+      return a.pct * base + a.fixed;
+    }
+
+    function priceFor(net, a) {
+      const multiplier = a.taxInclusive ? 1 + a.taxRate : 1;
+      const denom = 1 - a.pct * multiplier;
+      if (denom <= 0.02) return null;
+      return (net + a.fixed) / denom;
+    }
+
+    function renderSurcharges(provider) {
+      const box = byId('surcharges');
+      box.innerHTML = '';
+      if (!provider.surcharges.length) {
+        const p = document.createElement('p');
+        p.className = 'text-xs text-ink-400';
+        p.textContent = 'No optional surcharges for this provider.';
+        box.appendChild(p);
+        return;
+      }
+      provider.surcharges.forEach((s) => {
+        const label = document.createElement('label');
+        label.className = 'flex items-start gap-2 text-xs text-ink-600 leading-relaxed';
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.dataset.surcharge = s.id;
+        input.dataset.percent = String(s.percent);
+        input.className = 'mt-0.5 rounded border-ink-300';
+        const span = document.createElement('span');
+        span.textContent = s.label;
+        label.appendChild(input);
+        label.appendChild(span);
+        box.appendChild(label);
+      });
+    }
+
+    function applyProvider(id) {
+      const provider = providers.find((p) => p.id === id) || providers[0];
+      byId('fee-percent').value = String(provider.percent);
+      byId('fee-fixed').value = provider.fixed.toFixed(2);
+      byId('tax-inclusive').checked = provider.taxInclusive;
+      byId('provider-note').textContent = provider.note;
+      const src = byId('provider-source');
+      if (provider.source) {
+        src.href = provider.source;
+        src.classList.remove('hidden');
+      } else {
+        src.classList.add('hidden');
+      }
+      renderSurcharges(provider);
+    }
+
+    /* ---------- Provider dropdown (custom listbox) ----------
+       A native <select> cannot be styled once it opens: macOS renders the
+       option list as an OS menu, so the page's design system ends at the
+       closed control. This is the WAI-ARIA select-only combobox pattern
+       instead — button + role=listbox, fixed-positioned so the parent
+       card's `overflow-hidden` cannot clip it. */
+    const providerUI = (() => {
+      const trigger = byId('provider-trigger');
+      const menu = byId('provider-menu');
+      const valueEl = byId('provider-value');
+      const chevron = trigger.querySelector('.provider-chevron');
+      const options = Array.from(menu.querySelectorAll('[data-provider]'));
+      let activeIndex = 0;
+      let open = false;
+      let keyboardNav = false;
+
+      function paint() {
+        options.forEach((opt, i) => {
+          const selected = opt.dataset.provider === state.providerId;
+          const active = open && keyboardNav && i === activeIndex;
+          opt.setAttribute('aria-selected', String(selected));
+          opt.classList.toggle('bg-brand-50', selected);
+          opt.classList.toggle('dark:bg-brand-900', selected);
+          opt.classList.toggle('text-brand-700', selected);
+          opt.classList.toggle('dark:text-brand-200', selected);
+          opt.classList.toggle('font-medium', selected);
+          opt.classList.toggle('hover:bg-ink-50', !selected);
+          opt.classList.toggle('bg-ink-50', active && !selected);
+          opt.querySelector('.provider-check').style.opacity = selected ? '1' : '0';
+        });
+        if (open) {
+          trigger.setAttribute('aria-activedescendant', options[activeIndex].id);
+        } else {
+          trigger.removeAttribute('aria-activedescendant');
+        }
+      }
+
+      function place() {
+        const r = trigger.getBoundingClientRect();
+        const gap = 6;
+        const below = window.innerHeight - r.bottom - gap;
+        const menuHeight = menu.offsetHeight; // 0-safe: measured after unhide
+        menu.style.width = `${r.width}px`;
+        menu.style.left = `${Math.round(r.left)}px`;
+        if (menuHeight && below < menuHeight && r.top > menuHeight + gap) {
+          menu.style.top = `${Math.round(r.top - menuHeight - gap)}px`;
+        } else {
+          menu.style.top = `${Math.round(r.bottom + gap)}px`;
+        }
+      }
+
+      function openMenu(startIndex) {
+        if (open) return;
+        open = true;
+        menu.classList.remove('hidden');
+        const current = options.findIndex((o) => o.dataset.provider === state.providerId);
+        activeIndex = startIndex !== undefined ? startIndex : current >= 0 ? current : 0;
+        trigger.setAttribute('aria-expanded', 'true');
+        chevron.classList.add('rotate-180');
+        place();
+        paint();
+      }
+
+      function closeMenu() {
+        if (!open) return;
+        open = false;
+        menu.classList.add('hidden');
+        trigger.setAttribute('aria-expanded', 'false');
+        chevron.classList.remove('rotate-180');
+        paint();
+      }
+
+      function choose(index) {
+        const opt = options[index];
+        if (!opt) return;
+        setProvider(opt.dataset.provider);
+        closeMenu();
+        trigger.focus();
+      }
+
+      function step(delta) {
+        const next = Math.min(options.length - 1, Math.max(0, activeIndex + delta));
+        activeIndex = next;
+        paint();
+        options[next].scrollIntoView({ block: 'nearest' });
+      }
+
+      trigger.addEventListener('click', (e) => {
+        // detail > 0 is a real pointer click; keyboard-synthesised clicks
+        // report detail === 0 and must keep the keyboard highlight.
+        if (e.detail > 0) keyboardNav = false;
+        open ? closeMenu() : openMenu();
+      });
+
+      trigger.addEventListener('keydown', (e) => {
+        keyboardNav = true;
+        switch (e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            open ? step(1) : openMenu();
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            open ? step(-1) : openMenu(options.length - 1);
+            break;
+          case 'Home':
+            if (!open) return;
+            e.preventDefault();
+            activeIndex = 0;
+            paint();
+            options[0].scrollIntoView({ block: 'nearest' });
+            break;
+          case 'End':
+            if (!open) return;
+            e.preventDefault();
+            activeIndex = options.length - 1;
+            paint();
+            options[activeIndex].scrollIntoView({ block: 'nearest' });
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            open ? choose(activeIndex) : openMenu();
+            break;
+          case 'Escape':
+            if (!open) return;
+            e.preventDefault();
+            closeMenu();
+            break;
+          case 'Tab':
+            closeMenu();
+            break;
+        }
+      });
+
+      options.forEach((opt, i) => {
+        opt.addEventListener('mouseenter', () => {
+          keyboardNav = false;
+          activeIndex = i;
+          paint();
+        });
+        // mousedown, not click: prevents the trigger from losing focus first
+        opt.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          choose(i);
+        });
+      });
+
+      document.addEventListener('mousedown', (e) => {
+        if (open && !menu.contains(e.target) && !trigger.contains(e.target)) closeMenu();
+      });
+      window.addEventListener('resize', closeMenu);
+      // Close when the page scrolls (the panel is position:fixed, so it would
+      // detach from its trigger). Ignore scrolls that come from the panel
+      // itself — keyboard navigation calls scrollIntoView() inside it, and a
+      // capture-phase listener would otherwise close the menu mid-selection.
+      window.addEventListener(
+        'scroll',
+        (e) => {
+          const t = e.target;
+          if (t === menu || (t instanceof Node && menu.contains(t))) return;
+          closeMenu();
+        },
+        true
+      );
+
+      return { close: closeMenu, paint, setValue: (name) => (valueEl.textContent = name) };
+    })();
+
+    function setProvider(id) {
+      const provider = providers.find((p) => p.id === id) || providers[0];
+      state.providerId = provider.id;
+      providerUI.setValue(provider.name);
+      providerUI.paint();
+      applyProvider(provider.id);
+      render();
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      document.querySelectorAll('.mode-btn').forEach((btn) => {
+        const active = btn.dataset.mode === mode;
+        btn.classList.toggle('bg-white', active);
+        btn.classList.toggle('dark:bg-ink-100', active);
+        btn.classList.toggle('shadow-sm', active);
+        btn.classList.toggle('text-ink-900', active);
+        btn.classList.toggle('text-ink-500', !active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+      byId('amount-label').textContent =
+        mode === 'reverse' ? 'Net you want to keep' : 'Price you charge';
+      byId('result-label').textContent = mode === 'reverse' ? 'Set this price' : 'You keep';
+    }
+
+    function render() {
+      const a = readAssumptions();
+      const amount = parseFloat(byId('amount').value) || 0;
+      const reverse = state.mode === 'reverse';
+
+      let price;
+      let net;
+
+      if (reverse) {
+        const raw = priceFor(amount, a);
+        if (raw === null || !isFinite(raw)) {
+          byId('row-warn').classList.remove('hidden');
+          byId('row-warn').textContent =
+            'No finite price reaches that net: the percentage fee is at or above 100% of the base.';
+          byId('result-big').textContent = '—';
+          byId('result-sub').textContent = '';
+          return;
+        }
+        byId('row-warn').classList.add('hidden');
+        price = Math.ceil(raw * 100 - 1e-6) / 100;
+        net = price - feeFor(price, a);
+      } else {
+        byId('row-warn').classList.add('hidden');
+        price = amount;
+        net = price - feeFor(price, a);
+      }
+
+      const fee = feeFor(price, a);
+      const tax = price * a.taxRate;
+      const total = price + tax;
+
+      byId('result-big').textContent = fmtMoney(reverse ? price : net);
+      byId('row-price').textContent = fmtMoney(price);
+      byId('row-total').textContent = fmtMoney(total);
+      byId('row-fee').textContent = `−${fmtMoney(fee)}`;
+      byId('row-tax').textContent = tax > 0 ? `−${fmtMoney(tax)}` : '—';
+      byId('row-net').textContent = fmtMoney(net);
+      byId('row-rate').textContent = `Effective fee: ${fmtPct(fee / price)} of your list price.`;
+
+      if (reverse) {
+        const over = net - amount;
+        byId('result-sub').textContent =
+          over > 0.004
+            ? `Rounded up to the cent, so you keep ${fmtMoney(net)}${over >= 0.01 ? ` — ${fmtMoney(over)} over target` : ''}.`
+            : `That lands you at exactly ${fmtMoney(net)}.`;
+      } else {
+        byId('result-sub').textContent = `On a ${fmtMoney(price)} list price.`;
+      }
+
+      const nice = Math.ceil(price + 0.01) - 0.01;
+      const niceNet = nice - feeFor(nice, a);
+      byId('row-round').textContent =
+        nice - price > 0.004
+          ? `At $${nice.toFixed(2)} you keep ${fmtMoney(niceNet)}.`
+          : `Already a clean price point.`;
+
+      renderCross(net, a);
+      renderTaxSensitivity(price, a);
+    }
+
+    function renderCross(targetNet, a) {
+      const body = byId('cross-body');
+      body.innerHTML = '';
+      providers
+        .filter((p) => p.id !== 'custom')
+        .forEach((p) => {
+          const assumptions = {
+            pct: p.percent / 100,
+            fixed: p.fixed,
+            taxRate: a.taxRate,
+            taxInclusive: p.taxInclusive,
+          };
+          const price = priceFor(targetNet, assumptions);
+          const tr = document.createElement('tr');
+          tr.className = 'border-t border-ink-200';
+          const cells = [
+            p.name,
+            `${p.percent}% + ${fmtMoney(p.fixed)}`,
+            price === null ? '—' : fmtMoney(Math.ceil(price * 100 - 1e-6) / 100),
+          ];
+          cells.forEach((text, i) => {
+            const td = document.createElement('td');
+            td.className = i === 0 ? 'py-1.5 text-left' : 'py-1.5 text-right tabular-nums';
+            td.textContent = text;
+            tr.appendChild(td);
+          });
+          body.appendChild(tr);
+        });
+    }
+
+    function renderTaxSensitivity(price, a) {
+      const body = byId('tax-body');
+      body.innerHTML = '';
+      [0, 10, 20, 25].forEach((rate) => {
+        const assumptions = { ...a, taxRate: rate / 100 };
+        const fee = feeFor(price, assumptions);
+        const net = price - fee;
+        const tr = document.createElement('tr');
+        tr.className = 'border-t border-ink-200';
+        [fmtPct(rate / 100), fmtMoney(net), fmtPct(fee / price)].forEach((text, i) => {
+          const td = document.createElement('td');
+          td.className = i === 0 ? 'py-1.5 text-left' : 'py-1.5 text-right tabular-nums';
+          td.textContent = text;
+          tr.appendChild(td);
+        });
+        body.appendChild(tr);
+      });
+    }
+
+    document.querySelectorAll('.mode-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        setMode(btn.dataset.mode);
+        render();
+      });
+    });
+
+    document.querySelectorAll('.tax-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        byId('tax-rate').value = chip.dataset.tax;
+        render();
+      });
+    });
+
+    ['amount', 'fee-percent', 'fee-fixed', 'tax-rate', 'extra-cost', 'tax-inclusive'].forEach((id) => {
+      byId(id).addEventListener('input', render);
+      byId(id).addEventListener('change', render);
+    });
+
+    byId('surcharges').addEventListener('change', render);
+
+    setMode('reverse');
+    setProvider(providers[0].id);
+    render();
+  </script>
+</BaseLayout>

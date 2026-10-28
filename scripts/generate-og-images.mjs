@@ -240,4 +240,26 @@ for (const file of files) {
   );
 }
 
+// 独立工具页（不来自 blog collection，显式列出）
+const TOOL_PAGES = [
+  {
+    out: "og-tools-fee-reverse-calculator",
+    kicker: "Free Tool",
+    title: "Reverse Fee Calculator for Digital Products",
+    icons: [CATEGORY_ICONS.tools],
+  },
+];
+
+for (const tool of TOOL_PAGES) {
+  generate(
+    template({
+      kicker: tool.kicker,
+      title: tool.title,
+      footer: "shiptocash.com — free tools",
+      icons: tool.icons,
+    }),
+    tool.out
+  );
+}
+
 console.log("Done!");

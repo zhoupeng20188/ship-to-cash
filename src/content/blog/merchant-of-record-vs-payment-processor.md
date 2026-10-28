@@ -95,6 +95,8 @@ Call it **$20–30 a month** at $500 MRR to never think about sales tax again. T
 
 One more processor gotcha the headline rate hides: chargebacks. Stripe charges $15 per dispute, you write the evidence yourself, and you lose the fee even if you win. MoRs absorb that workload as part of their cut.
 
+The rate on the pricing page also hides its own base. A merchant of record takes its percentage on the tax-inclusive order total, not the subtotal, so a $20 sale to a buyer paying 20% VAT is charged as $24 and fees as $24. You still net $20 minus fee — the VAT was never yours — but the fee is larger than the headline rate suggests. If you want to [see what that does to a target take-home](/tools/fee-reverse-calculator/) before you commit to a price, run your own numbers rather than a comparison table's.
+
 ## When Stripe is the right answer anyway
 
 I'd be lying if I said everyone should pick an MoR. Stripe wins clearly in a few situations:

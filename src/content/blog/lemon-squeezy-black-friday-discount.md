@@ -110,7 +110,7 @@ Setting the discount's `status` to `draft` is an instant off switch. Checkout st
 
 I have needed that switch twice: once when a product hit its support capacity and the code was still driving buyers at it, and once when a large account shared the deal and I wanted to cap the damage rather than ride it.
 
-Avoid deleting a discount mid-sale. It works, but it takes the redemption records with it, and next year you will be starting from zero on the one question that matters: was 30% the right number?
+Avoid deleting a discount mid-sale. It works, but it takes the redemption records with it, and next year you will be starting from zero on the one question that matters: was 30% the right number, and [what did it leave you after the fee](/tools/fee-reverse-calculator/)?
 
 And if you decide to extend into Cyber Monday, **move `expires_at` on the existing code** instead of creating a second one. Two live codes means a buyer holding the older link can still redeem the older price, and your dashboard can no longer tell you which offer sold what.
 
@@ -130,7 +130,7 @@ For a one-time purchase — a template, a license key, a download — there is o
 
 For a subscription, `forever` is not a sale — it is a permanent price cut wearing a Black Friday costume. On a $20/month plan, 30% off with `forever` does not cost you 30% of one payment. It costs 30% of every payment, from every buyer who ever used the code, for as long as they stay. That is a different number by an order of magnitude, and it is invisible on the day you set it up.
 
-Different platforms handle this differently — the Eden guide to [running a Black Friday sale on digital products](https://eden.so/blog/black-friday-sale-for-creators) notes that on their store a membership discount only comes off the first payment. Do not assume that behavior carries over. In Lemon Squeezy it is explicit and it is yours to set, which means it is also yours to get wrong.
+Platforms differ: the Eden guide to [running a Black Friday sale on digital products](https://eden.so/blog/black-friday-sale-for-creators) notes a membership discount only comes off the first payment there. Do not assume that carries over — in Lemon Squeezy the setting is explicit, and yours to get wrong.
 
 ## The timezone bug that eats your last evening
 

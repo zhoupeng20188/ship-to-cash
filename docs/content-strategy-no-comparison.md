@@ -499,3 +499,62 @@ deploy 已占 15/21（71%），连续 3 篇新文都是 deploy。按 §7.1，若
 2. **卖家侧 license 自助门户**（#10 的唯一可写角度）：前 5 全是卖家给客户写的帮助页，教卖家怎么搭的教程为 0。
 3. **Track A 优先于新文**：改 8 篇有展示低 CTR 的标题，收益高于第 32 篇（见 traffic-breakout-plan §1.2）。
 
+---
+
+## §4.17 tools 簇开簇 · 手续费反算器（2026-10-28 执行）
+
+### 决策
+
+站点 11 周 **外链数为 0**，这是比「第 32 篇文章」更紧的瓶颈。工具页是唯一能自然吸链的资产（别人引用计算器，不引用观点）。因此把 tools 从 0 篇的空簇，改成**一个可交互计算器**，不是文章。
+
+### 绕开对比红线的做法
+
+不做「LS 与 Paddle 谁更便宜」（那是 X-vs-Y 对比文，DR 低必输），做**反算**——「我要净收 $30，该定价多少」。实测现有 reverse fee calculator **全部是 freelancer / Stripe 发票方向**，**没有一个处理 MoR 的税基问题**。这是唯一且干净的缺口。
+
+### 算法内核（已用官方示例反推验证）
+
+```
+fee  = pct × (taxInclusive ? price × (1 + taxRate) : price) + fixed
+price = (net + fixed) / (1 − pct × (taxInclusive ? 1 + taxRate : 1))
+```
+
+**验证锚点**：Lemon Squeezy 官方示例 —— $20 卖给法国买家（20% VAT），实际收 $24.00、费 $2.06、卖家净得 $17.94。用上式反推 17.94 → 得回 20.00。其他计算器全错在「拿税前价 × 费率」。
+
+### 费率数据（2026-10 从各家定价页读取，存于 `src/data/fees.ts`）
+
+| 平台 | 费率 | 附加费 | 税基 |
+|---|---|---|---|
+| Lemon Squeezy | 5% + 50¢ | 国际卡 +1.5%、PayPal +1.5%、订阅 +0.5%（**可叠加**） | 含税总额 |
+| Paddle | 5% + 50¢ | 无 | 含税总额 |
+| Polar | 5% + 50¢（Starter） | 国际卡 +1.5% | 含税总额 |
+| Gumroad | 12.9% + 80¢ | 无 | 含税总额 |
+| Stripe 直连 | 2.9% + 30¢ | 国际卡 +1.5%、换汇 +1% | 含税总额 |
+
+页面允许读者覆盖百分比与固定费——费率会漂，预设只是起点不是真理。
+
+### 交付物
+
+- `src/pages/tools/fee-reverse-calculator.astro`（37KB，正算/反算双向 + 附加费叠加 + 税率敏感性表 + 跨平台对照表）
+- `src/pages/tools/index.astro`（tools 分类落地页）
+- `src/data/fees.ts`（费率数据 + `RATES_VERIFIED = "October 2026"`）
+- 导航新增 Tools 项、首页新增工具入口、OG 图 `og-tools-fee-reverse-calculator.jpg`（57KB）
+
+### 编辑性入链（3 条，锚文本互不相同）
+
+- `how-to-price-a-developer-template` → "the reverse fee calculator"
+- `merchant-of-record-vs-payment-processor` → "see what that does to a target take-home"
+- `lemon-squeezy-black-friday-discount` → "what did it leave you after the fee"
+
+### schema
+
+BreadcrumbList（Home > Tools > 工具页）+ **WebApplication**（含 `offers: $0`、`featureList`、`publisher`）+ FAQPage（6 问）。文章页用 BlogPosting，工具页用 WebApplication —— 不要混用，否则 Google 可能按文章富结果处理。
+
+### 校验
+
+构建 41 页通过；全站 **0 个内链 404**；sitemap 含 `/tools/` 与工具页；headless Chrome 实测 7 个场景（默认态、加国际附加费、加 20% VAT、切 Gumroad、切正算模式、净收 $100、净收 $30）数值全部正确。
+
+### 已知遗留
+
+- `how-to-price-a-developer-template` 正文 **2060 词**（本轮之前就是 1997，属历史超限）。本轮只加 63 词做内链，未扩写。后续若要统一规格需单独压一次，压缩会动已发布内容，不在本轮范围。
+- 工具页文案是英文，未做 i18n。
+
