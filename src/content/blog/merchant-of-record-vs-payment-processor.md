@@ -125,6 +125,6 @@ Worth keeping in proportion, though: whichever one you pick, the fee is a commis
 
 The one thing I'd do differently than my first attempt: decide *before* launch. Migrating a few hundred subscribers between billing systems later means re-asking customers for card details, and some of them will quietly churn instead. Pick the rail you can live with for two years.
 
-Already have an app live and a domain connected ([that part's 20 minutes](/deploy/vercel-custom-domain-setup/))? Then you're one hosted checkout page away from your first dollar. Go make the dollar.
+Already have an app live and a domain connected ([that part's 20 minutes](/deploy/vercel-custom-domain-setup/))? Then you're one hosted checkout page away from your first dollar. Go make the dollar. When the first buyer writes to say no email arrived, remember the platform owns that pipe and the DNS behind it, not you — which changes [what you can actually fix on the delivery side](/payments/buyer-didnt-receive-download-email/).
 
 If a MoR signup stalls — invite-gated in your region, a review that never comes back — don't let it cost you a launch. [Ko-fi wired to PayPal](/payments/getting-paid-without-stripe-kofi-paypal/) got me charging in an afternoon with no company, no review queue, and no tax registration, which is also the answer to the question everyone asks first: [no, you don't need an LLC to sell digital products](/payments/do-i-need-an-llc-to-sell-digital-products/), not until the numbers say so.
