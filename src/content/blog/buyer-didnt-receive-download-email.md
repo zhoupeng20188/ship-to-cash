@@ -2,6 +2,7 @@
 title: "Why Buyers Never Get the Download Email"
 description: "Buyer paid, no email arrived. Fix it in order: unpaid orders, the signed receipt link you already have, and the Cloudflare record that stalls verification."
 pubDate: 2026-10-30
+updatedDate: 2026-11-02
 category: payments
 difficulty: intermediate
 author: "Peng Zhou"
@@ -21,11 +22,11 @@ faq:
     answer: "Send a real message through your actual code path to a Gmail address you control, open it, choose Show original, and read the authentication results. You want spf=pass, dkim=pass and dmarc=pass, and the d= value in the DKIM signature must match the domain you send from. Resend's dashboard reporting stops at Delivered, which only means the receiving server accepted the message, not that it reached the inbox."
 ---
 
-A buyer emailed me at 2am: paid twenty minutes ago, nothing in the inbox. My first move was to open Cloudflare and stare at DNS records. That was the wrong move, and I spent an hour on it before I looked at the order.
+A missing receipt can mean an incomplete payment, a delivery configuration problem, an incorrect address, or filtering. Check the order before changing DNS.
 
-The order was `pending`. No email had ever been generated, because there was nothing to deliver yet. I had been debugging email authentication for a payment that hadn't finished clearing.
+For example, if an order is still pending, investigate payment completion before treating the missing file as an email authentication problem.
 
-This is the pattern behind most "I paid and got nothing" messages. Four different failures produce one identical complaint, and only one of them is an email problem. Working through them in the wrong order is how an afternoon disappears.
+The table below separates four symptoms that can otherwise lead to the same support complaint.
 
 ## Four failures that look identical from your inbox
 
@@ -70,7 +71,7 @@ Every Lemon Squeezy order carries a `urls.receipt` field. The [order API documen
 }
 ```
 
-Paste that into your reply and the buyer clicks straight through to their files. No new email, no spam folder, no DNS. In my experience this resolves the case in under a minute, and it's the single most useful thing in this article.
+After verifying the customer and order, sharing the provider’s order-access link can restore access without waiting for a replacement email.
 
 The dashboard's "resend receipt" action exists too, but it sends another email to the same address through the same filters that already ate the first one. If the original went to spam, the duplicate usually follows it.
 
@@ -78,7 +79,7 @@ The dashboard's "resend receipt" action exists too, but it sends another email t
 
 The rest of this article only applies if you run your own sending — a Resend account, your own domain, a function that mails the download link. This is the setup where you actually own the deliverability, which means you can also be the one who breaks it.
 
-The failure I see most often on Cloudflare is a CNAME record left on the orange cloud. Resend's [domain setup guide](https://resend.com/docs/add-a-domain) is unusually blunt about it: when the dashboard shows you a CNAME, do not enable proxying, because it will prevent verification from completing.
+When using Cloudflare for DNS, check whether verification records must be DNS-only. [Resend’s domain setup guide](https://resend.com/docs/add-a-domain) describes its verification requirements.
 
 That's the whole mechanism. The proxy answers DNS queries with Cloudflare's anycast address instead of the value Resend generated. Resend checks for its own token, finds the wrong one, and the domain sits in `pending` forever while the dashboard's status dot stays grey and unhelpful.
 
@@ -116,7 +117,7 @@ Send a real message through your real code path to a Gmail address you control. 
 - `dkim=pass` with `d=` matching the domain you actually send from
 - `dmarc=pass`
 
-If `d=` is not your domain, you're sending from a different identity than you think, and DMARC alignment will fail even though DKIM itself passes. That mismatch is invisible in every dashboard I've used and obvious in the raw headers.
+Check DMARC alignment against the visible From domain. A passing DKIM signature for an unrelated domain does not establish alignment; inspect the raw message headers.
 
 ## The fix that doesn't depend on email at all
 

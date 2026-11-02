@@ -2,6 +2,7 @@
 title: "Cloudflare Pages Environment Variables Not Working (5 Fixes)"
 description: "Variable set in Cloudflare Pages but your build still reads undefined? Five ranked causes, including the one where secrets simply don't exist at build time."
 pubDate: 2026-09-14
+updatedDate: 2026-11-02
 category: deploy
 difficulty: intermediate
 author: "Peng Zhou"
@@ -21,9 +22,9 @@ faq:
     answer: "Not the way you'd expect. Your committed .env file is not read by the Pages build unless your framework loads it, and it should never hold production secrets anyway. For local development Cloudflare reads .dev.vars or .env next to your Wrangler config, but you must choose one — if a .dev.vars file exists, values in .env are ignored locally. Add both patterns to .gitignore."
 ---
 
-A reader emailed me two screenshots last month. The first was her Cloudflare Pages build log, with a red `Error: PUBLIC_SUPABASE_URL is not defined` near the bottom. The second was the dashboard tab behind it, where that exact variable sat in the list, spelled correctly, value intact.
+A Pages build may report `PUBLIC_SUPABASE_URL is not defined` even when the dashboard contains that name. Check the deployment scope, rebuild timing, framework exposure rules, and whether the value is a runtime binding.
 
-Both screenshots were true. That's what makes this the most expensive kind of deployment bug: **there's no error to chase, because nothing failed. The value just wasn't there when the build looked for it.**
+A value shown in the dashboard does not prove that the selected build or runtime received it. Inspect the environment scope and the code path that reads it.
 
 The Vercel version of this is common enough that I wrote [a whole guide to it](/deploy/vercel-environment-variables/). Cloudflare Pages looks similar and behaves differently in ways that matter — if you've carried Vercel habits over, this is where they break.
 
@@ -40,7 +41,7 @@ The Vercel version of this is common enough that I wrote [a whole guide to it](/
 | The build fails outright instead of returning undefined | Build command or output directory | [Vercel build failed](/deploy/vercel-build-failed/) |
 | Page renders then crashes with a JS error | A value missing at runtime, not at build | [Client-side exception](/deploy/application-error-client-side-exception-vercel/) |
 
-If the build succeeded, the page renders, and a `fetch` is being blocked, that's a different problem again — see my [CORS walkthrough](/deploy/cors-error-vercel/).
+If the build succeeded, the page renders, and a `fetch` is being blocked, that's a different problem again — see the [CORS walkthrough](/deploy/cors-error-vercel/).
 
 ## Why Cloudflare Pages behaves differently from Vercel
 
@@ -56,11 +57,11 @@ Start here, because it's the most common and the cheapest to rule out.
 
 Deployments are frozen snapshots. Adding or editing a variable changes what the **next** build receives; the deployment already serving your site keeps the values it was built with. So after any change: open **Deployments**, find the latest production deployment, and click **Retry deployment**.
 
-Don't just refresh the URL and hope. I've lost an evening to that — refreshing a page, re-reading the dashboard, certain the name matched. The name did match. The deployment was three days old.
+Refreshing an old deployment does not rebuild it with newly configured values. Trigger a new build and check that deployment’s output.
 
 ## Cause 2: You stored it as a Secret, and secrets don't exist at build time
 
-This is the Cloudflare-specific trap, and it produces exactly the two-screenshot contradiction above: visibly present, still undefined.
+This is the Cloudflare-specific trap, and it produces exactly a dashboard/build mismatch: visibly present, still undefined.
 
 When you add a value you pick a type:
 
@@ -75,9 +76,9 @@ BUILD      → looks for PUBLIC_SUPABASE_URL → Secret not exposed here → und
 RUNTIME    → context.env.SUPABASE_URL      → works fine
 ```
 
-The fix is counterintuitive if you treat every key as sensitive: **if the build has to read it, store it as a plaintext variable.** Encryption buys you nothing here, because the value gets baked into your published files anyway. That's the nature of a static site — anything the build uses is public by definition.
+Separate build access from publication. Only values included in generated HTML or browser JavaScript become public. A build can use a private value without publishing it; check the hosting platform’s build-secret mechanism and inspect the output before deciding where to store a value. A public configuration value and a private API credential need different treatment.
 
-The framework's own rules settle whether a value should be public at all. Astro's [environment variables docs](https://docs.astro.build/en/guides/environment-variables/) are blunt: "only environment variables prefixed with `PUBLIC_` are available in client-side code." If it carries that prefix, it's public and a Secret type protects nothing. If it doesn't, it's server-side only and your build can't use it either way.
+The framework's own rules settle whether a value should be public at all. Astro's [environment variables docs](https://docs.astro.build/en/guides/environment-variables/) are blunt: "only environment variables prefixed with `PUBLIC_` are available in client-side code." If it carries that prefix, it's public and a Secret type protects nothing. A variable without that prefix can be used in server-side Astro code, including during static generation; it must not be rendered into public output if it is secret.
 
 One related detail: the docs note secrets "need to be done before a deployment that uses those secrets." Adding one afterwards won't retrofit that deployment — retry it so the runtime picks it up.
 
@@ -105,7 +106,7 @@ const url = import.meta.env.API_URL; // no PUBLIC_ prefix → not available clie
 
 The rule that follows: **on a static site, the only environment variables that exist are the ones the build wrote into your files.** If you were hoping to rotate a value without rebuilding, this route won't do it — you need a Function, or a config fetched at runtime.
 
-That has a real consequence if you're selling something. In [my Lemon Squeezy + Astro setup](/payments/lemon-squeezy-checkout-astro-static-site/), the static page renders the checkout button while a Pages Function verifies webhook signatures — the signing secret can only live in that Function. That isn't a style preference, it's the runtime boundary. If the secret is genuinely in place and signatures still fail, the variable isn't your problem any more — [Lemon Squeezy webhook not firing](/payments/lemon-squeezy-webhook-not-firing/) covers the five causes, ranked.
+In a [static Astro checkout integration](/payments/lemon-squeezy-checkout-astro-static-site/), the page can show a public buy link while a function handles a secret webhook. Keep the webhook secret out of client bundles. If a correctly configured endpoint still rejects requests, use the [webhook diagnostic guide](/payments/lemon-squeezy-webhook-not-firing/).
 
 ## Cause 4: The setting moved, and you're reading stale instructions
 
@@ -128,7 +129,7 @@ If you're on Astro, two details from their docs will save you time.
 
 ## Bonus: five variables Cloudflare injects for you
 
-Free win, and I've never seen it in a blog post about this: Pages injects system variables into every build, and you can override them.
+Pages also provides system variables that can identify the build branch and deployment URL.
 
 | Variable | Value | Use it for |
 |---|---|---|
@@ -156,4 +157,4 @@ Then verify, because "it works now" isn't proof: trigger a fresh deployment and 
 
 On Cloudflare the runtime/build-time split is real, secrets live on one side of it, and the dashboard quietly renamed the door. Get the type and scope right and this stops being a source of mystery bugs.
 
-Once they're sorted, the next wall is usually routing — a deep link that 404s on refresh is a different mechanism entirely, and I've written up [the fix across Vercel, Netlify and Cloudflare Pages](/deploy/client-side-routing-404-vercel-netlify-cloudflare/). And if you're doing all this to sell something, deployment is the easy half; [getting paid without Stripe](/payments/getting-paid-without-stripe-kofi-paypal/) is where the real constraints show up. When you monetize that same deployed site, a [Content-Security-Policy set in the wrong place silently blocks Google AdSense](/monetize/google-adsense-on-astro/) through the same mis-scoped-layer trap — only now the failure is an empty ad slot instead of a missing variable.
+Once they're sorted, the next wall is usually routing — a deep link that 404s on refresh is a different mechanism entirely, and see [the fix across Vercel, Netlify and Cloudflare Pages](/deploy/client-side-routing-404-vercel-netlify-cloudflare/). And if you're doing all this to sell something, deployment is the easy half; [getting paid without Stripe](/payments/getting-paid-without-stripe-kofi-paypal/) is where the real constraints show up. When you monetize that same deployed site, a [Content-Security-Policy set in the wrong place silently blocks Google AdSense](/monetize/google-adsense-on-astro/) through the same mis-scoped-layer trap — only now the failure is an empty ad slot instead of a missing variable.

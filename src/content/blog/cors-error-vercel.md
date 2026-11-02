@@ -2,6 +2,7 @@
 title: "CORS Error on Vercel: Add the Right Header"
 description: "\"Blocked by CORS policy\" after deploying to Vercel? What the error means, and the exact place to add the header: vercel.json, next.config, or your route."
 pubDate: 2026-09-07
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -19,9 +20,9 @@ faq:
     answer: "Run a preflight by hand: curl -i -X OPTIONS https://your-app.vercel.app/api/hello -H \"Origin: https://yoursite.com\" -H \"Access-Control-Request-Method: POST\". A 200 with Access-Control-Allow-Origin in the response means it works. A 401 usually means Deployment Protection is blocking OPTIONS and the path needs to be on the OPTIONS Allowlist."
 ---
 
-My first app with an actual backend worked perfectly on my laptop. I deployed it to Vercel, opened the live URL, clicked the button that called my API — and the console filled with red. `Access to fetch at 'https://my-api.vercel.app/api/hello' from origin 'https://my-site.vercel.app' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.`
+A request from one deployed origin to another can fail with: `No Access-Control-Allow-Origin header is present on the requested resource`. Check the request and response headers in the browser Network panel.
 
-The API was fine. I could curl it and get JSON back. Only the browser refused to read the response. That difference is the whole confusion, and once you see it, the fix is about ten lines of config.
+If curl returns JSON but the browser blocks access, that does not establish that the CORS configuration is correct: curl does not enforce the browser’s same-origin policy.
 
 First, make sure you're on the right page. "It broke after I deployed" covers several different failures:
 
@@ -201,7 +202,7 @@ Middleware runs before your function does, so preflights get answered warm and f
 
 Sometimes you've done everything above and it still breaks. Three things account for nearly all of it.
 
-**You put the header on the fetch call.** I did exactly this. It looks so plausible:
+**Putting the response header on the fetch request does not grant browser access.** For example:
 
 ```js
 // ❌ Wrong — these are RESPONSE headers. Setting them on the request does nothing.
@@ -246,3 +247,8 @@ The rewrite runs server-to-server, so the browser sees a same-origin response. S
 ## Next steps
 
 Once the API answers cross-origin, the next thing that usually bites is credentials disappearing in production — [environment variables on Vercel](/deploy/vercel-environment-variables/) covers why they read as `undefined` until you redeploy. And when you're ready to put a real domain in front of both halves, here's [how to point a custom domain at Vercel](/deploy/vercel-custom-domain-setup/) without breaking what you just fixed.
+
+## Official references
+
+- [MDN CORS reference](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS)
+- [Vercel project headers](https://vercel.com/docs/project-configuration#headers)

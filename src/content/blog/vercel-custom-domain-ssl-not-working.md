@@ -1,8 +1,8 @@
 ---
 title: "Vercel Domain Not Secure? SSL & Redirect Loop Fixes"
-description: "Vercel domain 'not secure', looping on redirects, or stuck pending? Four fixes in the order I check them — the Cloudflare SSL mode is guilty 9 times in 10."
+description: "Diagnose Vercel custom-domain HTTPS failures by symptom: DNS verification, certificate issuance, Cloudflare SSL mode, redirects, and mixed content."
 pubDate: 2026-08-28
-updatedDate: 2026-10-21
+updatedDate: 2026-11-02
 category: deploy
 difficulty: intermediate
 author: "Peng Zhou"
@@ -20,7 +20,7 @@ faq:
 
 You followed the [Vercel custom domain setup guide](/deploy/vercel-custom-domain-setup/), pasted the DNS records, waited… and instead of your site you get a browser warning that the connection is "not secure," or the page reloads until Chrome gives up with "ERR_TOO_MANY_REDIRECTS," or the domain just sits there saying "Pending Verification" forever.
 
-I've done all three. The worst was the redirect loop: I'd set up Cloudflare, flipped one dropdown, and spent an hour convinced Vercel was broken — it wasn't. None of these are a missing certificate. Vercel gives you a valid, auto-renewing SSL cert for free on every domain. When it "isn't working," it's almost always that your DNS or proxy settings are stopping Vercel from either issuing the cert or serving it correctly.
+These symptoms can have different causes. Check domain verification, certificate status, and any proxy or redirect layer before changing settings.
 
 Here's the exact fix for each symptom, in the order I'd check them.
 
@@ -55,7 +55,7 @@ Vercel shows the exact records it wants at the bottom of that Domains panel. As 
 
 Two things worth internalising here. First, Vercel has been expanding its address pool, so newer projects sometimes get a different apex IP — treat both values as "whatever my dashboard prints", not constants. Second, older tutorials tell you to use `cname.vercel-dns.com` for the CNAME. That's the legacy shared target and it still resolves, but Vercel now verifies against the per-project value it shows you.
 
-I once typed `your-app.vercel.app` into the CNAME instead of the value Vercel printed, because it "looked more correct." It isn't — copy the dashboard's value character for character. If A records and CNAMEs are still opaque to you, [the DNS records explained from scratch](/deploy/buy-domain-set-up-dns/) covers what each one is actually doing before you paste anything else.
+Copy the CNAME target shown in the project’s domain settings. Do not substitute a `.vercel.app` hostname merely because it looks related. The [DNS guide](/deploy/buy-domain-set-up-dns/) explains the record types.
 
 ### Step 3: Wait for propagation (or verify it)
 
@@ -75,7 +75,7 @@ If **Settings → Domains** says *"Domain does not resolve to the Vercel deploym
 
 This is the one that feels like Vercel is broken but almost never is.
 
-### The cause I see most: Cloudflare "Flexible" SSL
+### Check Cloudflare Flexible SSL
 
 If your domain sits behind Cloudflare (orange cloud active), the **SSL/TLS mode** controls how Cloudflare talks to Vercel:
 
@@ -99,7 +99,7 @@ The second cause is running a redirect in *both* places:
 - In **Cloudflare**: **Rules → Redirect Rules** (or Page Rules) sending `www` → apex, or apex → `www`.
 - In **Vercel**: the **Domains** panel, where you pick which version is primary and Vercel redirects the other.
 
-If both are enforcing the same redirect, you get a loop. Pick one system to own the redirect and leave the other alone. My rule: let **Vercel** handle the www↔apex redirect (it's one click in the Domains panel) and keep Cloudflare redirect rules empty unless I have a specific reason.
+Inspect the entire redirect chain. Avoid opposing apex-to-www and www-to-apex rules on different systems. Assign the canonical-host redirect to one place and verify it with curl.
 
 <a id="stuck-pending"></a>
 ## Stuck pending: "Invalid Configuration" or "Pending Verification"
@@ -145,3 +145,8 @@ On Pro and above you can upload a custom certificate, but for a personal or indi
 Most of these errors trace back to one root cause: DNS not quite pointing at Vercel, or Cloudflare sitting in the middle with the wrong SSL mode. If you set the records up from memory, walk it end to end with [the exact Namecheap and Cloudflare values side by side](/deploy/vercel-custom-domain-setup/). If you bought the domain somewhere else and are wondering whether to move it, you don't have to: [pointing DNS is enough](/deploy/transfer-domain-to-vercel/), and transferring can actually reset your records and bring all this back. And no, none of this means you need to [buy an SSL certificate](/deploy/do-i-need-to-buy-ssl-certificate/) — Vercel's is free and automatic.
 
 One consequence worth knowing if you plan to make money from the site: a padlock that still throws a warning gets judged as a navigation problem long after you've stopped thinking about it. That's one of the reasons [AdSense reads an insecure domain as a broken site](/monetize/adsense-low-value-content-rejected/) and rejects it during review — fix the cert before you submit, not after.
+
+## Official references
+
+- [Vercel SSL certificates](https://vercel.com/docs/domains/working-with-ssl)
+- [Cloudflare redirect-loop diagnosis](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/)

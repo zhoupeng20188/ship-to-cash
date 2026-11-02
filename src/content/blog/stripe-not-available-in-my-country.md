@@ -1,89 +1,61 @@
 ---
-title: "Stripe Not Available in Your Country? 3 Routes That Actually Work"
-description: "Stripe not available in your country? The 3 routes that actually work — merchant of record, US LLC, regional tools — with real costs so you can charge this week."
+title: "Stripe Not Available in Your Country? Check These Routes"
+description: "Check seller eligibility, supported payouts, and product restrictions before choosing a merchant of record, PayPal route, or foreign company."
 pubDate: 2026-08-26
+updatedDate: 2026-11-02
 category: payments
 difficulty: beginner
 author: "Peng Zhou"
 image: /og-stripe-not-available-in-my-country.jpg
 faq:
-  - question: "Can I sign up for Stripe using a VPN?"
-    answer: "No. Stripe's identity verification asks for ID, proof of address, and a bank account matching your stated country. A VPN changes your IP, not your passport. The mismatch tends to surface at verification or after your first payouts, and the usual outcome is a closed account with the balance frozen for an extended review. Not something to build a product on."
-  - question: "Does Paddle support merchants in my country?"
-    answer: "Paddle onboards merchants from far more countries than Stripe does, but the list isn't universal and it changes over time. Before you design your whole launch around it, check Paddle's help center for their supported countries page — it takes two minutes and saves you a redesign."
-  - question: "Can I use Stripe Managed Payments instead?"
-    answer: "No. Managed Payments is a feature on a Stripe account, not an alternative to having one. If Stripe won't open an account for your country, there's nothing to enable it on. It's the successor to Lemon Squeezy's merchant-of-record model (Stripe acquired them in July 2024) and it's built for sellers who already have a Stripe account."
-  - question: "How much does the US LLC route cost per year?"
-    answer: "Ballpark: state filing fee ($50–500 one-time, Wyoming is $100), a registered agent (roughly $50–300 a year), and a US federal tax return (a few hundred dollars if an accountant files it). Some states add annual franchise tax — California's is $800. All-in, a quiet single-member LLC runs somewhere around $500–1,500 a year."
-  - question: "Can customers in the US still pay me if Stripe isn't available in my country?"
-    answer: "Yes. Payment networks don't care where your customers live — the restriction is always on the merchant's side. With Paddle or any merchant of record, a US customer checks out like normal; legally, they're buying from the MoR, who resells to them from you. That legal relabeling is exactly why route 1 works for unsupported countries."
+  - question: "Does accepting cards globally mean a provider accepts sellers everywhere?"
+    answer: "No. Seller onboarding, customer payment methods, and payout availability are different capabilities."
+  - question: "Will a foreign company guarantee Stripe approval?"
+    answer: "No. Identity, business activity, banking, country requirements, and the provider review still apply."
+  - question: "Does a merchant of record handle all my taxes?"
+    answer: "No. Check its agreement for customer-facing tax responsibilities and determine your own reporting separately."
 ---
 
-The first time I tried to charge money for something I built, the whole plan died on a dropdown. I had the product page done, the checkout half-wired, and then Stripe's signup form asked where my business was located. My country wasn't in the list. No error message, no waitlist — just not there.
+When Stripe does not support your business country, another checkout button is not enough. You need a provider that can onboard you as the seller, accept your product, and pay out to an account you can legally use.
 
-So I searched "stripe not available in my country" and got exactly what you got: a wall of listicles naming eight payment companies I'd never heard of, half of which didn't serve my country either, and forum threads old enough to predate the tools they were recommending.
+Start with [Stripe's supported-country list](https://stripe.com/global). Customer card acceptance and the countries where sellers can open accounts are different lists. A buyer being able to pay with a card does not mean you can register a merchant account from any country.
 
-What I actually needed was simple: the routes that exist, what each one costs, and where to start. There are three. One of them you can finish this week.
+## Build an eligibility worksheet
 
-## What Stripe's country list actually blocks
+Before integrating any provider, record:
 
-Stripe lets you open an account as a merchant in about 46 countries — the live list sits at stripe.com/global and creeps up occasionally. The part that confuses everyone: that limit is about where **you** are, not where your customers are. A developer in Germany can charge a customer in Brazil or Japan without a second thought. Customers can pay from anywhere, for anything, through any of this.
+| Field | What to confirm |
+|---|---|
+| Seller identity | Accepted country, individual or business status, identity documents |
+| Product | Whether the specific category is permitted |
+| Payout | Bank or wallet availability, currency, minimums, schedule |
+| Fees | Processing, cross-border, conversion, withdrawal, refunds |
+| Responsibility | Who is the customer-facing seller and who handles each tax obligation |
 
-So "Stripe isn't available in my country" never means people can't pay you. It means Stripe won't stand behind you as the seller. The problem isn't moving money — it's who's legally on the hook for the sale. Every route below is really just a different answer to that one question.
+Do not use another person's identity, a false address, or a borrowed account to bypass onboarding. Approval and continued payouts depend on accurate information.
 
-Stripe's own answer for unsupported countries, right on that page: form a US company (they'll happily sell you Stripe Atlas to do it). That's route two. It's not where I'd start.
+## Route 1: evaluate a merchant of record
 
-## Route 1: Sell through a merchant of record
+A merchant of record acts as the customer-facing seller within its agreement. That can simplify customer sales-tax handling, but it does not guarantee eligibility or remove your own income reporting obligations. The [MoR explainer](/payments/merchant-of-record-vs-payment-processor/) separates those responsibilities.
 
-I wrote a full article on [what a merchant of record actually is](/payments/merchant-of-record-vs-payment-processor/), but the short version: a MoR legally resells your product. The customer's card statement shows the MoR's name, the MoR is the legal seller, and sales tax and VAT become their department instead of yours.
+For Lemon Squeezy, check its [supported countries and payout restrictions](https://docs.lemonsqueezy.com/help/getting-started/supported-countries) and [prohibited products](https://docs.lemonsqueezy.com/help/getting-started/prohibited-products). Complete the actual store approval process before relying on the integration. An accessible signup page alone is not approval.
 
-This is the route that works when Stripe doesn't, because MoRs onboard merchants from far more countries than Stripe does. The one most solo devs land on:
+After acceptance, [hosted checkout on Astro](/payments/lemon-squeezy-checkout-astro-static-site/) can keep the sales site static. Validate the product and mode before sending buyers to it.
 
-**Paddle** — 5% + 50¢ per transaction, no monthly fee, tax handling included. They only take SaaS and digital products, which is exactly what a side project is.
+## Route 2: evaluate PayPal or a local provider
 
-Two things to know before you commit:
+A platform that connects to PayPal may be useful when the relevant account can receive commercial payments and withdraw them locally. Do not infer those capabilities from a global availability map. Check the local PayPal account terms and withdrawal options, or the corresponding domestic provider's documentation.
 
-- **Try Lemon Squeezy first, but verify you can actually get in.** Stripe acquired it in July 2024 and it has *not* shut down — no sunset date has been announced, and when I checked its registration page in September 2026 it was still open, asking for a business name and country with no waitlist notice. But availability has been inconsistent: third-party reports through mid-2026 describe new merchant access as invite-gated in some regions, and existing users are being pointed toward Stripe Managed Payments, which is a *more* expensive successor (roughly 3.5% on top of standard Stripe processing). Don't assume either way — attempt the signup before you design anything around it. If you do get in, [here's how to wire Lemon Squeezy checkout into a static Astro site](/payments/lemon-squeezy-checkout-astro-static-site/).
-- **Gumroad works but takes about 10%.** Fine for testing an ebook. Painful on anything where you care about margin.
+The [Ko-fi and PayPal checklist](/payments/getting-paid-without-stripe-kofi-paypal/) covers this route. A payment platform can still perform identity checks, hold funds, or reject a product. “No Stripe required” does not mean “no verification required.”
 
-Paddle's signup includes a review of your website, so have a real product page — what it does, what it costs, how to reach you. A template with lorem energy gets rejected. Once you're in, payouts go to your bank account on a normal schedule, and this is where Wise or Payoneer usually enter the picture for developers in unsupported countries (more on that in route 3).
+## Route 3: consider a foreign company only after a cost review
 
-The trade-off with any MoR is the fee. On a $50 sale, Paddle keeps $3. That's the price of not forming a company this month and never thinking about EU VAT. [I ran the full fee math at solo-dev scale here](/payments/merchant-of-record-vs-payment-processor/) — the short version is that at small numbers it's cheap for what it removes.
+A foreign company can introduce formation costs, annual reporting, banking requirements, accounting, and obligations in your home jurisdiction. Formation alone does not guarantee a Stripe account. Do not compare only the signup fee.
 
-## Route 2: Form a US company, then open Stripe properly
+Before paying a formation service, ask an adviser to explain which filings apply, who will prepare them, the annual cost, and what happens if the company is closed. The [business-structure checklist](/payments/do-i-need-an-llc-to-sell-digital-products/) is an orientation, not a country-specific solution.
 
-This is the long-term route, and it's what Stripe itself points you at. The shape of it:
+## Compare the full payout path
 
-1. **Form an LLC.** Wyoming and Delaware are the usual picks for non-residents. State filing fees run roughly $50–500 — Wyoming is $100, and California's $800/year franchise tax means nobody picks California on purpose.
-2. **Get an EIN from the IRS.** It's free. Without an SSN you can't use the online application — phone is fastest, mail takes weeks.
-3. **Open a US business bank account.** Mercury is the default answer here and explicitly supports non-resident founders. You'll apply as the LLC, with the EIN.
-4. **Apply to Stripe as the LLC.** The account is American now; where you live stops being the blocker.
+Use the same hypothetical order value for each eligible provider. Separate customer payment fees from currency conversion and withdrawal costs. Then compare the amount that reaches your bank, not only the balance shown in the platform.
 
-[Whether you *should* do this](/payments/do-i-need-an-llc-to-sell-digital-products/) is a separate question from how — the tax and liability trade-offs deserve their own read. But two warnings from people running this route in 2026:
-
-- **A registered agent's address doesn't cut it anymore.** Older guides tell you to use your agent's address for everything. Recent reports say Mercury, Wise, and Stripe verification are rejecting that during onboarding — plan on a real business address for the LLC, not the agent's suite number.
-- **It's a company, forever.** State fees, a US tax return every year, an accountant who answers emails. Budget a few hundred dollars a year minimum, even in years where nothing happens.
-
-This route makes sense once revenue is real. It's heavy machinery for a product with zero sales — and forming an LLC before your first customer is spending money to avoid a 5% fee you haven't earned yet.
-
-## Route 3: Regional tools and newer MoRs
-
-Depending on where you live, there are local players — but the ones that matter globally are **Wise** and **Payoneer**, and not as checkout tools. They're the last mile: payouts from Paddle or Stripe land in a bank account, and a Wise or Payoneer account is often how developers in unsupported countries actually get those dollars into something they can spend locally.
-
-There's also a crop of newer merchant-of-record services aimed at indie developers — DodoPayments, Creem, and friends. Fees are often lower than Paddle's. The trade is longevity: these are young companies holding your money. I'd treat them the way you'd treat any young company holding your money — reasonable at small scale, worth re-evaluating as revenue grows.
-
-Your country may also have a competent domestic payment provider. The honest caveat: I can't evaluate the one in your country from here, and "supports cross-border SaaS payouts cleanly" is a high bar that many fail. Search for "[your provider] payout problems" before committing, not after.
-
-## What I'd actually do
-
-Start with Paddle. Not because it's perfect — because it's the reversible option:
-
-- You can go from nothing to a working payment link in an afternoon.
-- No fixed costs, so a product that earns $0 costs you $0.
-- When you outgrow the 5%, the LLC route is still there — and you'll form it holding real revenue numbers instead of guesses.
-
-The math flips somewhere around $2,000–3,000 MRR. At $2,000 across forty $50 sales, Paddle keeps about $120 that month. A Wyoming LLC with an accountant runs a few hundred a year. Past that line, route 2 starts paying for itself. (And if you're reading this before you've even [deployed the app](/deploy/deploy-first-app-vercel/) — good. Payments is genuinely the easier half of this problem.)
-
-So, this week: Paddle account, one product, one payment link. Form nothing. Your first sale is the only market research that counts.
-
-And if the Paddle review is slow, or rejects the site you have rather than the site you're planning — you're not blocked. [Ko-fi wired to PayPal](/payments/getting-paid-without-stripe-kofi-paypal/) is the smallest working setup in this whole article: no merchant underwriting, no company, live the same afternoon. It's also a useful rehearsal, because it forces you to answer the delivery question — what does the buyer actually get after they pay — before you pick a permanent rail.
+Keep a written decision: which route is available, what approval is still required, what each party handles, and what evidence confirmed it. Build the checkout only after that decision. If no provider supports your situation, contact the relevant providers directly rather than treating an unsupported workaround as a launch plan.

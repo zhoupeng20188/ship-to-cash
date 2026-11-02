@@ -2,6 +2,7 @@
 title: "404 on Refresh: Fix SPA Routing on Vercel, Netlify & CF Pages"
 description: "Refresh a deep link and get a 404 though your homepage works? Client-side routing on static hosts — exact fixes for Vercel, Netlify, and Cloudflare Pages."
 pubDate: 2026-09-04
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -19,7 +20,7 @@ faq:
     answer: "No. The rewrite or _redirects rule only catches paths with no matching file. Requests for real built assets (/assets/*.js, /favicon.ico) resolve to the actual file first; only unknown paths fall through to index.html."
 ---
 
-The first time I shipped a React Router app, the homepage loaded, I clicked into the dashboard, everything looked great — then I hit refresh and got a bare 404 page. The app I had just "deployed" was gone the moment anyone refreshed a deep link. That's the bug that catches almost every first-time SPA deploy, and it's the one this guide fixes.
+If navigation inside a React Router app works but refreshing `/dashboard` returns a 404, the server may be looking for a file that only the client-side router knows how to render. Check the routing model before changing the build.
 
 Before you touch anything, make sure you're on the right page. A 404 has a few different causes, and they need different fixes:
 
@@ -113,7 +114,7 @@ You added the file, redeployed, and it still 404s. Almost always one of these:
 
 **You're on Cloudflare Pages with Pages Functions.** If your project has a `/functions` directory, some paths are handled by a worker instead of static files, and the `_redirects` catch-all may not cover them the way you expect. For a pure SPA with no functions, this doesn't apply — remove or scope the functions and the static `_redirects` fallback works as described.
 
-Once you add that `functions/` directory, though, you've changed the kind of site you're running: a purely static deploy has no runtime, and adding Functions gives it one. That flips how environment variables behave — a value the build could read before may now need to be a runtime binding instead, or the reverse. I wrote up [why Cloudflare Pages variables read as undefined](/deploy/cloudflare-pages-environment-variables-not-working/) for anyone hitting that after adding their first Function.
+Once you add that `functions/` directory, though, you've changed the kind of site you're running: a purely static deploy has no runtime, and adding Functions gives it one. That flips how environment variables behave — a value the build could read before may now need to be a runtime binding instead, or the reverse. See [why Cloudflare Pages variables read as undefined](/deploy/cloudflare-pages-environment-variables-not-working/) for anyone hitting that after adding their first Function.
 
 **Verify it worked:** after fixing, re-open the deep link. If it loads, you're done. If `index.html` itself loads but the *wrong view* shows (router renders the homepage instead of `/dashboard`), that's a router `basename` mismatch, not a host problem — see Cause 3's neighbor note below.
 
@@ -123,11 +124,11 @@ Sometimes the 404 isn't about routing; your deploy simply has no files for that 
 
 A close cousin, specific to SPAs: if `index.html` loads on refresh but renders the **homepage** instead of the route you asked for, your router and your host disagree on the base path. If you deploy under a sub-path (e.g. `https://yoursite.com/app/`), set the router `basename` to match and set the matching `base` in `vite.config.ts` (or `homepage` in `package.json` for CRA). Mismatched values make every deep link land on the wrong view even though the host "works."
 
-## A note for Astro users (and why my own site doesn't hit this)
+## A note for static Astro sites
 
 If your site is plain Astro with the default static output, you can close this tab. Astro pre-renders a real HTML file for every route at build time, so `/blog/my-post` is an actual file on disk — refresh it and the server serves that file. No fallback needed.
 
-You only meet this 404 when you run a client-side router *inside* Astro (a `client:only` React/Vue island using React Router or Vue Router, or a SPA-mode framework), or when you ship a pure Vite/React/Vue SPA to one of these hosts. That's the situation the three fixes above solve. My own ShipToCash site is Astro static, so it never needed a `_redirects` — but every React side-project I've put on Cloudflare Pages has, and the one-line file has saved each of them.
+These fallback rules address client-side SPA routing. ShipToCash uses Astro’s static output, so its content routes are generated as HTML files. A missing generated route should be fixed in the route definitions or build, rather than hidden behind an SPA fallback.
 
 ## The 60-second checklist
 
@@ -144,3 +145,8 @@ Do those, and a refresh on any sub-page returns `200` with your app intact.
 ## Next steps
 
 With routing solid, the deploy is actually done — the boring part is behind you. If deep links were 404ing because the build never produced files, the [build-failed walkthrough covers output directories and build commands](/deploy/vercel-build-failed/). And once the site is stable, the usual next milestone is a custom domain — here's [how to point a domain at Vercel](/deploy/vercel-custom-domain-setup/) when you're ready, or [whether transferring a domain is even worth it](/deploy/transfer-domain-to-vercel/) before you commit.
+
+## Official references
+
+- [Cloudflare Pages routing](https://developers.cloudflare.com/pages/configuration/serving-pages/)
+- [Netlify rewrite rules](https://docs.netlify.com/manage/routing/redirects/rewrites-proxies/)

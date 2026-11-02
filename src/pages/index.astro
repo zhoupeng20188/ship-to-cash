@@ -24,8 +24,26 @@ const liveCategories = CATEGORIES.filter((cat) =>
       </h1>
       <p class="mx-auto mt-6 max-w-2xl text-lg text-ink-600 leading-relaxed">
         Step-by-step guides for vibe coders: deploy your app, set up payments,
-        handle the legal stuff, and turn your project into income.
+        check delivery, and understand operating costs.
       </p>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 mt-12" aria-labelledby="lab-heading">
+    <div class="rounded-xl border border-brand-200 bg-brand-50 p-6 md:p-8 dark:border-brand-800 dark:bg-brand-900/40">
+      <p class="text-sm font-semibold text-brand-700 dark:text-brand-300">Runnable source · Recorded evidence</p>
+      <h2 id="lab-heading" class="mt-2 text-2xl font-bold text-ink-900">From a signed payment event to a private download</h2>
+      <p class="mt-3 max-w-3xl text-ink-600">
+        Run the same Astro project through changed signatures, duplicate notifications,
+        server restarts, expiring links, and refunds. Inspect 45 recorded checks against
+        synthetic orders and a private fixture file. No real payment account is needed.
+      </p>
+      <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-brand-700 dark:text-brand-300">
+        <a href="/payments/lemon-squeezy-webhook-signature-astro/" class="underline">Start with webhook verification →</a>
+        <a href="/payments/send-download-link-after-payment-no-backend/" class="underline">Follow the download experiment →</a>
+        <a href="https://github.com/zhoupeng20188/shiptocash-verification-labs/tree/6537765e7d9493673e744602e388f5cd06b7a2c9/payment-delivery-lab" class="underline">Source, commands &amp; evidence →</a>
+      </div>
+      <p class="mt-4 text-sm text-ink-500">Local Node experiment with pinned versions. It does not test live provider callbacks or cloud deployment.</p>
     </div>
   </section>
 

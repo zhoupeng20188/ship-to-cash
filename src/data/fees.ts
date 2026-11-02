@@ -1,15 +1,14 @@
 /**
  * Platform fee data for the reverse fee calculator.
  *
- * Every number here was read off the provider's own pricing page in
- * October 2026. Rates drift, so the calculator lets the reader override
- * both fields — the presets are a starting point, not a source of truth.
+ * Presets are editable modelling assumptions, not a verified current quote.
+ * Check the linked provider page and the seller's agreement before use.
  *
  * `percent` and `fixed` describe the fee on a single order. Everything is
  * in USD, which is how all of these platforms quote to US-based sellers.
  */
 
-export const RATES_VERIFIED = "October 2026";
+
 
 export type SurchargeId = "international" | "paypal" | "subscription" | "conversion";
 
@@ -66,7 +65,7 @@ export const PROVIDERS: Provider[] = [
     fixed: 0.5,
     surcharges: [{ id: "international", label: "Buyer outside the US (+1.5%)", percent: 1.5 }],
     note: "Starter plan is 5% + 50¢ since May 2026. Paid plans buy the rate down (Pro, $20/mo: 3.8% + 40¢).",
-    source: "https://polar.sh/pricing",
+    source: "https://polar.sh/blog/introducing-polar-plans",
     taxInclusive: true,
   },
   {

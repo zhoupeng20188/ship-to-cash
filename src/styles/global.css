@@ -148,6 +148,7 @@ body {
   max-width: var(--content-max-width);
   font-size: 1.125rem;
   line-height: 1.8;
+  overflow-wrap: anywhere;
 }
 
 .prose p {
@@ -289,12 +290,14 @@ body {
 }
 
 .prose table {
+  display: block;
+  max-width: 100%;
   width: 100%;
   border-collapse: collapse;
   margin: 2rem 0;
   font-size: 0.9375rem;
   border-radius: 0.5rem;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 

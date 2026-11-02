@@ -44,7 +44,7 @@ const ogImage = new URL(image, Astro.site);
     <meta name="twitter:image" content={ogImage} />
     <!-- Google Consent Mode v2: set default consent denied as early as possible.
          The CookieConsent banner updates this to "granted" on accept.
-         No external requests are made until consent is granted. -->
+         Consent Mode signals do not block all network requests. -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }

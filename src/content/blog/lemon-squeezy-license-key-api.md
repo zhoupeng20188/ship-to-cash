@@ -2,13 +2,14 @@
 title: "Lemon Squeezy License Key API: Activate, Validate, Deactivate"
 description: "Three endpoints, no API key, Access-Control-Allow-Origin: *. Working Lemon Squeezy license key code, plus 5 traps that leak emails and burn activation slots."
 pubDate: 2026-09-23
+updatedDate: 2026-11-02
 category: payments
 difficulty: intermediate
 author: "Peng Zhou"
 image: /og-lemon-squeezy-license-key-api.jpg
 faq:
   - question: "Does the Lemon Squeezy License API need an API key?"
-    answer: "No. The License API is documented as a separate API from the main Lemon Squeezy API, and its own curl examples contain no Authorization header. I confirmed this by calling the validate endpoint with a made-up key and no credentials: instead of a 401, it returned HTTP 404 with a body of {\"valid\":false,\"error\":\"license_key not found.\"}. That is what makes it usable from a small edge function with no secrets at all — but it also means anyone else can call it, which is why your own endpoint needs to check that the key belongs to your product."
+    answer: "The documented License API requests do not include a main-API bearer token. Follow the License API request format and validate the returned product and store identifiers before granting access."
   - question: "Can I call the License API straight from the browser?"
     answer: "Technically yes. The response includes the header access-control-allow-origin: *, so a fetch from any origin will not be blocked. You should not do it anyway. Two reasons: the response body contains the buyer's name, email address, and order ID, which you would be handing to whatever page made the call, and an unauthenticated endpoint anyone can hit means a leaked key can be activated repeatedly until the activation limit is exhausted. Put a thin server-side proxy in front instead — even a free Cloudflare Worker is enough."
   - question: "Why does validate return valid true for a key that isn't mine?"
@@ -21,9 +22,9 @@ faq:
     answer: "Activate returns activated false with the error message \"This license key has reached the activation limit.\" The limit itself is a per-product setting in the Lemon Squeezy dashboard — the docs use the example of a $9 product limited to one computer and a $19 variant of the same product allowing three. If buyers regularly run out of activations, raise the limit on the variant or add a higher-priced one rather than resetting keys manually."
 ---
 
-I added [Lemon Squeezy checkout to a static site](/payments/lemon-squeezy-checkout-astro-static-site/) and felt finished. Payments went through, and once I'd sorted out [a webhook that wouldn't fire](/payments/lemon-squeezy-webhook-not-firing/), the money landed. Then a buyer asked how to move his license to a new laptop, and I had no answer, because I had shipped a paid product with no way to tell a customer from someone who'd been forwarded the download link.
+After [checkout](/payments/lemon-squeezy-checkout-astro-static-site/) and [payment events](/payments/lemon-squeezy-webhook-not-firing/), a licensed application still needs a way to activate, validate, and release access for the purchased product.
 
-License keys are the fix, and the API behind them is small enough to hold in your head: three endpoints, no authentication, no SDK. I wired up all three in an afternoon. Five things about it surprised me, and four of them would have shipped as bugs if I'd written the obvious version and moved on.
+This guide explains the three License API endpoints with illustrative requests. They are not a record of a deployed customer licensing system.
 
 ## The License API is not the Lemon Squeezy API
 
@@ -33,11 +34,11 @@ This is the first thing to internalize, because the two share a hostname and not
 |---|---|---|
 | Authentication | `Authorization: Bearer <key>` from Settings → API | None |
 | Request body | JSON:API (`application/vnd.api+json`) | Form-encoded (`application/x-www-form-urlencoded`) |
-| Rate limit | 300 requests/minute | Docs say 60/min; response headers I got said 300 |
+| Rate limit | Follow the current documented limit | Handle throttling and retry with backoff |
 
-The docs ask for `application/x-www-form-urlencoded` on POSTs. In my testing the endpoint parsed a JSON body too — it returned the same 404 rather than a 422 — but I still send form-encoded, because that's what's documented and I have no reason to bet on undocumented behaviour.
+Use the documented `application/x-www-form-urlencoded` request format. Do not depend on undocumented JSON parsing behavior.
 
-On the rate limit: the [License API page](https://docs.lemonsqueezy.com/api/license-api) states 60 requests per minute. The response headers on my test calls came back with `x-ratelimit-limit: 300` and `x-ratelimit-remaining: 295`. I don't know which number is authoritative, so I design against 60 and treat anything above that as a bonus. Don't build a design that needs more than 60 license calls a minute; if you do, cache validation results locally for a few minutes instead.
+The [License API reference](https://docs.lemonsqueezy.com/api/license-api) documents a rate limit. Design for that published limit, handle HTTP 429, and avoid unnecessary validation calls.
 
 ## Turn on license keys for the product
 
@@ -138,7 +139,7 @@ curl -X POST https://api.lemonsqueezy.com/v1/licenses/deactivate \
 
 `instance_id` is required here, not optional. Missing it gets you HTTP 422 with `{"message":"The instance id field is required.","errors":{"instance_id":["The instance id field is required."]}}`. Since the only place you ever receive that id is the activate response, storing it isn't optional either.
 
-In practice, deactivation is a support feature: a buyer emails you about a new laptop, you look up their instance, and you release it. I give buyers a self-serve "deactivate this machine" button in their account page, because otherwise every upgrade is a support ticket.
+A self-service deactivation action can let a verified customer move to a new device. Authenticate the customer and bind the action to their own license instance.
 
 ## Put the three calls behind your own endpoint
 
@@ -207,7 +208,7 @@ If you're deploying the Worker alongside the rest of your project, keep the stor
 
 ## Five things that will bite you
 
-**1. No API key, and `access-control-allow-origin: *`.** I checked the response headers on a validate call and got `access-control-allow-origin: *` with `access-control-allow-methods: GET, POST, PUT, PATCH, DELETE, OPTIONS`. The browser will happily let a page call these endpoints directly. That's convenient and dangerous at the same time: an endpoint that anyone can call without credentials is an endpoint anyone can hammer with a key they found in a screenshot, burning through the activation limit until the real buyer's key stops working. Keep the calls server-side.
+**1. Public API access is not authorization for your product.** Your access decision still needs to check the license’s store, product, status, and instance. Do not assume a generic valid key belongs to your product.
 
 **2. `valid: true` doesn't mean the key is yours.** It means the key exists and is usable. A key from a completely different Lemon Squeezy store validates just as happily against your endpoint unless you compare `meta.store_id` and `meta.product_id`. This is the one check that separates a license system from a speed bump.
 

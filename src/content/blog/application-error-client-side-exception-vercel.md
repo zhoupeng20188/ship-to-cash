@@ -2,6 +2,7 @@
 title: "Application Error: a Client-Side Exception on Vercel (4 Fixes)"
 description: "Page goes blank with 'a client-side exception has occurred' on Vercel? Four ranked causes: env vars, hydration, stale chunks, missing error boundary."
 pubDate: 2026-09-11
+updatedDate: 2026-11-02
 category: deploy
 difficulty: intermediate
 author: "Peng Zhou"
@@ -21,7 +22,7 @@ faq:
     answer: "Use retry. It became a stable API in Next.js 16.3.0, after landing as unstable_retry in 16.2.0. retry() re-fetches and re-renders the segment, which is what you want after a transient failure. reset() still exists, but the docs now say to use retry in most cases and reserve reset for when you want to clear the error state and re-render without re-fetching."
 ---
 
-A friend sent me a link to their Next.js dashboard last month: "works on my machine, white page in production." I opened it and got one line of grey text in the middle of an empty screen:
+A Next.js page can deploy successfully and still fail in the browser with this message:
 
 ```
 Application error: a client-side exception has occurred (see the browser console for more information)
@@ -60,7 +61,7 @@ Here are the three causes, ranked by how often they turn out to be the answer.
 
 ## Cause 1 (most common): the variable exists in Production only
 
-This is the single most frequent cause I've run into, and it's sneaky because the app works — right up until it needs to render something that came from an API.
+A browser exception can occur when rendering data returned by an API. Check the data shape before changing deployment settings.
 
 Every Vercel variable has independent environment scopes: **Production**, **Preview**, **Development**, plus custom environments. Adding a key to Production does not add it to Preview. So this happens constantly: you add your API key on the Production tab, ship to `main`, everything works — then a preview deployment hits the API with `undefined`, gets an error response back, and the component that expected data crashes on render.
 
@@ -93,7 +94,7 @@ if (posts.length === 0) return <p>Nothing here yet.</p>
 
 ## Cause 2: hydration mismatch
 
-Hydration is React converting your server-rendered HTML into a live app by attaching event handlers. A mismatch means the HTML the server produced and the tree React builds in the browser disagree. Next.js [documents the common causes](https://nextjs.org/docs/messages/react-hydration-error), and these four cover almost everything I've seen:
+Hydration attaches event handlers to server-rendered HTML. A mismatch means the server output and the browser render differ. Next.js [documents these common causes](https://nextjs.org/docs/messages/react-hydration-error):
 
 1. **Invalid HTML nesting** — a `<div>` or `<ul>` inside a `<p>`, an `<a>` inside an `<a>`. Check this first, because browsers silently "fix" invalid nesting while parsing, so the DOM your React tree expects isn't the DOM that exists.
 2. **Browser-only APIs in render logic** — reading `window`, `localStorage` or `document` while rendering. On the server they don't exist, so the two renders diverge.

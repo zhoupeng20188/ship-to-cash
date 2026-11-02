@@ -2,6 +2,7 @@
 title: "Do I Need to Buy an SSL Certificate? No — and Here's Why (2026)"
 description: "Do I need to buy an SSL certificate? No. Modern hosts issue free SSL automatically. Here's where free certs come from, and when paid ones actually matter."
 pubDate: 2026-08-12
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -21,13 +22,13 @@ You're buying a domain at Namecheap, you get to checkout, and there's the upsell
 
 Take your finger off the button. If you're hosting on Vercel, Netlify, Cloudflare Pages, or basically any modern platform, **you already have SSL, it's free, and it's already working**. That padlock on your deployed site? You never configured anything for it. This article is about why that upsell exists, where free SSL actually comes from, and the narrow cases where paid certificates still make sense.
 
-I said the same thing in my [domain buying guide](/deploy/buy-domain-set-up-dns/) — decline the add-ons at checkout — and SSL is the upsell people hesitate on most. Here's the full reasoning.
+I said the same thing in the [domain buying guide](/deploy/buy-domain-set-up-dns/) — decline the add-ons at checkout — and SSL is the upsell people hesitate on most. Here's the full reasoning.
 
 ## The short answer
 
 You need HTTPS. You do **not** need to buy a certificate to get it.
 
-Every modern hosting platform — Vercel, Netlify, Cloudflare Pages, Render, Railway, GitHub Pages — automatically issues and renews a free certificate for your custom domain. When I connected my domain to Vercel ([full walkthrough here](/deploy/vercel-custom-domain-setup/)), the certificate showed up on its own a few minutes after verification. There was no SSL step because there never is one.
+Managed hosts commonly provide HTTPS certificates for connected custom domains. Check your host’s documentation and domain status before purchasing a separate certificate. The [Vercel domain guide](/deploy/vercel-custom-domain-setup/) covers its verification workflow.
 
 ## What HTTPS actually does (in one paragraph)
 
@@ -78,3 +79,8 @@ Bought nothing, deployed, and the padlock is missing? It's one of these:
 ## Next steps
 
 Padlock sorted, no money spent. If you landed here while connecting a domain, the [Vercel custom domain guide](/deploy/vercel-custom-domain-setup/) finishes that job; if you're still earlier in the journey, start with [deploying your first app](/deploy/deploy-first-app-vercel/). Coming up in this series: environment variables — where your API keys should live now that your traffic is encrypted but your code is on GitHub.
+
+## Official references
+
+- [Vercel SSL certificates](https://vercel.com/docs/domains/working-with-ssl)
+- [Let’s Encrypt overview](https://letsencrypt.org/getting-started/)

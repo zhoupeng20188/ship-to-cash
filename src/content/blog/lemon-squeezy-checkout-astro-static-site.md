@@ -2,6 +2,7 @@
 title: "Lemon Squeezy Checkout on an Astro Site (No Backend)"
 description: "Add Lemon Squeezy checkout to a static Astro site with no backend: lemon.js button, Cloudflare Pages webhook, raw-body signature checks, test-mode traps."
 pubDate: 2026-09-09
+updatedDate: 2026-11-02
 category: payments
 difficulty: intermediate
 author: "Peng Zhou"
@@ -14,28 +15,28 @@ faq:
   - question: "Can I copy Lemon Squeezy's Node.js signature example into a Cloudflare Pages Function?"
     answer: "Not directly. The official example imports node:crypto and calls crypto.timingSafeEqual, neither of which exists in the Workers runtime by default. Use the Web Crypto API (crypto.subtle.importKey and crypto.subtle.sign) to build the HMAC, then compare the hex strings with your own constant-time loop."
   - question: "Why does my buy button stop working after navigating between pages?"
-    answer: "Lemon.js binds click listeners once, when the script loads. If you use Astro View Transitions, the page swaps without a full reload, so buttons on the new page never get bound. Call window.createLemonSqueezy() inside an astro:page-load listener to rebind them."
+    answer: "Lemon.js binds click listeners once, when the script loads. If you use Astro View Transitions, the page swaps without a full reload, so buttons on the new page never get bound. Call window.LemonSqueezy.Refresh() inside an astro:page-load listener to rebind them."
   - question: "Is Lemon Squeezy the merchant of record?"
     answer: "Yes. Lemon Squeezy is the legal seller on every transaction, which means they calculate, collect, and file sales tax and VAT on your behalf. That's the main thing their 5% + 50¢ per transaction fee buys, and it's the reason a solo seller without a company can sell internationally without registering for VAT in every country."
   - question: "How do I stop test purchases from granting real access?"
     answer: "Every webhook payload carries a test_mode boolean in the attributes object. Check it before you grant anything and short-circuit with a 200 response when it's true. Lemon Squeezy also retries any non-200 response up to three more times, so returning 200 for events you're deliberately ignoring matters."
 ---
 
-I put off adding a buy button to my site for about three weeks, and the reason was embarrassing: every Lemon Squeezy tutorial I could find assumed I was running Next.js with API routes. My site is a static Astro build on Cloudflare Pages. There is no server. There is nothing to receive a webhook.
+A static Astro page can link to hosted checkout without a backend. A webhook is needed only when your own application must react to payment events.
 
-It turns out you need exactly two things — one script tag and one file. Neither requires a framework, and the second one is about forty lines. Here's the whole thing, including the four places I got stuck.
+This guide separates the public checkout link from optional server-side fulfillment. Do not put an API key or signing secret into a static component.
 
 ## Why Lemon Squeezy is the right shape for a static site
 
 Before the code, the reason this pairing works at all: [Lemon Squeezy is a merchant of record](/payments/merchant-of-record-vs-payment-processor/). They are legally the seller on every transaction, which means they calculate, collect, and file sales tax and VAT on your behalf across jurisdictions.
 
-That matters enormously when your site is a folder of HTML files. You are not building tax logic, you are not storing invoices, and you are not registering for VAT in twenty-seven countries. Compare that with a tip-jar setup like [Ko-fi wired to PayPal](/payments/getting-paid-without-stripe-kofi-paypal/), where you are the seller of record and every one of those problems is yours.
+That matters enormously when your site is a folder of HTML files. Review the platform agreement for customer-tax and invoice handling, and retain the records your own business needs. Compare that with a tip-jar setup like [Ko-fi wired to PayPal](/payments/getting-paid-without-stripe-kofi-paypal/), where you are the seller of record and every one of those problems is yours.
 
-Per [Lemon Squeezy's pricing page](https://www.lemonsqueezy.com/pricing), the cost is **5% + 50¢ per transaction** with no monthly fee, and payouts go out twice a month by bank wire or PayPal to more than 200 countries. That last part is why it's on my short list at all — I can't open a Stripe account where I live, and [the workarounds for that](/payments/stripe-not-available-in-my-country/) are all worse than this.
+Check the current [pricing](https://www.lemonsqueezy.com/pricing) and [supported payout countries](https://docs.lemonsqueezy.com/help/getting-started/supported-countries) before integration. Base fees may exclude surcharges, and seller approval is separate from a working buy link.
 
-**Before you build on it, check you can actually open a store.** Stripe acquired Lemon Squeezy in July 2024. It has not shut down and no sunset date has been announced, but new-account availability has been patchy — reports through 2026 describe signups as gated in some regions, and existing stores are being nudged toward Stripe Managed Payments, which is a pricier successor. I checked the registration page while writing this and it was open, but I can't speak for your country. Create the account first; paste the code second.
+**Confirm store eligibility first.** Complete the provider’s country, identity, product, and payout checks. Do not interpret an accessible registration page as approval.
 
-One more thing the headline rate hides: 5% + 50¢ is the floor, not the ceiling. Lemon Squeezy's own pricing page warns that some payments carry additional fees, and third-party breakdowns put international card and PayPal payments around +1.5% with subscriptions adding roughly another 0.5%. Confirm the real blended rate in your own dashboard rather than trusting any single number — mine included.
+One more thing the headline rate hides: 5% + 50¢ is the floor, not the ceiling. Lemon Squeezy's own pricing page warns that some payments carry additional fees, see the official [fee breakdown](https://docs.lemonsqueezy.com/help/getting-started/fees) for the applicable surcharges. Confirm the real blended rate in your own dashboard rather than trusting any single number.
 
 ## Step 1: the button, on a page with no server
 
@@ -68,7 +69,7 @@ Two Astro-specific notes:
 
 The class name is what does the work. On load, Lemon.js attaches listeners to every `.lemonsqueezy-button` element and turns the click into an iframe overlay.
 
-Overlay or hosted page? The overlay keeps the visitor on your domain, which is worth something for both trust and analytics — the sale happens on a page you control. The hosted page is one less third-party script, and because your `href` is a real URL, it still works if JavaScript fails or a content blocker kills `lemon.js`. I use the overlay because conversion matters more to me than purity, and the link underneath means it degrades instead of breaking.
+The overlay keeps the checkout interaction on the current page; a plain hosted link avoids loading the overlay script. Keep a real checkout URL in the anchor so the link still works without JavaScript.
 
 ## Step 2: the trap that only Astro sites hit
 
@@ -81,14 +82,14 @@ The fix is one line, using the lifecycle event Astro fires after every swap:
 ```html
 <script is:inline>
   document.addEventListener("astro:page-load", () => {
-    window.createLemonSqueezy?.();
+    window.LemonSqueezy?.Refresh();
   });
 </script>
 ```
 
-`createLemonSqueezy()` is safe to call repeatedly — it just refreshes the listeners. I mention this because I burned an evening on it, and because every Lemon.js integration doc I found covers React and Vue but not Astro's navigation model.
+If using client-side navigation, consult the [Lemon.js method reference](https://docs.lemonsqueezy.com/help/lemonjs/methods) and test links after a page swap. Do not assume that a listener attached on the initial load covers new content.
 
-## Step 3: your entire backend, in one file
+## Step 3: an optional webhook endpoint
 
 The button takes the payment. If you want to *know* about the payment — grant access, send a download, update a record — you need a webhook endpoint.
 
@@ -169,7 +170,9 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (event === "order_created") {
-    // Grant access, email the download, write to KV or D1.
+    // Verification example only. Before fulfillment, validate paid status,
+    // expected store/product and mode; persist an idempotent entitlement.
+    // This example deliberately performs no fulfillment.
   }
 
   return new Response("ok", { status: 200 });

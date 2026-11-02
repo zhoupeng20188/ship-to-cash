@@ -2,7 +2,7 @@
 title: "Deploy Your First App to Vercel (No DevOps Experience)"
 description: "You built an app with AI. Here's how to get it off your laptop and onto the internet with Vercel — step by step, no prior deployment experience required."
 pubDate: 2026-08-04
-updatedDate: 2026-08-21
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -20,7 +20,7 @@ So you built something with Cursor, v0, or Claude — and it works on your lapto
 
 Right now your app only exists at `localhost:3000`, which means exactly one person on Earth can see it: you. Deploying puts it on a server that's always on, with a URL anyone can open. This takes about 15 minutes with Vercel's free tier, and you don't need to know anything about servers.
 
-Full disclosure: I ship my own projects on Cloudflare Pages these days (cheaper at scale). But when someone asks me how to deploy their very first app, I still point them at Vercel — its framework detection is the most forgiving, and the error messages actually tell you what's wrong. Everything below transfers to other hosts later.
+This guide covers importing a repository, checking the build settings, and inspecting a deployment. Before using Vercel for a commercial site, check its [plan requirements](https://vercel.com/docs/plans/hobby); Hobby is for personal, non-commercial use.
 
 ## What you'll need
 
@@ -37,7 +37,7 @@ Run this in your project folder:
 npm run build
 ```
 
-If it fails, fix it now. Build errors don't fix themselves in the cloud — they just get harder to read. I skipped this check on my first deploy and spent 20 minutes staring at a Vercel log before realizing my local build was broken too. The usual culprit is a TypeScript or lint error your AI tool left behind; paste the error back into it and ask for a fix.
+If the local build fails, resolve that error before pushing. Record the first failing command and its error output; a deployment wrapper’s exit code is not enough to diagnose it.
 
 ## Step 1: Push your code to GitHub
 
@@ -59,13 +59,13 @@ git remote add origin https://github.com/yourname/your-app.git
 git push -u origin main
 ```
 
-**One check before you push:** your `.env` file must *not* be included. Run `git status` — if `.env` shows up, add it to `.gitignore` first (most frameworks generate one that already excludes it). API keys pushed to GitHub get scraped by bots within minutes. I know someone who lost $400 in OpenAI credits this way before breakfast.
+**Before pushing:** exclude private `.env` files and inspect staged files with `git diff --cached`. Use `git ls-files` to detect secrets already tracked by Git; adding a file to `.gitignore` does not untrack it. Rotate any credential that has been published.
 
 ## Step 2: Import the project in Vercel
 
 1. Sign up at [vercel.com](https://vercel.com) with **Continue with GitHub** — this connects your repos automatically.
 2. Go to [vercel.com/new](https://vercel.com/new) and click **Import** next to your project.
-3. Vercel detects your framework (Next.js, Vite, Astro…) and fills in the build settings. Leave the defaults — the detection is right about 95% of the time.
+3. Vercel detects your framework (Next.js, Vite, Astro…) and fills in the build settings. Confirm the detected framework, build command, and output directory against your project.
 4. Click **Deploy**.
 
 The build takes 60–90 seconds. When it finishes: confetti, and your app is live at `your-app.vercel.app`.
@@ -80,11 +80,11 @@ If your app uses API keys (OpenAI, Supabase, Stripe…), it works locally becaus
 2. Add each key-value pair from your `.env`.
 3. **Redeploy** — variables only apply to new deployments. **Deployments → ⋯ → Redeploy**.
 
-Forgetting the redeploy step cost me an embarrassing amount of "but I ADDED the variable!" confusion. Everyone does it once.
+After changing a variable, create a new deployment and check the environment scope it uses.
 
 One naming trap: variables prefixed with `NEXT_PUBLIC_` (or `VITE_` in Vite) get baked into the browser bundle and are **publicly visible**. Never put secret keys behind those prefixes — only values that are safe to expose, like a Supabase anon key.
 
-These are Vercel's rules, and they're the ones I'd learn first. But heads up for later: if you move this project to Cloudflare Pages — common once a site starts earning, since the free plan permits commercial use — the same variable can sit in the dashboard and still read as `undefined` at build time, because that platform splits variables and secrets across a runtime boundary Vercel doesn't have. I covered [the four causes and how to tell them apart](/deploy/cloudflare-pages-environment-variables-not-working/) so a migration doesn't cost you the evening this step just saved.
+These are Vercel's rules, and they're the ones I'd learn first. But heads up for later: if you move this project to Cloudflare Pages — common once a site starts earning, since the free plan permits commercial use — the same variable can sit in the dashboard and still read as `undefined` at build time, because that platform splits variables and secrets across a runtime boundary Vercel doesn't have. See [the four causes and how to tell them apart](/deploy/cloudflare-pages-environment-variables-not-working/) so a migration doesn't cost you the evening this step just saved.
 
 ## Step 4: Understand what you just set up
 
@@ -121,9 +121,9 @@ Two things beginners get wrong here:
 
 > **Blank page, or 404 on refresh?** If the page renders but a **deep link 404s the moment you refresh it**, that's a client-side routing problem, not a render crash. See [how to fix 404s on refresh for Vercel, Netlify, and Cloudflare Pages](/deploy/client-side-routing-404-vercel-netlify-cloudflare/). The row above is for when the page never renders at all.
 
-That first error, `Module not found`, deserves special mention — it's the one that works locally and only breaks on Vercel, and the fix is usually a single character. I broke down [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/) (file casing, mostly) in its own guide.
+That first error, `Module not found`, deserves special mention — it's the one that works locally and only breaks on Vercel, and the fix is usually a single character. See [why Module not found happens on Vercel but not locally](/deploy/vercel-module-not-found-works-locally/) (file casing, mostly) in its own guide.
 
-Hit something not in this table? If the build itself failed, I keep a running list of [the Vercel build failures I hit most often](/deploy/vercel-build-failed/) and what fixed each one.
+For errors earlier in the build, use the [build-stage diagnostic table](/deploy/vercel-build-failed/).
 
 And if there's no error to copy — you pushed, GitHub has the commit, and Vercel shows no deployment whatsoever — none of this applies. That's the trigger never firing, and [the fix when Vercel shows no deployment after a push](/deploy/vercel-git-push-not-triggering-deploy/) begins with a question you can answer in five seconds: did the Vercel Bot comment on your commit? Otherwise, copy the exact error from the Vercel build log and paste it into your AI tool along with "my Vercel deploy fails with this error." Deploy errors are one of the things AI debugs best, because build logs are extremely literal.
 
@@ -135,6 +135,11 @@ The two restrictions worth knowing: Hobby is licensed for **non-commercial use**
 
 ## Next steps
 
-Your `.vercel.app` subdomain works, but it screams "weekend project." A custom domain costs about $10 a year and takes 20 minutes to connect — my [Vercel custom domain setup guide](/deploy/vercel-custom-domain-setup/) walks through it with Namecheap and Cloudflare. Don't have a domain yet? Start with [how to buy one and set up DNS](/deploy/buy-domain-set-up-dns/). (And no, you don't need to [transfer your domain to Vercel](/deploy/transfer-domain-to-vercel/) — pointing it is enough.) If the domain attaches but the browser still warns you the connection isn't private, don't go buy a certificate — that's a config error with a short list of causes, and [these are the fixes](/deploy/vercel-custom-domain-ssl-not-working/). Then set up analytics, because watching your first real visitor arrive is the moment this stops being a toy.
+Your `.vercel.app` subdomain works, but it screams "weekend project." A custom domain costs about $10 a year and takes 20 minutes to connect — the [Vercel custom domain setup guide](/deploy/vercel-custom-domain-setup/) walks through it with Namecheap and Cloudflare. Don't have a domain yet? Start with [how to buy one and set up DNS](/deploy/buy-domain-set-up-dns/). (And no, you don't need to [transfer your domain to Vercel](/deploy/transfer-domain-to-vercel/) — pointing it is enough.) If the domain attaches but the browser still warns you the connection isn't private, don't go buy a certificate — that's a config error with a short list of causes, and [these are the fixes](/deploy/vercel-custom-domain-ssl-not-working/). Then set up analytics, because watching your first real visitor arrive is the moment this stops being a toy.
 
 And when the app is live and you're ready to charge for it: before you open a Stripe account, read [merchant of record vs payment processor](/payments/merchant-of-record-vs-payment-processor/) — the difference decides who files your sales tax, and picking wrong is expensive. While you're at it, settle the other question every solo dev asks at this point: [no, you don't need an LLC to sell digital products](/payments/do-i-need-an-llc-to-sell-digital-products/) — here's when the entity actually pays for itself.
+
+## Official references
+
+- [Vercel deployment overview](https://vercel.com/docs/deployments)
+- [Project configuration](https://vercel.com/docs/project-configuration)

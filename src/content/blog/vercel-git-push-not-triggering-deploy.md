@@ -2,6 +2,7 @@
 title: "Git Push Not Triggering a Vercel Deploy: 9 Checks, in Order"
 description: "Pushed to GitHub and Vercel did nothing? No deploy, no error. These 9 checks find the cause, starting with whether the Vercel Bot left a comment."
 pubDate: 2026-09-21
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -21,9 +22,9 @@ faq:
     answer: "Create an empty commit and push it, using git commit --allow-empty -m \"Trigger deploy\" followed by git push. This gives Vercel a fresh push event to evaluate without changing any files. If a deployment still doesn't appear, run vercel deploy from the CLI instead — the CLI surfaces errors the dashboard hides, such as the message stating that the Git author must have access to the team's projects to create deployments."
 ---
 
-I pushed three commits on a Friday afternoon and refreshed the Vercel dashboard maybe twenty times. Nothing. Not a failed deploy, not a queued one — the deployment list still showed Thursday's build at the top, and there was no record that Vercel had seen anything at all.
+If a pushed commit produces no deployment entry, investigate the Git integration and trigger conditions before debugging application compilation.
 
-That absence is the tell. A broken build leaves a red entry you can click into. A push that never triggers leaves **nothing**, which is why this failure feels like Vercel is down. It almost never is. Nearly every case I've hit was a config boundary quietly saying no, and the order in which you check them matters more than how fast you check them.
+A failed build normally leaves a deployment record. First distinguish that state from a skipped, blocked, or missing trigger.
 
 One sanity check first, because several deploy symptoms look alike from the outside and their fixes don't overlap at all:
 
@@ -49,7 +50,7 @@ Open the commit on GitHub and look for a comment from the Vercel Bot.
 
 **If the Bot said nothing at all**, that silence is itself the signal. Vercel's knowledge base puts it directly: comments don't appear when no deployment could be created at all, which happens when pre-deployment validation fails — "a malformed `vercel.json` is a common trigger, as is a missing Git integration." So no comment means the failure happened *before* the permission check ever ran. Jump to cause 2.
 
-I wasted an afternoon on this once by starting at the wrong end: reconnecting GitHub over and over when the real problem was a trailing comma in `vercel.json` that failed validation before Vercel looked at anything else.
+Check configuration validity, branch settings, permissions, and usage before repeatedly reconnecting the repository.
 
 ## 1. Your commit author isn't recognized
 
@@ -104,7 +105,7 @@ Two edge cases worth knowing before you start reconnecting things:
 
 **Two Vercel accounts cannot share one GitHub account.** Set up the link on a second Vercel account and it's removed from the first. If your deploys died right after you joined a team or signed up with a different email, this is probably it.
 
-**Reconnecting isn't free.** On Hobby you get 100 deployments per day and one concurrent build. Vercel's guide warns that "repeatedly reconnecting and manually redeploying while troubleshooting can exhaust this limit on its own and reproduce the exact symptom under investigation." I've done this — burned through the daily cap while trying to diagnose why deploys weren't happening, which kept them not happening. Check your usage before your fourth reconnect.
+**Check usage limits.** Repeated manual deployment attempts can consume account allowances. Use the [current limits](https://vercel.com/docs/limits) and your usage dashboard to distinguish a cap from a broken Git integration.
 
 ## 3. A build filter is skipping your commit
 
@@ -162,8 +163,13 @@ If step 3 works and step 1 doesn't, your build is fine and the trigger path is b
 
 ## Where this sits in the rest of your setup
 
-Once pushes are flowing again, the next failure you'll meet is a build that runs and breaks. That's a different problem with a different fix, and [the build failures I hit most](/deploy/vercel-build-failed/) covers those causes. If you're still on your first deploy, the [first-deploy guide](/deploy/deploy-first-app-vercel/) walks the whole path from `git init` to a live URL, and [connecting a custom domain](/deploy/vercel-custom-domain-setup/) is the step after that.
+Once pushes are flowing again, the next failure you'll meet is a build that runs and breaks. That's a different problem with a different fix, and [the build-failure guide](/deploy/vercel-build-failed/) covers those causes. If you're still on your first deploy, the [first-deploy guide](/deploy/deploy-first-app-vercel/) walks the whole path from `git init` to a live URL, and [connecting a custom domain](/deploy/vercel-custom-domain-setup/) is the step after that.
 
 Past that point the problems stop being deployment problems. Once a site is live and stable, the next question is how it earns money — [adding a Lemon Squeezy checkout to an Astro site](/payments/lemon-squeezy-checkout-astro-static-site/) is the shortest path there if you don't want to run a backend.
 
 And if you're on Netlify instead: the same silence looks completely different there. Netlify reports build failures with `build script returned non-zero exit code: 2`, and the causes behind it have nothing to do with push triggers. I wrote [a separate guide for that Netlify error](/deploy/netlify-build-failed-exit-code-2/).
+
+## Official references
+
+- [Vercel Git integration](https://vercel.com/docs/git)
+- [Ignored Build Step](https://vercel.com/docs/project-configuration#ignorecommand)

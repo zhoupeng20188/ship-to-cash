@@ -1,7 +1,7 @@
 export const SITE = {
   name: "ShipToCash",
   description:
-    "Step-by-step guides for vibe coders: deploy your app, set up payments, handle the legal stuff, and turn your project into income.",
+    "Step-by-step guides for vibe coders: deploy your app, set up payments, check delivery, and understand operating costs.",
   url: "https://shiptocash.com",
   author: "Peng Zhou",
   github: "https://github.com/zhoupeng20188",
@@ -36,7 +36,7 @@ export const CATEGORIES = [
     slug: "payments",
     name: "Payments",
     description:
-      "Stripe, Paddle, Lemon Squeezy — choose a provider, open an account from anywhere, and handle taxes.",
+      "Stripe, Paddle, Lemon Squeezy — choose a provider, check seller eligibility, integrate checkout, and understand seller responsibilities.",
   },
   {
     slug: "monetize",

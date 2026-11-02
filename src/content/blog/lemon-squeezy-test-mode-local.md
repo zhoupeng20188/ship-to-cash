@@ -2,6 +2,7 @@
 title: "Lemon Squeezy Test Mode: Catch Checkout Bugs Before Going Live"
 description: "Run your Lemon Squeezy checkout and webhooks in test mode on localhost with test cards and a tunnel. Catch bugs before your first real charge, not after."
 pubDate: 2026-10-14
+updatedDate: 2026-11-02
 category: payments
 difficulty: intermediate
 author: "Peng Zhou"
@@ -19,17 +20,17 @@ faq:
     answer: "Two things: real payouts (no actual money moves, so you can't confirm the bank side or payout timing) and tax amounts in your customer's jurisdiction beyond what the sandbox computes. Everything about your code path — checkout, webhook, signature, access logic — is fully testable before you take a cent."
 ---
 
-I shipped my first paid product on a Friday night and didn't sleep until I'd made a real $29 purchase with my own card to prove it worked. It did. Then I realized I had no idea whether the webhook would behave the same on a live order as it had on the three test orders I'd clicked through that afternoon — because I'd never actually built the live side the way I'd built the test side.
+Test checkout, webhook delivery, signature verification, and access grants together before launch. Keep test events separate from production entitlements.
 
 That gap is exactly what [Lemon Squeezy's test mode](https://www.lemonsqueezy.com/pricing) is for, and most people treat it like a toy. It isn't. Test mode is a complete, separate copy of your store where you can run the entire purchase flow — checkout, webhook, signature, access grant — against fake money on your own laptop. If you use it right, your launch day is a non-event instead of a fire drill.
 
-This is the walkthrough I wish I'd had: how to rehearse the whole thing on localhost, including the webhook, before a single real card is charged.
+The workflow below rehearses the purchase path on localhost using test-mode data.
 
 ## What test mode is — and the part that surprises everyone
 
 Flip the toggle at the bottom-left of the Lemon Squeezy dashboard and the store you're looking at becomes a sandbox. Purchases are free, orders are clearly marked, and any webhook you fire carries `test_mode: true` in its payload. You can build your [checkout on a static site](/payments/lemon-squeezy-checkout-astro-static-site/) against it exactly as you would against production.
 
-The surprise is that test mode is a *separate catalogue*, not a flag on your real one. [Indie tooling write-ups](https://www.indietools.app/blog/lemon-squeezy-test-live-catalogue-review) and Lemon Squeezy's own docs are explicit about this: products, variants, and checkout URLs created in test mode stay in test mode. They do not copy over when you go live. Your live store has its own product IDs, its own variant IDs, and its own checkout URLs.
+The surprise is that test mode is a *separate catalogue*, not a flag on your real one. [Lemon Squeezy’s test-mode documentation](https://docs.lemonsqueezy.com/help/getting-started/test-mode) are explicit about this: products, variants, and checkout URLs created in test mode stay in test mode. They do not copy over when you go live. Your live store has its own product IDs, its own variant IDs, and its own checkout URLs.
 
 That single fact causes more broken launches than anything else. You build against test product `123`, flip to live, and suddenly your code is pointing at an ID that doesn't exist in the production catalogue. We'll fix that properly in Step 3, because it's the difference between "tested" and "tested for the right thing."
 

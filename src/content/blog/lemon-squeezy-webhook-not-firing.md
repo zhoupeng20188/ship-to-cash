@@ -2,6 +2,7 @@
 title: "Lemon Squeezy Webhook Not Firing or Invalid Signature: 5 Fixes"
 description: "Lemon Squeezy says the webhook was sent but your handler never runs — or X-Signature never matches. Five causes in order, with Node, Next.js and Go fixes."
 pubDate: 2026-09-28
+updatedDate: 2026-11-02
 category: payments
 difficulty: intermediate
 author: "Peng Zhou"
@@ -21,7 +22,7 @@ faq:
     answer: "Between 6 and 40 characters. The dashboard enforces this when you create the webhook, so a longer secret you generated elsewhere will be rejected at creation time rather than failing later. The secret is per webhook, not per store: if you delete and recreate an endpoint, the old secret dies with it and any deployment still holding it will fail every signature check."
 ---
 
-Payments were working. That was the annoying part. I had [Lemon Squeezy checkout running on a static site](/payments/lemon-squeezy-checkout-astro-static-site/), real money was arriving, and my webhook handler had logged exactly nothing. When I finally did get a request through, `X-Signature` failed on every single one — and then the same event arrived four times in a row.
+A working checkout does not prove that your webhook endpoint is reachable or correctly configured. Distinguish a missing request from a rejected signature and from duplicate delivery.
 
 Three hours later the picture was clear. The signature check itself is four lines. What breaks is everything around it: your framework already consumed the request body, you are comparing a hex string against raw bytes, or your handler is returning the wrong status code and Lemon Squeezy is quietly retrying behind your back.
 
@@ -192,6 +193,6 @@ Then confirm the real path once: resend an event from the dashboard and watch fo
 
 ## If you'd rather not run an endpoint at all
 
-A webhook is only needed when your code has to react to a payment. Lemon Squeezy will email the buyer their download and handle the invoice without one, and for a first product that is a legitimate endpoint-free setup — [the same conclusion I reached with Ko-fi and PayPal](/payments/getting-paid-without-stripe-kofi-paypal/). Being a [merchant of record](/payments/merchant-of-record-vs-payment-processor/) means they own the tax side too, so the only thing you're giving up is automatic access control. When you do want automatic access, [the safe way to send a download after the webhook fires](/payments/send-download-link-after-payment-no-backend/) keeps the signing key server-side.
+If your product only needs hosted file delivery, you may not need a webhook. For custom access grants, use a verified event and persistent entitlement record. See the [file delivery checklist](/payments/send-download-link-after-payment-no-backend/) and the [merchant-of-record responsibilities](/payments/merchant-of-record-vs-payment-processor/).
 
 Add the endpoint when you have something to grant. Until then, ship the product.

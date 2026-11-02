@@ -1,15 +1,15 @@
 ---
 title: "Vercel Build Failed? 5 Causes Matched to Your Error Log"
-description: "Log stuck on 'exited with 1'? Match the first red line to one of 5 causes — each with the exact fix, pulled from my own failed build logs."
+description: "Match a failed Vercel build to its first error: dependency install, Node version, TypeScript, output settings, or resource limits."
 pubDate: 2026-08-19
-updatedDate: 2026-10-21
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
 image: /og-vercel-build-failed.jpg
 faq:
   - question: "Where do I find the logs for a failed Vercel build?"
-    answer: "In your Vercel dashboard, open the project, click the Deployments tab, then click the failed deployment. The build log is the 'Building' section — scroll to the first red line, not the last. Vercel keeps build logs indefinitely, so you can go back to old failed deployments at any time."
+    answer: "In your Vercel dashboard, open the project, click the Deployments tab, then click the failed deployment. The build log is the 'Building' section — scroll to the first red line, not the last. Check deployment retention before relying on an old log; save the relevant output with your incident record."
   - question: "Why does my app build locally but fail on Vercel?"
     answer: "Because your laptop and Vercel's build container are different environments. The usual gaps: file-name casing (macOS doesn't care, Linux does), a Node version mismatch, dependencies that are installed locally but missing from package.json, and environment variables that exist in your .env but were never added to the project."
   - question: "Can I skip TypeScript errors to get the build passing?"
@@ -20,9 +20,9 @@ faq:
     answer: "It means Vercel's build container could not finish compiling and packaging your app, so it never produced a deployable output. The cause is almost always one of five things: a dependency mismatch, a Node version gap, a TypeScript error, a wrong build/output setting, or a timeout. The exact reason is in the first red line of the build log — scroll up, not down."
 ---
 
-The first time I saw a red "Error" status on a Vercel deployment, I stared at the log for twenty minutes. The app built fine on my laptop. It built fine five minutes earlier. What changed?
+A Vercel build can fail even when local development appears to work. Start by finding the first failing stage in the build log.
 
-That was my first deploy. The lesson: Vercel build failures are rarely mysterious — your laptop quietly forgives things Vercel's Linux build container doesn't. Once you know the five things it's strict about, you can usually name the fix within a minute.
+Common differences include dependency installation, Node versions, file-name casing, environment variables, and build configuration. Use the log to choose which difference to investigate.
 
 Three failures look like build failures but aren't, and each has its own fix. `Module not found` is usually file casing — [why Vercel says Module not found when your laptop doesn't](/deploy/vercel-module-not-found-works-locally/). Pages that render fine but [404 the moment you refresh a deep link](/deploy/client-side-routing-404-vercel-netlify-cloudflare/) are a routing problem. And when Vercel shows no new deployment at all, the trigger never fired — [Vercel never even started a deployment](/deploy/vercel-git-push-not-triggering-deploy/), so there's no log to read. Off Vercel entirely? Netlify's `build script returned non-zero exit code: 2` is [its own flavor of this error](/deploy/netlify-build-failed-exit-code-2/).
 
@@ -30,13 +30,13 @@ Three failures look like build failures but aren't, and each has its own fix. `M
 
 Open your project in the Vercel dashboard, click **Deployments**, then click the failed deployment. The build log is the **Building** section.
 
-The mistake everyone makes (me included, for those twenty minutes) is reading the log bottom-up. The end of a failed log is full of cleanup noise — "build failed," exit codes, "Deployment failed" repeated three ways. None of it is the actual error.
+Read above the final exit-code summary. Cleanup messages explain that the build failed; the earlier command error explains why.
 
-**Scroll up to the first red line.** That's the real error. Everything after it is the build process falling over. Vercel keeps build logs indefinitely, so you can always come back to an old failure and re-read it — useful when the same error shows up a week later and you've forgotten the fix.
+**Scroll up to the first red line.** That's the real error. Everything after it is the build process falling over. Retain a copy of the relevant error output: deployment retention settings can remove old deployment data.
 
 Now, the five causes.
 
-Here's the lookup table I wish I'd had. Find your exact string, read the cause, then jump to the section — most of these resolve in a minute once you know which of the five you're in.
+Use this table to distinguish a generic wrapper message from an actionable error:
 
 | Exact string in your log | What it actually means | Jump to |
 |---|---|---|
@@ -73,8 +73,8 @@ error pnpm: command not found
 
 **The fix:**
 
-1. Delete your local `node_modules` and lockfile, then reinstall from scratch: `rm -rf node_modules package-lock.json && npm install`
-2. Commit the fresh `package-lock.json` (or `pnpm-lock.yaml` — whichever your project uses, it must be in git)
+1. Reproduce a clean install without discarding dependency reproducibility: `npm ci` (for an npm project with a committed, matching lockfile)
+2. If the manifest and lockfile disagree, run your package manager’s install command locally, review the dependency changes, and commit the matching manifest and lockfile.
 3. Push and let Vercel rebuild
 
 If you get the `ERESOLVE` peer-dependency error specifically, it means two packages want incompatible versions of the same thing. Run the install locally — npm will print the exact conflict — and resolve it there, not by guessing.
@@ -123,7 +123,7 @@ Type error: Cannot find module '@/components/Logo' or its corresponding type dec
      }
    }
    ```
-3. Escape hatch only: `typescript: { ignoreBuildErrors: true }` in `next.config` will skip the check. I've used it to ship on a Friday. It's a bad permanent state — the errors don't go away, they just move from build time to runtime, where they're harder to see.
+3. `typescript: { ignoreBuildErrors: true }` skips a check rather than fixing the error. Prefer resolving the type error before deploying.
 
 ## 4. The build command or output directory is wrong
 
@@ -176,14 +176,19 @@ One rate-limit gotcha while you're iterating on builds: the Hobby plan caps you 
 Before your next push, run these locally:
 
 ```bash
-rm -rf node_modules && npm install   # clean install, like Vercel does
+npm ci   # clean install, like Vercel does
 npm run build                        # full build, like Vercel does
 ```
 
-If both pass locally, your odds of a green first deployment go way up. It's the same check I tell everyone to run in the [first-deploy guide](/deploy/deploy-first-app-vercel/) — it exists because I skipped it once and paid for it with those twenty minutes.
+A successful clean install and build narrow the remaining differences to deployment settings and the remote environment. See the [first-deploy checks](/deploy/deploy-first-app-vercel/).
 
 ## Next steps
 
-Fix the build, and you're back to the fun part: the thing actually being online. If red deployments are becoming a pattern and your project is mostly static, it's worth knowing that [Cloudflare Pages and Vercel trade blows differently](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) — I run projects on both, and build behavior is one of the places they genuinely differ. And once the deploy is green, the next milestone is a custom domain — here's [how to point a domain at Vercel](/deploy/vercel-custom-domain-setup/) when you're ready, or [whether transferring the domain is even worth it](/deploy/transfer-domain-to-vercel/).
+Once the build succeeds, check the deployed page and [connect the custom domain](/deploy/vercel-custom-domain-setup/). If the host is a poor fit for the app’s output or commercial use, use the [hosting checklist](/deploy/vercel-vs-netlify-vs-cloudflare-pages/).
 
 And when the deploy has stayed green for a week, the next wall stops being technical. Usually the reason you wanted this thing deployed is to charge for it, and that turns out to be [taking money without a Stripe account](/payments/getting-paid-without-stripe-kofi-paypal/) — fees, payouts, and the parts nobody explains up front.
+
+## Official references
+
+- [Troubleshooting builds](https://vercel.com/docs/deployments/troubleshoot-a-build)
+- [Deployment retention](https://vercel.com/docs/deployment-retention)

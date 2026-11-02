@@ -2,7 +2,7 @@
 title: "Vercel Custom Domain Setup: Namecheap & Cloudflare Records"
 description: "Vercel custom domain setup for Namecheap & Cloudflare: the exact DNS records (A + CNAME), auto SSL, www vs apex, and the mistakes that break verification."
 pubDate: 2026-08-06
-updatedDate: 2026-10-21
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -24,9 +24,9 @@ faq:
 
 Your app is live on a `*.vercel.app` subdomain, and now you want it on a real domain. Good call — nothing says "weekend toy" like a free subdomain, and a proper domain costs about $10 a year.
 
-I did this for a Next.js side project I hosted on Vercel. The actual work is two DNS records and about 10 minutes of clicking; the waiting for DNS propagation is what pads it out. This guide covers the two registrars I see most often — Namecheap and Cloudflare — because their DNS screens are where people get lost.
+This walkthrough connects an existing domain to a Vercel deployment using the DNS records shown in the project dashboard. Namecheap and Cloudflare examples illustrate where to edit those records.
 
-If you haven't deployed yet, do that first: [my 15-minute Vercel deploy guide](/deploy/deploy-first-app-vercel/) gets you from local folder to live URL. And if you bought a domain through Cloudflare and are wondering whether to just host there too, I [compared Vercel, Netlify, and Cloudflare Pages](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) after using all three.
+Deploy the app first using the [first-deploy guide](/deploy/deploy-first-app-vercel/). If the host is still undecided, compare [output types and runtime requirements](/deploy/vercel-vs-netlify-vs-cloudflare-pages/).
 
 ## What this guide covers
 
@@ -102,13 +102,13 @@ This isn't superstition. Vercel's own docs say a proxied record sits between pub
 
 Instead of adding A/CNAME records at your registrar, you can hand your whole DNS over to Vercel: at your registrar, change the domain's nameservers to `ns1.vercel-dns.com` and `ns2.vercel-dns.com`, and Vercel manages every record for you.
 
-I don't recommend this for a first domain. Nameserver changes propagate more slowly than record edits, and once you switch, your registrar's DNS screen stops working — all future records (email, verification TXT, subdomains) must be added in Vercel's dashboard instead. The A + CNAME approach above keeps your DNS where the rest of your stuff lives. The nameserver route is really for wildcard domains or people who want everything inside Vercel.
+A nameserver switch requires planning for all existing DNS records. Nameserver changes propagate more slowly than record edits, and once you switch, your registrar's DNS screen stops working — all future records (email, verification TXT, subdomains) must be added in Vercel's dashboard instead. The A + CNAME approach above keeps your DNS where the rest of your stuff lives. The nameserver route is really for wildcard domains or people who want everything inside Vercel.
 
 ## Step 3: Verification and SSL
 
 Back in **Settings → Domains** on Vercel, watch the status next to your domain. It starts as "Pending" or shows a configuration warning, then flips to a healthy state once Vercel sees your records.
 
-In my experience with Namecheap and Cloudflare, this takes 5 to 30 minutes. The official line is that DNS propagation can take up to 48 hours, but I've never seen it take more than an hour with these two registrars.
+DNS changes are not instantaneous. Check authoritative answers and the project’s verification state instead of relying on a fixed waiting-time estimate.
 
 Once verified, Vercel automatically provisions a free SSL certificate (via Let's Encrypt). You don't configure anything — your site just works on `https://`. If you visit too early and get a certificate error in the browser, that's normal; give it a few more minutes.
 
@@ -116,7 +116,7 @@ Once verified, Vercel automatically provisions a free SSL certificate (via Let's
 
 You now have both `yourapp.com` and `www.yourapp.com` serving your app. Don't leave it that way — two live URLs split your SEO signals.
 
-In **Settings → Domains**, Vercel lets you set a redirect from one to the other. I redirect the apex to `www` (which is also what Vercel recommends), but honestly either direction is fine. What matters is that one canonical URL answers and the other 301-redirects to it.
+Choose one preferred hostname and configure the other to redirect to it. Verify the redirect response and canonical URL after deployment.
 
 ## When it doesn't work
 
@@ -124,10 +124,15 @@ In **Settings → Domains**, Vercel lets you set a redirect from one to the othe
 
 **Stuck on pending or "Invalid Configuration" for over an hour.** Check, in order: leftover parking records at your registrar (delete them), Cloudflare proxy still on (switch to DNS only), a typo in the CNAME value (re-copy from Vercel, don't type it). To see what the internet actually sees, run `dig yourapp.com +short` — it should return `76.76.21.21`. If it returns a Namecheap parking IP, old records are still live.
 
-**SSL errors after the domain resolves.** The certificate is issued after verification, not simultaneously. Wait 10 minutes. If it persists past an hour and you're on Cloudflare, that proxy is almost certainly on. And if you've checked both of those and the browser still refuses to load your site securely, I broke down the remaining causes one by one — cert errors, redirect loops, CNAMEs that never validate, mixed content — in [Vercel custom domain SSL not working](/deploy/vercel-custom-domain-ssl-not-working/).
+**SSL errors after the domain resolves.** The certificate is issued after verification, not simultaneously. Wait 10 minutes. If it persists past an hour and you're on Cloudflare, that proxy is almost certainly on. And if you've checked both of those and the browser still refuses to load your site securely, See the remaining causes one by one — cert errors, redirect loops, CNAMEs that never validate, mixed content — in [Vercel custom domain SSL not working](/deploy/vercel-custom-domain-ssl-not-working/).
 
 ## Next steps
 
-Domain connected, SSL green padlock, canonical URL picked — your app now looks like a real product. But if the domain connects and instead you get a "not secure" warning or a redirect loop, my [Vercel SSL troubleshooting guide](/deploy/vercel-custom-domain-ssl-not-working/) covers the exact Cloudflare and DNS fixes. If you're wondering why that padlock matters beyond appearances (and whether you'd ever need to buy a certificate), I answered that in [do you need to buy an SSL certificate?](/deploy/do-i-need-to-buy-ssl-certificate/) — short version: no. And if this DNS stuff felt like magic incantations, my [beginner's guide to buying a domain and setting up DNS](/deploy/buy-domain-set-up-dns/) makes the records actually make sense.
+Domain connected, SSL green padlock, canonical URL picked — your app now looks like a real product. But if the domain connects and instead you get a "not secure" warning or a redirect loop, the [Vercel SSL troubleshooting guide](/deploy/vercel-custom-domain-ssl-not-working/) covers the exact Cloudflare and DNS fixes. If you're wondering why that padlock matters beyond appearances (and whether you'd ever need to buy a certificate), I answered that in [do you need to buy an SSL certificate?](/deploy/do-i-need-to-buy-ssl-certificate/) — short version: no. And if this DNS stuff felt like magic incantations, the [beginner's guide to buying a domain and setting up DNS](/deploy/buy-domain-set-up-dns/) makes the records actually make sense.
 
 The question after this one is rarely technical. You just spent $10 on a name and ten minutes on DNS, so the obvious next thought is how the site starts paying that back — [the ad layer that needs a verified domain first](/monetize/google-adsense-on-astro/) is where most people go, and the approval review is the part that actually stops them.
+
+## Official references
+
+- [Adding a domain](https://vercel.com/docs/domains/working-with-domains/add-a-domain)
+- [Cloudflare DNS records](https://developers.cloudflare.com/dns/manage-dns-records/)

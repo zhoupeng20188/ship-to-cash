@@ -2,6 +2,7 @@
 title: "Module Not Found on Vercel (Works Locally): 5 Causes & Fixes"
 description: "Module not found on Vercel but works locally? The build server isn't your laptop. The 5 real causes — case mismatches, Git traps, missing deps — and fixes."
 pubDate: 2026-08-13
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -27,7 +28,7 @@ First, though, read the error properly, because it tells you which cause you hav
 - `Can't resolve './...'` or `'@/...'` — a **local file path** problem (causes 1–3)
 - `Can't resolve 'some-package'` — an **npm dependency** problem (causes 4–5)
 
-Vercel's build logs are genuinely the clearest of the big three hosts here — one of the things I noted when I [compared Vercel, Netlify, and Cloudflare Pages](/deploy/vercel-vs-netlify-vs-cloudflare-pages/). The answer is always in that red line.
+Read the unresolved import path in the build log. The [hosting checklist](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) explains why local and hosted environments can differ.
 
 ## Cause 1: Case mismatch (the usual suspect)
 
@@ -73,7 +74,7 @@ Then commit **both** `package.json` and your lockfile (`package-lock.json`, `pnp
 
 Rare, but real: Vercel caches your build to make deploys faster, and occasionally that cache holds onto an old state — a path that existed two commits ago, a half-installed dependency tree.
 
-The fix is a clean rebuild. In **Deployments**, click **⋯ → Redeploy** on the latest deployment, and in the dialog **uncheck "Use existing Build Cache"**. (I wrote about the [redeploy flow and what that checkbox does](/deploy/deploy-first-app-vercel/) — unchecked means a full clean build.)
+The fix is a clean rebuild. In **Deployments**, click **⋯ → Redeploy** on the latest deployment, and in the dialog **uncheck "Use existing Build Cache"**. (See the [redeploy flow and what that checkbox does](/deploy/deploy-first-app-vercel/) — unchecked means a full clean build.)
 
 Do this one *last*. Clearing the cache won't fix a genuine casing or dependency problem — the error will come right back, just slower.
 
@@ -90,3 +91,8 @@ That order resolves essentially every instance of this error. "Works on my machi
 ## Next steps
 
 Error cleared, deploy green. If you hit a *different* failure next — build succeeds but the app misbehaves, or environment variables come up undefined — those are their own rabbit holes with their own fixes, and this series covers them. The foundation everything builds on is the [first deploy walkthrough](/deploy/deploy-first-app-vercel/) if you landed here from a search and want the full picture.
+
+## Official references
+
+- [Troubleshooting builds](https://vercel.com/docs/deployments/troubleshoot-a-build)
+- [npm clean install](https://docs.npmjs.com/cli/v11/commands/npm-ci)

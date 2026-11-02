@@ -2,6 +2,7 @@
 title: "Environment Variables on Vercel: Where API Keys Live"
 description: "Where do your API keys actually go on Vercel? How to add environment variables, why they stay undefined until you redeploy, and the prefix that leaks keys."
 pubDate: 2026-08-31
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -17,7 +18,7 @@ faq:
     answer: "Production applies to your main deployment, Preview to pull-request and branch deployments, and Development to anything run locally with the Vercel CLI. You can give each environment different values — a live Stripe key in Production, a test key everywhere else — and you can leave a variable unset in one environment on purpose."
 ---
 
-A friend asked me to look at his app last week. It built fine, the homepage loaded, but every button that touched an API returned `401 Unauthorized`. He'd spent two evenings on it. The whole bug was one missing environment variable — the key existed in his local `.env`, and he'd assumed Vercel would just pick it up somehow.
+An app can build successfully but return `401 Unauthorized` when a server-side API key is missing. A value in your local `.env` file is not automatically configured in the hosted project.
 
 That's the mental model almost every new vibe coder starts with, and it's wrong in a way that costs real time. Your laptop and Vercel are two different machines. Nothing about your `.env` travels to Vercel unless you explicitly put it there. This guide covers how that actually works, where keys should live, and the three mistakes that leak them.
 
@@ -42,10 +43,10 @@ The point isn't secrecy for its own sake — it's that the same code can run in 
 The hardcoded version feels harmless when it's just you and a personal project. It is not harmless, for three reasons:
 
 1. **Git never forgets.** Once a key is committed, deleting it later doesn't help — it's in the history. The only reliable fix is rotating the key, which means regenerating it everywhere and updating every reference.
-2. **Bots scrape public repos for keys within minutes.** OpenAI, Stripe, and Supabase all run automated key detection, but attackers run their own scrapers that don't wait for the official warning email. The first I heard about one of my leaked keys was a $60 bill, not a notification.
+2. **Treat a published secret as compromised.** Revoke or rotate it at the provider and remove it from the repository. Deleting the latest copy does not erase Git history.
 3. **You'll deploy to more than one place.** Vercel for the site, a cron somewhere, a second project for testing. Hardcoded keys means editing code for every one of them; variables means changing one value.
 
-I still remember the first time I got burned: I shipped a little tool with a key hardcoded in the front end because "it's just a side project." The key showed up in the browser source, and within a few hours someone was using it. Nothing important was lost — it was a free-tier key — but it taught me that "just a side project" is exactly where you're most likely to be sloppy, because you're moving fast.
+A key embedded in browser JavaScript is visible to visitors. Keep server credentials in the server environment; use frontend-exposed variables only for values intended to be public.
 
 ## The local setup: your .env file
 
@@ -73,7 +74,7 @@ Here's the part that trips everyone up. Your `.env` on your laptop does *not* ge
 
 If you have a lot of variables, you can also paste the whole `.env` file's contents into the bulk editor in the same screen. Just make sure it's the *production* values, not leftover test values.
 
-These steps assume your project is already on Vercel. If it isn't yet, start with my [walkthrough for deploying your first app to Vercel](/deploy/deploy-first-app-vercel/) and come back once it's live — you need an existing deployment before any of this has somewhere to apply.
+These steps assume your project is already on Vercel. If it isn't yet, start with the [walkthrough for deploying your first app to Vercel](/deploy/deploy-first-app-vercel/) and come back once it's live — you need an existing deployment before any of this has somewhere to apply.
 
 ## The three environments, and why they matter
 
@@ -89,7 +90,7 @@ This exists so you can keep a live Stripe key in Production and a test key in Pr
 
 ## The redeploy gotcha
 
-This is worth its own heading because it's the single most common "bug" I hear about, and I've been the person causing it.
+Changing a setting does not modify an already-built deployment. Rebuild and confirm the target environment.
 
 You add a variable, click Save, refresh your site, and... still undefined. You check the name three times. It matches. You start Googling.
 
@@ -98,7 +99,7 @@ The variable is there. It just isn't in the *deployment that's currently running
 - **Added or changed a variable?** Redeploy.
 - **Still undefined after redeploying?** Check whether your framework inlines it at build time (see the prefix section below) — if so, confirm you're actually redeploying, not just editing the variable.
 
-I burned a full evening on this exact loop before I learned it. If your build itself is failing rather than returning `undefined`, I keep a running list of [the Vercel build failures I hit most often](/deploy/vercel-build-failed/) and what fixed each one.
+If the build fails rather than producing an undefined value at runtime, inspect the [build-stage errors](/deploy/vercel-build-failed/).
 
 ## The prefix trap that leaks keys
 
@@ -129,6 +130,11 @@ The whole flow, end to end:
 
 Get this right once and it becomes invisible — you'll add a key in thirty seconds and never think about it again. That's the goal: environment variables should be the boring plumbing you stop noticing, not a recurring source of mystery bugs.
 
-One platform caveat before you bookmark this page. Everything above is *Vercel's* rules, and Cloudflare Pages plays by different ones: there, an encrypted value exists for Pages Functions at runtime and nowhere else, so a build step that reads it gets nothing at all. If you've migrated a project — or you're about to, because Cloudflare's free plan allows commercial use — I broke down [why Cloudflare Pages environment variables come back undefined](/deploy/cloudflare-pages-environment-variables-not-working/) and how to tell its four causes apart before you start changing settings at random.
+One platform caveat before you bookmark this page. Everything above is *Vercel's* rules, and Cloudflare Pages plays by different ones: there, an encrypted value exists for Pages Functions at runtime and nowhere else, so a build step that reads it gets nothing at all. If you've migrated a project — or you're about to, because Cloudflare's free plan allows commercial use — See [why Cloudflare Pages environment variables come back undefined](/deploy/cloudflare-pages-environment-variables-not-working/) and how to tell its four causes apart before you start changing settings at random.
 
 When you're ready to go further with your deployed app, the natural next step is a real database — which brings its own `DATABASE_URL` variable into the mix. And once your app starts talking to a payment provider, the keys you're guarding here become actual money: before you open a Stripe account, read my breakdown of [merchant of record vs payment processor](/payments/merchant-of-record-vs-payment-processor/) — it decides who files your sales tax, and it's the kind of thing you want to understand before your first charge, not after.
+
+## Official references
+
+- [Vercel environment variables](https://vercel.com/docs/environment-variables)
+- [Astro environment variables](https://docs.astro.build/en/guides/environment-variables/)

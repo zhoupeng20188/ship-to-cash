@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { PROVIDERS, RATES_VERIFIED } from '../../data/fees';
+import { PROVIDERS } from '../../data/fees';
 
 const TITLE = 'Reverse Fee Calculator for Digital Products';
 const DESCRIPTION =
@@ -192,7 +192,7 @@ const faqLd = {
 
             <p id="provider-note" class="mt-2 text-xs text-ink-500 leading-relaxed"></p>
             <p class="mt-1 text-xs text-ink-400">
-              Rates read from each provider's pricing page in {RATES_VERIFIED}. Override them below if yours differ.
+              Presets are modelling assumptions. Check the linked pricing page and your agreement, then enter your actual fees below.
               <a id="provider-source" href="#" target="_blank" rel="noopener nofollow" class="hidden text-brand-600 hover:underline">Official pricing</a>
             </p>
           </div>

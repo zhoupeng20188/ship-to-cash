@@ -33,17 +33,35 @@ import { SITE } from '../config/site';
         taking real money from real users, and not getting into legal trouble doing it.
       </p>
       <p>
-        I ship on Cloudflare Pages with auto-deploy from GitHub — it's the setup I use for
-        everything. A big part of what I write about is the gap Stripe doesn't cover: how do you
-        actually get paid when Stripe won't open an account in your country? I dig into the
-        workarounds — Ko-fi, PayPal, Paddle — and the tax and payout trade-offs nobody explains
-        up front. The goal is the same for every guide here: take you from "it runs on my laptop"
-        to "strangers are paying me for this."
+        ShipToCash focuses on deployment, checkout integration, and the operational steps
+        between a working prototype and a public product. This site itself uses Astro
+        to generate static pages, with its content maintained in a Git repository.
+      </p>
+      <h2 id="editorial-standards">Editorial standards</h2>
+      <p>
+        Guides combine explanations, documentation references, and worked examples.
+        An example is not a report of a customer transaction or a production test.
+        Where a guide describes a recorded test, it should identify the environment,
+        steps, and observed result. We do not claim every service or scenario has been
+        tested on the author's own account.
       </p>
       <p>
-        Every guide here is something I've actually done, on the current version of the tool.
-        If a step is missing a screenshot, it's because I forgot to take one — not because I'm
-        hand-waving the hard part.
+        AI tools assist with drafting and code review. AI output is not evidence of
+        first-hand experience. Prices, limits, eligibility, and API behavior should be
+        checked against the linked provider documentation and your own account before use.
+        Publication dates describe publication; update dates describe edits, not necessarily
+        a complete retest of every step.
+      </p>
+      <p>
+        Hypothetical calculations are labelled as examples. Payment and business-structure
+        articles distinguish provider responsibilities from the seller's local obligations.
+        ShipToCash does not provide individualized legal or tax advice.
+      </p>
+      <p>
+        When a material error is reported, we review the relevant instructions and update
+        the page. Please use the <a href="/contact/">contact page</a> to identify the URL,
+        affected step, and supporting documentation. If an article contains a paid or affiliate
+        relationship, it should disclose that relationship beside the relevant recommendation.
       </p>
       <p>
         I also write about AI tools over at
@@ -56,12 +74,23 @@ import { SITE } from '../config/site';
         good place to start.
       </p>
 
+      <h2>Recorded verification lab</h2>
+      <p>
+        The payment and delivery guides include a
+        <a href="https://github.com/zhoupeng20188/shiptocash-verification-labs/tree/6537765e7d9493673e744602e388f5cd06b7a2c9/payment-delivery-lab">separate source repository</a>
+        with fixed versions, commands, source hashes, and a recorded 45-check run.
+        These are synthetic local experiments, not real customer transactions.
+        Start with the <a href="/payments/lemon-squeezy-webhook-signature-astro/">webhook case</a>
+        or the <a href="/payments/send-download-link-after-payment-no-backend/">download case</a>
+        to see what was measured and what remains outside the experiment.
+      </p>
+
       <h2>What you'll find here</h2>
       <ul>
         <li><strong>Deploy</strong> — hosting, domains, HTTPS, databases</li>
         <li><strong>Payments</strong> — Stripe, Paddle, Lemon Squeezy, taxes (and what to do when Stripe says no)</li>
         <li><strong>Monetize</strong> — ads, subscriptions, pricing</li>
-        <li><strong>Legal</strong> — privacy policies, GDPR, terms</li>
+        <li><strong>Tools</strong> — fee calculations with editable assumptions</li>
       </ul>
 
       <h2>Get in touch</h2>

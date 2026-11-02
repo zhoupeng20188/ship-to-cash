@@ -2,6 +2,7 @@
 title: "Lemon Squeezy Black Friday Discount: Full Setup"
 description: "Build a Lemon Squeezy Black Friday discount that starts and ends on time: the four timing fields, the encoded checkout link, and the kill switch."
 pubDate: 2026-10-28
+updatedDate: 2026-11-02
 category: monetize
 difficulty: intermediate
 author: "Peng Zhou"
@@ -23,9 +24,9 @@ faq:
 
 Black Friday 2026 is Friday, November 27, and Cyber Monday is November 30. If you sell a template, a plugin, or a license key, that is four weeks away — enough time to set the discount up properly instead of doing it at 11 PM on Thanksgiving.
 
-I have watched this go wrong in both directions. One year the code went live two days early, and the people who had paid full price the week before noticed. Another year it simply never stopped — it stayed valid into January, and every new buyer for six weeks got 30% off a price I had spent months establishing.
+A promotion can start earlier than intended or remain available after the advertised deadline. Test the schedule and disable the code when necessary.
 
-Both failures come from the same place. In the Lemon Squeezy dashboard, creating a discount feels like a two-field form — a code and a percentage. But *when* a discount is usable is actually spread across four separate fields that do four different things, and the form does not tell you that. This is the setup I use now, with the exact fields and the two traps that cost me money.
+Check code validity, redemption limits, product eligibility, and subscription duration separately. A percentage alone does not define the campaign.
 
 ## The four fields that actually control timing
 
@@ -48,7 +49,7 @@ The official [Discount object reference](https://docs.lemonsqueezy.com/api/disco
 
 Create it in advance with `status` set to `draft`. That single choice is the difference between "scheduled" and "oh no, it is live."
 
-This is the payload I use for a 30% Black Friday code on a one-time product:
+Illustrative payload for a 30% discount on a one-time product; replace the IDs, schedule, and limits for your store:
 
 ```bash
 curl -X POST "https://api.lemonsqueezy.com/v1/discounts" \
@@ -95,7 +96,7 @@ The parameter is `checkout[discount_code]`, and the brackets must be percent-enc
 
 [Remkus de Vries documented the pattern](https://remkusdevries.com/notes/adding-discount-code-to-lemon-squeezy-product-link) after hitting the same gap in the official docs, and it is still the clearest explanation of how the two pieces combine.
 
-Two rules I follow for the link itself:
+Two checks for the link itself:
 
 - **One link per channel.** `-email`, `-x`, `-newsletter` suffixes on separate codes, so the week after the sale you can say which channel actually converted instead of guessing.
 - **The link is the announcement.** Put it in the email, the post, and the link-in-bio. If the discount lives in the code and not the link, half your traffic never sees it.
@@ -104,11 +105,11 @@ If your checkout is embedded on a static page instead, the [static-site checkout
 
 ## Step 3: end it on purpose
 
-`expires_at` handles the scheduled ending, which covers 95% of cases. Keep a manual switch for the other 5%.
+`expires_at` defines the scheduled ending. Keep a manual disable option for an early stop.
 
 Setting the discount's `status` to `draft` is an instant off switch. Checkout stops accepting the code immediately, and unlike deleting the discount, your redemption history survives. That history is the single most useful number you will have on December 1 — how many people actually used it, and at what average order value.
 
-I have needed that switch twice: once when a product hit its support capacity and the code was still driving buyers at it, and once when a large account shared the deal and I wanted to cap the damage rather than ride it.
+Use the disabled state when you need to stop redemption, and verify the public checkout afterward.
 
 Avoid deleting a discount mid-sale. It works, but it takes the redemption records with it, and next year you will be starting from zero on the one question that matters: was 30% the right number, and [what did it leave you after the fee](/tools/fee-reverse-calculator/)?
 

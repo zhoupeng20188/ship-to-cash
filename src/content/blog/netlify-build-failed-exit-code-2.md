@@ -2,6 +2,7 @@
 title: "Netlify Build Failed: What Exit Code 2 Actually Means (3 Fixes)"
 description: "'Build script returned non-zero exit code: 2' on Netlify isn't the real error. Here are the 3 causes behind it, ranked, with the exact fix for each."
 pubDate: 2026-09-18
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
@@ -28,7 +29,7 @@ My Netlify deploy log ended like this:
 9:34:15 PM: Failed during stage 'building site': Build script returned non-zero exit code: 2
 ```
 
-The first time it happened, I did what the top Stack Overflow answer said and set `CI` to `false` in my environment variables. Same failure, same exit code. Then I cleared the cache. Same failure. The actual error turned out to be about fourteen lines above the exit code, and it had nothing to do with CI.
+Do not begin by disabling CI or clearing caches at random. Find the first failing command above the final exit-code summary and choose a fix for that specific error.
 
 Here's the thing about this message: **the number is not the error.** Netlify's own support guide says as much about its near-identical cousin, `Build script exited with Error 1` — that it "is a SYMPTOM of some prior error from your build script." Exit code 2 works exactly the same way. It tells you your build command ended with a non-zero status. It does not tell you why.
 
@@ -163,8 +164,13 @@ CI=true npm run build  # build the way Netlify builds
 git stash pop
 ```
 
-Two commands, and it reproduces the two failures that account for most exit code 2 deploys. It's the same check I suggest in the [first-deploy guide](/deploy/deploy-first-app-vercel/) — it exists because I skipped it and spent those twenty minutes reading a log from the bottom.
+Run a clean install and the actual build command to distinguish dependency installation from compilation. The [first-deploy guide](/deploy/deploy-first-app-vercel/) explains the same separation.
 
 ## Next steps
 
 Once the deploy is green, the two things people hit next are both environment-shaped. If a variable you set in the UI comes back `undefined` at build time, that's a different failure with its own causes — here's the Vercel version of [environment variables not reaching the build](/deploy/vercel-environment-variables/), and the [Cloudflare Pages version](/deploy/cloudflare-pages-environment-variables-not-working/) if that's where the project lives. And if you're picking a host rather than debugging one, [Vercel, Netlify, and Cloudflare Pages fail differently](/deploy/vercel-vs-netlify-vs-cloudflare-pages/) — build behavior is one of the places the difference actually shows up. After that it's a domain: [pointing one at your deployment](/deploy/vercel-custom-domain-setup/).
+
+## Official references
+
+- [Netlify build troubleshooting](https://docs.netlify.com/build/configure-builds/troubleshooting-tips/)
+- [npm clean install](https://docs.npmjs.com/cli/v11/commands/npm-ci)

@@ -1,104 +1,67 @@
 ---
-title: "Vercel vs Netlify vs Cloudflare Pages: I Deployed to All Three"
-description: "Honest comparison of the three big free static hosts — Vercel, Netlify, and Cloudflare Pages — after deploying real apps to each. Which one for your first app?"
+title: "Vercel vs Netlify vs Cloudflare Pages: Deployment Checklist"
+description: "Compare hosting by output type, runtime compatibility, commercial terms, and billing. Includes a migration checklist for static Astro sites."
 pubDate: 2026-08-04
+updatedDate: 2026-11-02
 category: deploy
 difficulty: beginner
 author: "Peng Zhou"
 image: /og-vercel-vs-netlify-vs-cloudflare-pages.jpg
 faq:
-  - question: "Can I use Vercel's free tier for a commercial project?"
-    answer: "No. The Hobby plan is licensed for non-commercial use only. If your app makes money (ads, subscriptions, sales), you need Vercel Pro at $20/month — or use Cloudflare Pages, which allows commercial use on the free plan."
-  - question: "Can I switch hosts later without rebuilding my app?"
-    answer: "Yes. All three deploy from the same Git repository. Moving means connecting your repo to the new host, updating your DNS records, and waiting for propagation — usually under an hour of actual work."
-  - question: "Do any of them require a credit card for the free tier?"
-    answer: "No. Vercel, Netlify, and Cloudflare Pages all let you sign up and deploy without a credit card."
+  - question: "Is a free Vercel Hobby project suitable for commercial use?"
+    answer: "The Hobby documentation limits it to personal, non-commercial use. Check an eligible plan before launching a commercial project."
+  - question: "Can every app move between these hosts unchanged?"
+    answer: "No. Static files are portable, but server adapters, runtime APIs, secrets, storage, redirects, and functions may need changes."
+  - question: "Should I compare only bandwidth allowances?"
+    answer: "No. Include builds, requests, runtime work, storage, commercial terms, and any add-ons in the comparison."
 ---
 
-Picking a host is the first decision that actually matters after your app works locally. The three names you'll see everywhere are Vercel, Netlify, and Cloudflare Pages — all free to start, all deploy from Git, all handle HTTPS for you.
+Choose a host by what your app produces: static files, server-rendered pages, functions, or a mixture. A static Astro site and a Next.js app with server actions do not have the same hosting requirements.
 
-I've deployed real projects to all three — this site included. This isn't a feature-list regurgitation; it's what actually differs when you use them, and which one I'd hand to someone deploying their first app today.
+This is a documentation-based comparison and a deployment checklist, not a benchmark of speed or reliability. Plan terms and account allowances can change; check the provider's current pages before committing a commercial project.
 
-My test setup, so you know where the opinions come from: a Next.js side project (Vercel, then migrated), an Astro content site (Cloudflare Pages), and a handful of client demos (Netlify, back when it was my default). So I've hit the real limits of each, not just read the pricing pages.
+## Classify the output first
 
-## The short answer
+Run your build locally. A directory of HTML, CSS, JavaScript, and images can use static hosting. An app that needs server rendering, database credentials at request time, or payment webhooks also needs a compatible runtime.
 
-- **Deploying your very first app?** Use **Vercel**. The onboarding is the smoothest and the error messages are the most readable. (My [step-by-step Vercel guide](/deploy/deploy-first-app-vercel/) takes about 15 minutes.)
-- **Expecting real traffic, or monetizing from day one?** Use **Cloudflare Pages**. Unlimited bandwidth, commercial use allowed, free.
-- **Netlify** is fine, but in 2026 it's the third choice for most people — keep reading for why.
+ShipToCash is an example of the first case: its `astro.config.mjs` has no server adapter, and its `build` script runs `astro build`. Its guides generate static routes from a content collection. You can inspect the same signals in your own repository.
 
-## What they have in common (so you can stop worrying)
+| Requirement | What to check before choosing |
+|---|---|
+| Static pages | Build command, output directory, redirects, custom headers |
+| Server-rendered routes | Supported framework adapter and runtime APIs |
+| Payment webhooks | Public POST endpoint, secrets, signature verification, storage |
+| Client-side SPA routes | Fallback routing without masking genuine missing assets |
+| Commercial project | Plan terms as well as technical quotas |
 
-All three give you: Git-based auto-deploys, preview URLs for pull requests, free HTTPS with auto-renewed certificates, a global CDN, custom domains, and no credit card required. If you pick any of them, your app will be fast and secure.
+## Vercel: check framework support and commercial terms
 
-The differences are in pricing limits, framework support, and developer experience.
+Vercel is a practical option to evaluate for a Next.js application. For a static project, check the detected build command and output directory before the first deployment. The [first-deploy guide](/deploy/deploy-first-app-vercel/) walks through that workflow.
 
-## Vercel: the best first-deploy experience
+The [Hobby plan documentation](https://vercel.com/docs/plans/hobby) limits that plan to personal, non-commercial use. A sales site should assess a suitable commercial plan rather than assuming that low traffic makes the free tier eligible. Plan suitability and technical capacity are separate questions.
 
-Vercel makes Next.js, so its tooling is the most polished for React/Next apps — but it handles Astro, Vite, SvelteKit, and plain HTML just as well.
+If the build runs but fails, start with the [build diagnostic table](/deploy/vercel-build-failed/). If a push produces no deployment entry, use the [Git trigger checks](/deploy/vercel-git-push-not-triggering-deploy/) instead.
 
-**What I like:**
-- Framework detection is right almost every time. You click Import, it figures out the rest.
-- Build logs are the clearest of the three. When a deploy fails, the error usually tells you the actual cause.
-- Preview deployments are the most mature — every PR gets a URL you can share.
+## Netlify: check the billing model on your account
 
-**The catch:**
-- **Hobby tier is non-commercial only.** Running AdSense or charging users on a Hobby account violates the terms. The moment you monetize, that's $20/month for Pro.
-- 100 GB/month bandwidth sounds like a lot, and it is — until something goes viral. Then you're paying or migrating.
+Use [Netlify's current pricing page](https://www.netlify.com/pricing/) and your account dashboard. Do not reuse an old table of monthly build minutes and bandwidth as if it described every current account. Also inspect function usage, requests, and any add-ons the project enables.
 
-## Netlify: the original, now mostly middle-of-the-road
+For a static app, confirm the publish directory. For an SPA, configure fallback routing deliberately. A build exit code alone does not identify the failure; [the Netlify error guide](/deploy/netlify-build-failed-exit-code-2/) explains how to find the earlier error.
 
-Netlify basically invented this category of Git-based static hosting, and it's still solid. But it hasn't pulled ahead anywhere that matters for a first app.
+## Cloudflare Pages: distinguish assets from Functions
 
-**What I like:**
-- Built-in form handling and split testing — nice if you need them, you probably don't yet.
-- Very framework-agnostic. No favorite child.
+Cloudflare Pages can publish a static build directory and run Pages Functions for request-time logic. Their limits and runtime behavior differ. Use the [Pages limits documentation](https://developers.cloudflare.com/pages/platform/limits/) for builds and assets, and check function limits separately when adding backend behavior.
 
-**The catch:**
-- The free tier limits **build minutes to 300/month**. Sounds fine until you're iterating with an AI tool and pushing 20 times a day — a 2-minute build means 150 deploys and you're done for the month. I've hit this ceiling. It's annoying.
-- Smaller free bandwidth (100 GB) and a community that's quieter than the other two.
-- Build failures report differently there, too: you get `build script returned non-zero exit code: 2` rather than a framework error, and [the three causes behind that Netlify error](/deploy/netlify-build-failed-exit-code-2/) catch out most first deploys.
-- Vercel's version of this confusion is quieter still: sometimes a push produces **no deployment at all**, not even a failed one. That's not a build error, it's a trigger that never fired — [the checks for a Vercel deploy that never starts](/deploy/vercel-git-push-not-triggering-deploy/) cover it.
+A build-time environment variable does not automatically become a secret available to a function. Before moving payment code, review [Pages environment variables and bindings](/deploy/cloudflare-pages-environment-variables-not-working/). Also verify that any Node APIs used by an integration work in the target runtime.
 
-## Cloudflare Pages: the one I actually use now
+## Compare a concrete workload
 
-Full disclosure: this is where my own projects live, including this site.
+Write down expected production deploys, preview deploys, asset size, requests, function calls, and any database or storage charges. Distinguish included allowances from paid overages and hard limits. Record the plan name and date beside any numbers you use.
 
-**What I like:**
-- **Unlimited bandwidth on the free plan.** Not "generous" — unlimited. A Reddit hug of death costs you nothing.
-- **Commercial use is allowed.** Ads, subscriptions, whatever — no tier upgrade required.
-- Cloudflare's network is genuinely one of the fastest on the planet, and your DNS, CDN, and host live in one place.
-- It plays well with Workers if you later need server-side logic.
+Avoid choosing on the phrase “unlimited bandwidth” alone. File-size, build, function, and acceptable-use constraints can still matter. A static documentation site may have negligible runtime cost while a small authenticated application spends most of its budget on functions and storage.
 
-**The catch:**
-- Developer experience is a notch below Vercel. The dashboard is busier, and error messages are terser.
-- If your app needs full server-side rendering (Next.js with API routes, for example), support exists via adapters but it's the roughest edge of the platform. For static/SSG sites — most first apps — you'll never notice.
+## Rehearse a move before changing DNS
 
-## Head-to-head
+Deploy the same commit to the candidate host using a preview URL. Check direct navigation, refreshes, missing routes, images, response headers, environment values, and any server endpoints. Keep private values out of client bundles.
 
-| | Vercel | Netlify | Cloudflare Pages |
-|---|---|---|---|
-| Free bandwidth | 100 GB/mo | 100 GB/mo | **Unlimited** |
-| Commercial use free | ❌ (Pro $20/mo) | ✅ | ✅ |
-| Build limit | 100 deploys/day | 300 build min/mo | 500 builds/mo |
-| Framework detection | Excellent | Good | Good |
-| Full SSR support | Excellent | Good | Okay (adapters) |
-| Dashboard/DX | Best | Good | Busy |
-
-## What about GitHub Pages, Render, and Railway?
-
-**GitHub Pages** is free and unlimited-ish, but it only serves plain static files — no build pipeline worth mentioning, no preview deployments, no serverless anything. It's where documentation sites live, not where your app should.
-
-**Render and Railway** are for apps with persistent backends (long-running Node servers, Docker containers, databases). If your AI tool built you a pure frontend or a framework app, you don't need them yet — and their free tiers either sleep your app (Render spins down after 15 minutes idle, meaning 30+ second cold starts for your visitors) or are time-limited trials (Railway). When you outgrow serverless, that's when these enter the conversation.
-
-## So which one?
-
-For a first app, I still say **Vercel** — when you're learning, clear error messages matter more than pricing theory. You'll deploy, break things, read logs, and learn.
-
-But here's the nuance most comparison posts skip: **if you already know you'll monetize** (AdSense, a paid tool, an affiliate site like this one), start on **Cloudflare Pages** instead. Migrating later is easy but not free of friction — you'll touch DNS, and DNS changes make everyone nervous. Starting where you'll end up saves that.
-
-And don't agonize. All three deploy from the same Git repo, so switching later is an hour of work, not a rebuild. The worst host decision is the one that delays your first deploy by a week.
-
-## Next steps
-
-Picked Vercel? Follow the [15-minute deploy guide](/deploy/deploy-first-app-vercel/). Picked Cloudflare Pages? The flow is nearly identical — connect GitHub, set build command to `npm run build`, output directory `dist`, done. Either way, next up is [setting up a custom domain on Vercel](/deploy/vercel-custom-domain-setup/) — and no, [transferring your domain to Vercel](/deploy/transfer-domain-to-vercel/) isn't required; pointing two DNS records at it is enough.
+Then [connect the custom domain](/deploy/vercel-custom-domain-setup/) using the records the chosen host supplies. Keep email records intact and keep the old deployment available until the new one is verified. Static files usually move easily; functions, provider-specific APIs, and stored data require a separate migration plan.
