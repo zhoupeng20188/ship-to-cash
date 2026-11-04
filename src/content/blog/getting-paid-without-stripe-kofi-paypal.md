@@ -16,7 +16,7 @@ faq:
     answer: "Do not assume so. Use a supported shop or delivery feature and verify the customer access flow."
 ---
 
-Ko-fi connected to PayPal is one route to evaluate when you cannot use a direct Stripe account. It is useful only if your PayPal account can receive the intended commercial payments and withdraw them to an available bank or card.
+Ko-fi connected to PayPal is one route to evaluate when you cannot use a direct Stripe account. It is useful only if your PayPal account can receive the intended commercial payments and withdraw them to an available bank or card. Where a Stripe account is available, [a static Astro page can take payments through a hosted Payment Link](/payments/stripe-payment-link-astro-static-site/) with no server at all.
 
 This is a setup checklist, not a record of this author's payouts. Account features, fees, and supported withdrawal methods depend on country and account type.
 

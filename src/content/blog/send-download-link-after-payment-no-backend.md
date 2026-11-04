@@ -24,7 +24,7 @@ This guide reproduces that failure using a **public canary file**, then checks a
 
 For a one-off ZIP, PDF, or template, hosted file delivery may be sufficient. [Lemon Squeezy's product documentation](https://docs.lemonsqueezy.com/help/products/adding-products) describes attaching files to products. Your [static Astro sales page](/payments/lemon-squeezy-checkout-astro-static-site/) can link to that hosted checkout without operating its delivery service.
 
-This experiment addresses the other case: your application needs to authorize downloads from private storage. That requires server-side logic, even if the sales page is static. A browser `?success=true` flag cannot prove payment. Stripe's [fulfillment documentation](https://docs.stripe.com/checkout/fulfillment) also separates fulfillment from the customer's return to a landing page.
+This experiment addresses the other case: your application needs to authorize downloads from private storage. That requires server-side logic, even if the sales page is static. A browser `?success=true` flag cannot prove payment. Stripe's [fulfillment documentation](https://docs.stripe.com/checkout/fulfillment) also separates fulfillment from the customer's return to a landing page. [Wiring the checkout side with Stripe Payment Links](/payments/stripe-payment-link-astro-static-site/) is a separate task and needs no server for a single product.
 
 ## Run the built application and checks
 

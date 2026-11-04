@@ -18,7 +18,7 @@ faq:
 
 When Stripe does not support your business country, another checkout button is not enough. You need a provider that can onboard you as the seller, accept your product, and pay out to an account you can legally use.
 
-Start with [Stripe's supported-country list](https://stripe.com/global). Customer card acceptance and the countries where sellers can open accounts are different lists. A buyer being able to pay with a card does not mean you can register a merchant account from any country.
+Start with [Stripe's supported-country list](https://stripe.com/global). Customer card acceptance and the countries where sellers can open accounts are different lists. A buyer being able to pay with a card does not mean you can register a merchant account from any country. If your country is on the seller list, skip this worksheet and go to [adding Stripe Payment Links to a static Astro site](/payments/stripe-payment-link-astro-static-site/).
 
 ## Build an eligibility worksheet
 

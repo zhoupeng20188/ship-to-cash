@@ -32,7 +32,7 @@ Evaluate the exact product and contract, not only a brand name. A company may of
 
 [Lemon Squeezy describes its MoR role](https://docs.lemonsqueezy.com/help/payments/merchant-of-record) and its [customer sales-tax handling](https://docs.lemonsqueezy.com/help/payments/sales-tax-vat). Those descriptions do not mean the platform handles every obligation of the supplier in every country.
 
-For direct payments, [Stripe Tax documentation](https://docs.stripe.com/tax) separates tax calculation from registration and reporting workflows. Confirm the services you enable and what you remain responsible for rather than assuming a standard checkout includes everything.
+For direct payments, [Stripe Tax documentation](https://docs.stripe.com/tax) separates tax calculation from registration and reporting workflows. Confirm the services you enable and what you remain responsible for rather than assuming a standard checkout includes everything. A processor-only setup such as [a static Stripe Payment Link](/payments/stripe-payment-link-astro-static-site/) leaves the whole tax and invoicing column on your side of the table.
 
 ## Check eligibility independently
 
