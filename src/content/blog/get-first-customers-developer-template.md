@@ -59,7 +59,7 @@ Record the date, audience, page URL, offer, channel, and result. Separate these 
 - Payment completes.
 - They receive and install the product.
 
-Do not count page views as customers or checkout starts as revenue. If using analytics, respect the site's consent and privacy choices. For a very small launch, support conversations and provider order records may reveal more than an elaborate funnel dashboard.
+Do not count page views as customers or checkout starts as revenue. If using analytics, respect the site's consent and privacy choices, and [verify the measurement layer first](/monetize/cloudflare-web-analytics-not-tracking-astro/): a zero-view dashboard can be a missing beacon rather than an empty audience. For a very small launch, support conversations and provider order records may reveal more than an elaborate funnel dashboard.
 
 ## Diagnose the point where people stop
 

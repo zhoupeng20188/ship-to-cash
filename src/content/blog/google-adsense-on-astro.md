@@ -60,7 +60,7 @@ rg 'pagead2.googlesyndication.com' dist/index.html
 cat dist/ads.txt
 ```
 
-Inspect an article HTML file too. Confirm the loader occurs once, the client ID matches your account, and the file includes the article content. After deploying, use View Source and the Network panel to check the public version.
+Inspect an article HTML file too. Confirm the loader occurs once, the client ID matches your account, and the file includes the article content. After deploying, use View Source and the Network panel to check the public version. The same output check applies to a statistics script: [checking whether the analytics beacon reaches the HTML](/monetize/cloudflare-web-analytics-not-tracking-astro/) takes one `grep` before any dashboard debugging.
 
 Record the result of each layer separately:
 

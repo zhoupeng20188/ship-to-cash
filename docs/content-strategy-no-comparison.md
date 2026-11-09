@@ -558,3 +558,56 @@ BreadcrumbList（Home > Tools > 工具页）+ **WebApplication**（含 `offers: 
 - `how-to-price-a-developer-template` 正文 **2060 词**（本轮之前就是 1997，属历史超限）。本轮只加 63 词做内链，未扩写。后续若要统一规格需单独压一次，压缩会动已发布内容，不在本轮范围。
 - 工具页文案是英文，未做 i18n。
 
+---
+
+## §4.18 选题日 SERP 实测与交付（2026-11-09）—— 跳出 LS / MoR，转向 Astro 脚本生命周期
+
+站点状态：33 篇（deploy 16 / payments 12 / monetize 5）；11-02 完成 AdSense 复审前整改（32 篇重写 / 纠错），11-04 发布 `stripe-payment-link-astro-static-site`。本轮实测 11 词，**8 判死、3 可打**。
+
+### 一、二次确认 LS / MoR 词族饱和（10-28 §4.16 结论成立）
+
+| 候选词 | 前 5 构成 | 判定 |
+|---|---|---|
+| lemon squeezy activation limit exceeded | 5/5 卖家给买家的帮助页（开发者侧 0 条） | △ 降 P2，词量仅数百 + 意图错配 |
+| lemon squeezy subscription payment failed / dunning | 对比站占 2 席 + 聚合 + 买家页 + Strapi FAQ 已写全 | ❌ |
+| lemon squeezy refund webhook | 厂商 recipe + 中文镜像 + skill 聚合 + npm 文档 + 对比文；与站内 webhook-not-firing / Paid Download Lab 双重内耗 | ❌ |
+| lemon squeezy customer portal | ethelab + apiscout 两条开发者教程已覆盖 | ❌ |
+| stripe payment link success url | Stripe 官方 **5/5**（含多语言镜像）；且 11-04 新文内耗 | ❌ |
+| ads.txt not found adsense | Google 官方 ×2 + WP 通用教程 ×3；google-adsense-on-astro 已覆盖 | ❌ |
+| adsense reapply after rejection | 5/5 检查工具站 / 代理站（wordpressadapproval 占 2 席），0 UGC；复审结果未出 | ❌ |
+| how to accept payments on static site no backend | 厂商软文 + AI 农场 3/5；与 getting-paid / stripe-payment-link 内耗 | ❌ |
+
+### 二、两个新蓝海（判据：看专属缺口，不数 UGC 条数）
+
+| 方向 | 前 5 构成 | 专属缺口 |
+|---|---|---|
+| **Cloudflare Web Analytics 零数据排查**（选它） | dev.to 一手 + CF Community + johal 3 分钟 AI 教程 + gmacario 个人博客 + 中文博客 = **3 条个人一手、官方 0 直接占位、大站 0** | 没人把「注入 / 拦截 / SPA 路由计数」按官方依据拆成按概率排序的三层；站内 0 覆盖且 `ga4Id` 仍为空 |
+| 静态站付费墙边界 | flaviocopes / ceaksan / abovethehook / indiepub / template0 = **4/5 个人一手架构文** | 4 篇全讲「怎么搭整套 SSR」，没人回答「纯静态能不能 gate」（Tearsheet 明确写 No） |
+
+⚠️ 数据源口径：本轮为通用实时检索，非纯 Google；按 §4.11，判「软不软」看有无专属缺口，不看 UGC 条数。
+
+### 三、写前核实带来的关键修正
+
+选题时假设「View Transitions 下 CF beacon 是否计数是无人验证的缺口」。写前逐页核实发现 **Cloudflare 有专门的 SPA 追踪文档**（`get-started/web-analytics-spa/`），明确列出 Soft Navigations API / Navigation API / patch `pushState` 三种自动机制及 `spa: false` 语法；FAQ 还写了 `no-transform`、CORS 主机名后缀匹配、CSP 的 `script-src` / `connect-src`、`/cdn-cgi/rum` 405 等真因。于是文章结构从「猜缺口」改成「按官方依据做三层排查」，并把官方声明与 dev.to / gmacario 的社区观察分开标注。
+
+🔴 **补一条判据**：除了「官方是否单页通吃根因」，还要看「官方是否已有专门子页」。有子页不等于判死，但**必须先把子页读完再定差异化**，否则会写出官方已覆盖的内容，或误把「没人验证」当成事实。
+
+### 四、交付：`cloudflare-web-analytics-not-tracking-astro.md`（monetize 第 6 篇）
+
+- 规格：正文 **1707 词**（去代码块）/ title 46 字符（渲染 59，带品牌）/ desc 145 / FAQ 7 条 / OG 61KB / 无 H1 / 无 custom-id。
+- 三类 schema 齐全（BlogPosting + BreadcrumbList + FAQPage），canonical 与 og:image 正确。
+- 结构：症状原文 → 5 秒 curl 验证 → 三层原因（注入 / 拦截 / 客户端路由计数，按概率排序）→ 每层修复 → 五层验证表 → 边界 → 行动清单。
+- 开头明确声明「documentation-based checklist，非本站在真实账户的实测」，所有行为断言挂官方链接；手动 Astro 组件标注 illustrative shape。遵守 11-02 整改红线。
+- 外链 **7 个唯一 URL**（3 个 CF 官方 + 2 个 Astro 官方 + dev.to 一手 + gmacario 个人博客），全部实测可访问；CF Community 那条 403，弃用不引。
+- 出链 **8 条**（全唯一、结尾斜杠），跨簇 **5 条**（deploy 3 + payments 2）。回链 **4 条**、锚文本互不相同：google-adsense-on-astro（"checking whether the analytics beacon reaches the HTML"）/ adsense-low-value-content-rejected（"Cloudflare Web Analytics not tracking on Astro"，保留核心词）/ get-first-customers（"verify the measurement layer first"）/ cloudflare-pages-env-vars（"another Cloudflare Pages setting that looks enabled but changes nothing"，跨簇）。
+- 差异化：串起站内已有 3 篇 `astro:page-load` 实证（Lemon.js `Refresh()`、AdSense loader、Stripe 自定义元素），并**明确反着用** —— CF FAQ 规定每页只能有一个 snippet，beacon 不能照搬 rebind 模式。
+- 分类决策：归 **monetize**（AdSense 簇延伸）。🔴 不归 tools（tools 下出现 content collection 文章会与手写 `src/pages/tools/index.astro` 同路径静默覆盖），不归 deploy（GSC 数据封盘）。
+- 校验：`npm run build` 44 页；`check-site.py` **0 错误**（2219 处链接/资源、331 锚点）；本地 4322 预览新文 / monetize hub / tools 均 200。git 仅 6 个文件变更（1 新文 + 1 OG + 4 篇回链老文），OG 批量重生成未引入无关改动。
+- 状态：**本地已建未推**（遵守 push 前口头确认）。
+
+### 五、下轮方向
+
+1. **静态站付费墙边界**（本轮 ★★★★ 未选）：前 5 全是一手架构文，缺口是「纯静态能不能 gate」，可当 payments 簇内链枢纽。写成架构教程需 lab，否则按「边界决策 + 官方导读」写并声明非实测。
+2. **卖家侧 license 自助门户**（10-28 #10 唯一可写角度）：词量小，P2。
+3. **Track A 仍是 ROI 最高的动作**：改 8 篇有展示低 CTR 的标题（traffic-breakout-plan §1.2），收益仍高于第 35 篇。
+

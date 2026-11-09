@@ -52,7 +52,7 @@ Search Console URL Inspection can help diagnose indexing and crawler access. Ind
 
 Prioritize broken instructions, unsafe examples, and unsupported legal or financial conclusions. Next remove duplicate sections and unnecessary introductions. Finally add the missing examples that help someone complete the task. Increasing word count without doing those steps leaves the underlying problem intact.
 
-Our [editorial standards](/about/#editorial-standards) describe the distinction between documentation-based guidance, examples, and recorded tests. The [Astro integration guide](/monetize/google-adsense-on-astro/) covers technical setup separately; installing that code is not evidence of approval.
+Our [editorial standards](/about/#editorial-standards) describe the distinction between documentation-based guidance, examples, and recorded tests. The [Astro integration guide](/monetize/google-adsense-on-astro/) covers technical setup separately; installing that code is not evidence of approval. A measurement fault is a third track: if the dashboard shows no visitors at all, [Cloudflare Web Analytics not tracking on Astro](/monetize/cloudflare-web-analytics-not-tracking-astro/) starts from the served HTML rather than the content.
 
 ## Request another review after substantive changes
 

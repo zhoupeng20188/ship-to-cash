@@ -104,7 +104,7 @@ And this gives you `undefined` on a static site no matter what the dashboard say
 const url = import.meta.env.API_URL; // no PUBLIC_ prefix → not available client-side
 ```
 
-The rule that follows: **on a static site, the only environment variables that exist are the ones the build wrote into your files.** If you were hoping to rotate a value without rebuilding, this route won't do it — you need a Function, or a config fetched at runtime.
+The rule that follows: **on a static site, the only environment variables that exist are the ones the build wrote into your files.** If you were hoping to rotate a value without rebuilding, this route won't do it — you need a Function, or a config fetched at runtime. The same inspect-the-output rule applies to platform-injected scripts: [another Cloudflare Pages setting that looks enabled but changes nothing](/monetize/cloudflare-web-analytics-not-tracking-astro/) is Web Analytics, whose official Pages path uses a project-level toggle and adds the snippet on the next deployment.
 
 In a [static Astro checkout integration](/payments/lemon-squeezy-checkout-astro-static-site/), the page can show a public buy link while a function handles a secret webhook. Keep the webhook secret out of client bundles. If a correctly configured endpoint still rejects requests, use the [webhook diagnostic guide](/payments/lemon-squeezy-webhook-not-firing/).
 
