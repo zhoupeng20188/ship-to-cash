@@ -83,3 +83,5 @@ This site's shared layout does not use Astro's `ClientRouter`. Ordinary links pe
 If the site is rejected for low value content, use the [content audit](/monetize/adsense-low-value-content-rejected/) before treating blank placements as a JavaScript defect. Google's [readiness guidance](https://support.google.com/adsense/answer/12176698?hl=en) covers connection, access, content, and review separately.
 
 Never click your own ads to test the installation or ask someone else to generate test clicks. Use source inspection, network diagnostics, and the account status instead. Keep payment checkout independent of this integration; [hosted checkout on Astro](/payments/lemon-squeezy-checkout-astro-static-site/) solves a different task.
+
+Ads also assume every visitor can read the page — [an ad-supported page never needs a per-request access check](/payments/static-site-paywall-no-server/), which is exactly the thing a paywall would add.

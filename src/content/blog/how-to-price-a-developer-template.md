@@ -56,6 +56,8 @@ Suppose each buyer needs an average of 20 minutes of support, valued at a hypoth
 
 Now estimate maintenance separately: framework upgrades, dependency fixes, documentation updates, and compatibility testing. Some of that cost is per release, not per buyer. Do not promise lifetime support unless the price and support policy can sustain it.
 
+If the price assumes recurring access to a members' area rather than a one-off file, add [what a static site paywall without a server actually requires](/payments/static-site-paywall-no-server/) to that maintenance line: sessions, revocation and support do not disappear after the first sale.
+
 ## Choose a price to test
 
 Record the audience, offer, price, date, and channel. Keep the product scope stable while evaluating feedback. If you change price and scope together, you will not know which change affected purchases.

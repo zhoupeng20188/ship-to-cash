@@ -23,6 +23,8 @@ faq:
 
 A static Astro site can take a Stripe payment with no server route at all. Stripe hosts checkout; your site needs a link. A server is needed when you build the cart, and a webhook when your own application must react to the payment — two separate decisions that most guides collapse into one.
 
+What that link cannot do is decide who is allowed to read a page. [Where taking a payment stops and restricting a page begins](/payments/static-site-paywall-no-server/) is a different boundary, and it needs code that runs on each request.
+
 This guide separates three routes — a plain Payment Link, an embeddable buy button, and a Checkout Session behind an Astro endpoint — and where each stops. Code samples are illustrative shapes from current official documentation, not a record of a live store or a tested production integration. Field names, fees and dashboard labels change; verify them against the linked docs and your own dashboard. Never place a secret API key in a static component.
 
 First confirm [whether Stripe can accept a seller in your country](/payments/stripe-not-available-in-my-country/). A working link is no help if the account cannot be opened.
